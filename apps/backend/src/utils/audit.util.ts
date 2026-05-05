@@ -7,7 +7,7 @@ export const logAdminActivity = async (
   targetResource: string,
   targetId: string,
   ipAddress?: string,
-  details?: Record<string, any>
+  details?: Record<string, any>,
 ) => {
   try {
     await AdminActivityLogModel.create({
@@ -16,7 +16,7 @@ export const logAdminActivity = async (
       targetResource,
       targetId,
       ipAddress,
-      details
+      details,
     });
   } catch (error) {
     console.error('[AUDIT LOG ERROR]', error);

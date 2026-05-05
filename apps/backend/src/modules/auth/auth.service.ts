@@ -39,7 +39,7 @@ export class AuthService {
 
   static async login(email: string, passwordString: string) {
     const user = await UserModel.findOne({ email }).select('+passwordHash');
-    
+
     if (!user) {
       throw new AppError('Invalid email or password', 401);
     }
@@ -61,11 +61,11 @@ export class AuthService {
     await user.save();
 
     return {
-      user: { 
-        id: user.id, 
-        email: user.email, 
+      user: {
+        id: user.id,
+        email: user.email,
         role: user.role,
-        mustChangePassword: user.mustChangePassword 
+        mustChangePassword: user.mustChangePassword,
       },
       tokens,
     };

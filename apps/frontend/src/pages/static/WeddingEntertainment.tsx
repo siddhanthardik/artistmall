@@ -5,21 +5,22 @@ import { Heart, Music, BadgeCheck, ChevronRight, Sparkles } from 'lucide-react';
 export const WeddingEntertainment: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
-      
       {/* 1. HERO SECTION */}
       <section className="relative pt-48 pb-32 overflow-hidden bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
           <div className="max-w-4xl">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-4 mb-8"
             >
               <div className="h-[2px] w-12 bg-brand-orange"></div>
-              <span className="text-slate-500 text-[10px] font-black uppercase tracking-[0.5em]">Wedding Entertainment</span>
+              <span className="text-slate-500 text-[10px] font-black uppercase tracking-[0.5em]">
+                Wedding Entertainment
+              </span>
             </motion.div>
-            
-            <motion.h1 
+
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -28,14 +29,15 @@ export const WeddingEntertainment: React.FC = () => {
               The Soundtrack <br />
               to your <span className="text-brand-orange italic">Celebration.</span>
             </motion.h1>
-            
-            <motion.p 
+
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               className="text-slate-600 text-xl md:text-2xl leading-relaxed max-w-2xl font-medium tracking-tight mb-12"
             >
-              Find singers, DJs, live bands, anchors, and performers for weddings, sangeets, receptions, and destination events.
+              Find singers, DJs, live bands, anchors, and performers for weddings, sangeets,
+              receptions, and destination events.
             </motion.p>
 
             <div className="flex flex-col sm:flex-row gap-6">
@@ -54,18 +56,18 @@ export const WeddingEntertainment: React.FC = () => {
       <section className="py-32 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <WeddingSpecialtyCard 
-              title="Sangeet Performances" 
+            <WeddingSpecialtyCard
+              title="Sangeet Performances"
               description="Bollywood singers, anchors, and dance performers for wedding functions."
               icon={Music}
             />
-            <WeddingSpecialtyCard 
-              title="Receptions" 
+            <WeddingSpecialtyCard
+              title="Receptions"
               description="Live bands, instrumental ensembles, and performers for wedding dinners and receptions."
               icon={Sparkles}
             />
-            <WeddingSpecialtyCard 
-              title="Intimate Ceremonies" 
+            <WeddingSpecialtyCard
+              title="Intimate Ceremonies"
               description="Sufi ensembles, traditional folk singers, and soulful instrumentalists for a spiritually resonant atmosphere."
               icon={Heart}
             />
@@ -78,28 +80,40 @@ export const WeddingEntertainment: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-col lg:flex-row items-center gap-24">
             <div className="flex-1 space-y-12">
-               <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-tight">
-                 Reliability Meets <br />
-                 Artist Coordination.
-               </h2>
-               <div className="space-y-8">
-                  <ValuePoint title="Confirmed Requirements" description="Booking requirements are documented before the event." />
-                  <ValuePoint title="Logistics Support" description="Coordination support for travel, technical riders, and event-day requirements." />
-                  <ValuePoint title="Verified Artist Profiles" description="Published artist profiles are reviewed before appearing in the directory." />
-               </div>
+              <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-tight">
+                Reliability Meets <br />
+                Artist Coordination.
+              </h2>
+              <div className="space-y-8">
+                <ValuePoint
+                  title="Confirmed Requirements"
+                  description="Booking requirements are documented before the event."
+                />
+                <ValuePoint
+                  title="Logistics Support"
+                  description="Coordination support for travel, technical riders, and event-day requirements."
+                />
+                <ValuePoint
+                  title="Verified Artist Profiles"
+                  description="Published artist profiles are reviewed before appearing in the directory."
+                />
+              </div>
             </div>
             <div className="flex-1">
-               <div className="aspect-square bg-slate-100 rounded-[48px] overflow-hidden shadow-2xl relative border-8 border-white">
-                  <img 
-                    src="/images/wedding_focus.png" 
-                    alt="Wedding event" 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-10 right-10 bg-white/90 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-xl">
-                     <p className="text-3xl font-black text-brand-orange mb-1">500+</p>
-                     <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-tight">Destination <br />Weddings Supported</p>
-                  </div>
-               </div>
+              <div className="aspect-square bg-slate-100 rounded-[48px] overflow-hidden shadow-2xl relative border-8 border-white">
+                <img
+                  src="/images/wedding_focus.png"
+                  alt="Wedding event"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-10 right-10 bg-white/90 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-xl">
+                  <p className="text-3xl font-black text-brand-orange mb-1">500+</p>
+                  <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-tight">
+                    Destination <br />
+                    Weddings Supported
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -108,20 +122,24 @@ export const WeddingEntertainment: React.FC = () => {
       {/* 4. DESTINATION WEDDINGS HEATMAP */}
       <section className="py-32 bg-slate-900 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
-           <div className="text-center mb-24">
-             <h2 className="text-5xl font-black text-white mb-6 tracking-tighter">Destination Support</h2>
-             <p className="text-slate-400 font-bold uppercase tracking-[0.25em] text-xs">Artist coordination for major wedding destinations</p>
-           </div>
-           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <DestinationItem city="Udaipur" events="120+" />
-              <DestinationItem city="Dubai" events="85+" />
-              <DestinationItem city="Goa" events="150+" />
-              <DestinationItem city="Jaipur" events="95+" />
-              <DestinationItem city="Istanbul" events="40+" />
-              <DestinationItem city="Bali" events="30+" />
-              <DestinationItem city="London" events="25+" />
-              <DestinationItem city="Phuket" events="35+" />
-           </div>
+          <div className="text-center mb-24">
+            <h2 className="text-5xl font-black text-white mb-6 tracking-tighter">
+              Destination Support
+            </h2>
+            <p className="text-slate-400 font-bold uppercase tracking-[0.25em] text-xs">
+              Artist coordination for major wedding destinations
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <DestinationItem city="Udaipur" events="120+" />
+            <DestinationItem city="Dubai" events="85+" />
+            <DestinationItem city="Goa" events="150+" />
+            <DestinationItem city="Jaipur" events="95+" />
+            <DestinationItem city="Istanbul" events="40+" />
+            <DestinationItem city="Bali" events="30+" />
+            <DestinationItem city="London" events="25+" />
+            <DestinationItem city="Phuket" events="35+" />
+          </div>
         </div>
       </section>
 
@@ -129,7 +147,9 @@ export const WeddingEntertainment: React.FC = () => {
       <section className="py-40 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Heart className="w-20 h-20 text-brand-orange mx-auto mb-10 opacity-20" />
-          <h2 className="text-6xl font-black text-slate-900 mb-12 tracking-tighter italic">Plan Your Wedding Entertainment.</h2>
+          <h2 className="text-6xl font-black text-slate-900 mb-12 tracking-tighter italic">
+            Plan Your Wedding Entertainment.
+          </h2>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button className="bg-brand-orange hover:bg-brand-orangeHover text-white font-black px-12 py-5 rounded-2xl shadow-xl shadow-brand-orange/20 transition-all uppercase tracking-widest text-xs active:scale-[0.98]">
               Connect With Wedding Desk
@@ -140,7 +160,6 @@ export const WeddingEntertainment: React.FC = () => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };
@@ -173,7 +192,8 @@ const ValuePoint = ({ title, description }: any) => (
 const DestinationItem = ({ city, events }: any) => (
   <div className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all cursor-default">
     <p className="text-white font-black text-xl mb-1">{city}</p>
-    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{events} Events</p>
+    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+      {events} Events
+    </p>
   </div>
 );
-

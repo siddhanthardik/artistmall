@@ -27,7 +27,7 @@ const HeroBannerSchema: Schema = new Schema(
   {
     timestamps: true,
     collection: 'hero_banners',
-  }
+  },
 );
 
 // Index for efficient sorting

@@ -10,7 +10,7 @@ export const PERMISSIONS = {
 
 export const ALL_PERMISSIONS = Object.values(PERMISSIONS);
 
-export type Permission = typeof ALL_PERMISSIONS[number];
+export type Permission = (typeof ALL_PERMISSIONS)[number];
 
 export const DEFAULT_ROLES = [
   {

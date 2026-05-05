@@ -17,22 +17,32 @@ export interface IArtistAvailability extends Document {
   }[];
 }
 
-const artistAvailabilitySchema = new Schema<IArtistAvailability>({
-  artistId: { type: Schema.Types.ObjectId, ref: 'Artist', required: true, unique: true },
-  blockedDates: [{ type: Date }],
-  unavailableDays: [{ type: String }],
-  unavailableSlots: [{
-    startTime: { type: String, required: true },
-    endTime: { type: String, required: true },
-    days: [{ type: String }]
-  }],
-  seasonalUnavailability: [{
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
-    reason: { type: String }
-  }]
-}, BaseSchemaOptions);
+const artistAvailabilitySchema = new Schema<IArtistAvailability>(
+  {
+    artistId: { type: Schema.Types.ObjectId, ref: 'Artist', required: true, unique: true },
+    blockedDates: [{ type: Date }],
+    unavailableDays: [{ type: String }],
+    unavailableSlots: [
+      {
+        startTime: { type: String, required: true },
+        endTime: { type: String, required: true },
+        days: [{ type: String }],
+      },
+    ],
+    seasonalUnavailability: [
+      {
+        startDate: { type: Date, required: true },
+        endDate: { type: Date, required: true },
+        reason: { type: String },
+      },
+    ],
+  },
+  BaseSchemaOptions,
+);
 
 artistAvailabilitySchema.plugin(auditPlugin);
 
-export const ArtistAvailabilityModel = mongoose.model<IArtistAvailability>('ArtistAvailability', artistAvailabilitySchema);
+export const ArtistAvailabilityModel = mongoose.model<IArtistAvailability>(
+  'ArtistAvailability',
+  artistAvailabilitySchema,
+);

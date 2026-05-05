@@ -17,18 +17,23 @@ export const BookingService = {
   createRequest: async (artistId: string, eventDetails: Record<string, unknown>) => {
     const response = await api.post('/bookings', {
       artistId,
-      ...eventDetails
+      ...eventDetails,
     });
     return response.data.data;
   },
 
   // Negotiate an existing booking (Deal Room)
-  negotiate: async (id: string, action: 'ACCEPT' | 'REJECT' | 'COUNTER', counterAmount?: number, notes?: string) => {
+  negotiate: async (
+    id: string,
+    action: 'ACCEPT' | 'REJECT' | 'COUNTER',
+    counterAmount?: number,
+    notes?: string,
+  ) => {
     const response = await api.post(`/bookings/${id}/negotiate`, {
       action,
       counterAmount,
-      notes
+      notes,
     });
     return response.data.data;
-  }
+  },
 };

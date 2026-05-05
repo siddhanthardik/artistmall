@@ -23,5 +23,5 @@ export const ManagementService = {
   getIncomingRequests: async () => {
     const response = await api.get('/bookings/incoming');
     return response.data.data;
-  }
+  },
 };

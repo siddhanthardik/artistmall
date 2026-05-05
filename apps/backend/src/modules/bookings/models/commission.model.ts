@@ -10,14 +10,17 @@ export interface ICommission extends Document {
   status: 'UNPAID' | 'PAID' | 'DISPUTED';
 }
 
-const commissionSchema = new Schema<ICommission>({
-  bookingRequestId: { type: Schema.Types.ObjectId, ref: 'BookingRequest', required: true },
-  managementCompanyId: { type: Schema.Types.ObjectId, ref: 'ManagementCompany', required: true },
-  bookingAmount: { type: Number, required: true, min: 0 },
-  platformFeePercentage: { type: Number, required: true, min: 0, max: 100 },
-  platformFeeAmount: { type: Number, required: true, min: 0 },
-  status: { type: String, enum: ['UNPAID', 'PAID', 'DISPUTED'], default: 'UNPAID' },
-}, BaseSchemaOptions);
+const commissionSchema = new Schema<ICommission>(
+  {
+    bookingRequestId: { type: Schema.Types.ObjectId, ref: 'BookingRequest', required: true },
+    managementCompanyId: { type: Schema.Types.ObjectId, ref: 'ManagementCompany', required: true },
+    bookingAmount: { type: Number, required: true, min: 0 },
+    platformFeePercentage: { type: Number, required: true, min: 0, max: 100 },
+    platformFeeAmount: { type: Number, required: true, min: 0 },
+    status: { type: String, enum: ['UNPAID', 'PAID', 'DISPUTED'], default: 'UNPAID' },
+  },
+  BaseSchemaOptions,
+);
 
 commissionSchema.plugin(auditPlugin);
 commissionSchema.index({ managementCompanyId: 1, status: 1 });

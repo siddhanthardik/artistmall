@@ -5,7 +5,7 @@ export const AuthService = {
   login: async (credentials: Record<string, unknown>) => {
     const response = await api.post('/auth/login', credentials);
     const { user, accessToken } = response.data.data;
-    
+
     // Populate global Zustand store
     useAuthStore.getState().setAuth(user, accessToken);
     return user;
@@ -14,7 +14,7 @@ export const AuthService = {
   register: async (data: Record<string, unknown>) => {
     const response = await api.post('/auth/register', data);
     const { user, accessToken } = response.data.data;
-    
+
     useAuthStore.getState().setAuth(user, accessToken);
     return user;
   },
@@ -25,5 +25,5 @@ export const AuthService = {
     } finally {
       useAuthStore.getState().clearAuth();
     }
-  }
+  },
 };

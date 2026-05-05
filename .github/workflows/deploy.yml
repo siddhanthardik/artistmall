@@ -2,7 +2,7 @@ name: Production Deployment
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   workflow_dispatch: # Allows manual trigger
 
 jobs:
@@ -10,19 +10,19 @@ jobs:
     name: Deploy Backend to Production
     runs-on: ubuntu-latest
     needs: [] # In real life, this would need the CI job to pass
-    
+
     steps:
-    - name: Trigger Render Deployment
-      # Assuming Render.com for backend hosting
-      run: |
-        curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      - name: Trigger Render Deployment
+        # Assuming Render.com for backend hosting
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
   deploy-frontend:
     name: Deploy Frontend to Production
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Trigger Vercel Deployment
-      # Assuming Vercel for frontend hosting
-      run: |
-        curl -X POST ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+      - name: Trigger Vercel Deployment
+        # Assuming Vercel for frontend hosting
+        run: |
+          curl -X POST ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}

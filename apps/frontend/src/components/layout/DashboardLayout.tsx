@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Users, 
-  CalendarCheck, 
-  Wallet, 
-  Settings, 
-  LogOut, 
+import {
+  LayoutDashboard,
+  Users,
+  CalendarCheck,
+  Wallet,
+  Settings,
+  LogOut,
   HeartHandshake,
-  Bookmark
+  Bookmark,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { AuthService } from '../../services/auth.service';
@@ -45,7 +45,6 @@ export const DashboardLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
-      
       {/* Sidebar */}
       <div className="w-64 bg-white border-r border-slate-200 flex flex-col shadow-sm">
         <div className="h-20 flex items-center px-6 border-b border-slate-100">
@@ -53,9 +52,7 @@ export const DashboardLayout: React.FC = () => {
             <div className="w-9 h-9 rounded-xl bg-[#1E4DB7] flex items-center justify-center shadow-lg shadow-blue-500/20">
               <span className="text-sm font-black text-white">AM</span>
             </div>
-            <span className="text-lg font-black text-slate-900 tracking-tight">
-              {brandName}
-            </span>
+            <span className="text-lg font-black text-slate-900 tracking-tight">{brandName}</span>
           </Link>
         </div>
 
@@ -68,12 +65,14 @@ export const DashboardLayout: React.FC = () => {
                   key={item.name}
                   to={item.path}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${
-                    isActive 
-                      ? 'bg-[#1E4DB7]/5 text-[#1E4DB7] border border-[#1E4DB7]/10 shadow-sm' 
+                    isActive
+                      ? 'bg-[#1E4DB7]/5 text-[#1E4DB7] border border-[#1E4DB7]/10 shadow-sm'
                       : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                   }`}
                 >
-                  <item.icon className={`w-5 h-5 ${isActive ? 'text-[#1E4DB7]' : 'text-slate-400'}`} />
+                  <item.icon
+                    className={`w-5 h-5 ${isActive ? 'text-[#1E4DB7]' : 'text-slate-400'}`}
+                  />
                   {item.name}
                 </Link>
               );
@@ -87,11 +86,15 @@ export const DashboardLayout: React.FC = () => {
               {user?.email?.charAt(0) || 'U'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-black text-slate-900 truncate">{user?.email?.split('@')[0]}</p>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">{user?.role?.replace('_', ' ')}</p>
+              <p className="text-sm font-black text-slate-900 truncate">
+                {user?.email?.split('@')[0]}
+              </p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">
+                {user?.role?.replace('_', ' ')}
+              </p>
             </div>
           </div>
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all font-bold text-sm"
           >
@@ -120,7 +123,6 @@ export const DashboardLayout: React.FC = () => {
           </div>
         </main>
       </div>
-
     </div>
   );
 };

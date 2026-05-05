@@ -9,14 +9,20 @@ export interface IBookingStatusLog extends Document {
   reason?: string;
 }
 
-const bookingStatusLogSchema = new Schema<IBookingStatusLog>({
-  bookingRequestId: { type: Schema.Types.ObjectId, ref: 'BookingRequest', required: true },
-  previousStatus: { type: String, required: true },
-  newStatus: { type: String, required: true },
-  changedById: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  reason: { type: String },
-}, BaseSchemaOptions);
+const bookingStatusLogSchema = new Schema<IBookingStatusLog>(
+  {
+    bookingRequestId: { type: Schema.Types.ObjectId, ref: 'BookingRequest', required: true },
+    previousStatus: { type: String, required: true },
+    newStatus: { type: String, required: true },
+    changedById: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    reason: { type: String },
+  },
+  BaseSchemaOptions,
+);
 
 bookingStatusLogSchema.plugin(auditPlugin);
 
-export const BookingStatusLogModel = mongoose.model<IBookingStatusLog>('BookingStatusLog', bookingStatusLogSchema);
+export const BookingStatusLogModel = mongoose.model<IBookingStatusLog>(
+  'BookingStatusLog',
+  bookingStatusLogSchema,
+);

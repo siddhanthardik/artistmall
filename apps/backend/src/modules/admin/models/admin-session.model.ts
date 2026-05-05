@@ -12,18 +12,21 @@ export interface IAdminSession extends Document {
   lastUsedAt: Date;
 }
 
-const adminSessionSchema = new Schema<IAdminSession>({
-  adminId: { type: Schema.Types.ObjectId, ref: 'Admin', required: true },
-  refreshToken: { type: String, required: true, unique: true },
-  userAgent: { type: String },
-  ipAddress: { type: String },
-  isValid: { type: Boolean, default: true },
-  rotatedAt: { type: Date },
-  expiresAt: { type: Date, required: true },
-  lastUsedAt: { type: Date, default: Date.now },
-}, { 
-  timestamps: true 
-});
+const adminSessionSchema = new Schema<IAdminSession>(
+  {
+    adminId: { type: Schema.Types.ObjectId, ref: 'Admin', required: true },
+    refreshToken: { type: String, required: true, unique: true },
+    userAgent: { type: String },
+    ipAddress: { type: String },
+    isValid: { type: Boolean, default: true },
+    rotatedAt: { type: Date },
+    expiresAt: { type: Date, required: true },
+    lastUsedAt: { type: Date, default: Date.now },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 // Index for automatic cleanup of expired sessions
 adminSessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });

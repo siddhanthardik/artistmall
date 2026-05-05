@@ -36,7 +36,7 @@ export const createClient = async (req: Request, res: Response, next: NextFuncti
       website,
       isActive: isActive !== undefined ? String(isActive) === 'true' : true,
       order: order !== undefined ? parseInt(order, 10) : 0,
-      logo
+      logo,
     });
 
     res.status(201).json({ status: 'success', data: { client } });

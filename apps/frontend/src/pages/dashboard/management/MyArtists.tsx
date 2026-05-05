@@ -7,16 +7,17 @@ import { StatusBadge, StatusType } from '../../../components/shared/StatusBadge'
 import { Artist } from '../../../types';
 
 export const MyArtists: React.FC = () => {
-  const { data: artists, isLoading, isError } = useQuery({
+  const {
+    data: artists,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['my-artists'],
-    queryFn: ManagementService.getMyRoster
+    queryFn: ManagementService.getMyRoster,
   });
-
-
 
   return (
     <div className="space-y-6">
-      
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-black text-slate-900">My Roster</h2>
@@ -32,9 +33,9 @@ export const MyArtists: React.FC = () => {
         <div className="p-4 border-b border-slate-100 flex flex-wrap gap-4 items-center justify-between bg-slate-50/30">
           <div className="relative w-full md:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search roster..." 
+            <input
+              type="text"
+              placeholder="Search roster..."
               className="w-full bg-white border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:border-[#1E4DB7] focus:ring-4 focus:ring-blue-500/5 focus:outline-none transition-all placeholder:text-slate-400"
             />
           </div>
@@ -82,7 +83,9 @@ export const MyArtists: React.FC = () => {
               {!isLoading && !isError && (!artists || artists.length === 0) && (
                 <tr>
                   <td colSpan={6} className="px-8 py-20 text-center">
-                    <p className="text-slate-400 font-bold">You haven't added any artists to your roster yet.</p>
+                    <p className="text-slate-400 font-bold">
+                      You haven't added any artists to your roster yet.
+                    </p>
                   </td>
                 </tr>
               )}
@@ -101,9 +104,15 @@ export const MyArtists: React.FC = () => {
                       {artist.categoryId?.name || 'Artist'}
                     </span>
                   </td>
-                  <td className="px-8 py-5 font-bold text-slate-600">{artist.cityId?.name || 'India'}</td>
-                  <td className="px-8 py-5"><StatusBadge status={artist.status as StatusType} /></td>
-                  <td className="px-8 py-5 font-medium text-slate-400 text-xs">{new Date(artist.createdAt).toLocaleDateString()}</td>
+                  <td className="px-8 py-5 font-bold text-slate-600">
+                    {artist.cityId?.name || 'India'}
+                  </td>
+                  <td className="px-8 py-5">
+                    <StatusBadge status={artist.status as StatusType} />
+                  </td>
+                  <td className="px-8 py-5 font-medium text-slate-400 text-xs">
+                    {new Date(artist.createdAt).toLocaleDateString()}
+                  </td>
                   <td className="px-8 py-5 text-right">
                     <button className="text-slate-400 hover:text-slate-900 hover:bg-slate-100 p-2 rounded-lg transition-all">
                       <MoreVertical className="w-5 h-5" />
@@ -117,15 +126,25 @@ export const MyArtists: React.FC = () => {
 
         {/* Pagination Placeholder */}
         <div className="p-6 border-t border-slate-100 flex justify-between items-center bg-slate-50/30">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Showing {artists?.length || 0} artists</span>
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            Showing {artists?.length || 0} artists
+          </span>
           <div className="flex gap-2">
-            <button className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-black text-slate-400 hover:bg-white transition-all disabled:opacity-30" disabled>Previous</button>
-            <button className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-black text-slate-400 hover:bg-white transition-all disabled:opacity-30" disabled>Next</button>
+            <button
+              className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-black text-slate-400 hover:bg-white transition-all disabled:opacity-30"
+              disabled
+            >
+              Previous
+            </button>
+            <button
+              className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-black text-slate-400 hover:bg-white transition-all disabled:opacity-30"
+              disabled
+            >
+              Next
+            </button>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 };

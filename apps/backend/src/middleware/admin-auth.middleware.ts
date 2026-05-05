@@ -7,7 +7,7 @@ import { RoleModel } from '../modules/users/models/role.model';
 export const protectAdmin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let token;
-    
+
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
     }
@@ -34,7 +34,7 @@ export const protectAdmin = async (req: Request, res: Response, next: NextFuncti
       userId: admin.id,
       role: admin.role,
     };
-    
+
     next();
   } catch (error: any) {
     if (error.name === 'TokenExpiredError') {
@@ -61,7 +61,9 @@ export const checkPermission = (permission: string) => {
         return next(new AppError('Authentication required before checking permissions.', 401));
       }
 
-      const admin = await AdminModel.findById(req.user.userId).populate<{ roleId?: { permissions: string[] } }>('roleId');
+      const admin = await AdminModel.findById(req.user.userId).populate<{
+        roleId?: { permissions: string[] };
+      }>('roleId');
       if (!admin || !admin.isActive) {
         return next(new AppError('Administrative account is unavailable.', 401));
       }

@@ -11,12 +11,14 @@ const seedSuperAdmin = async () => {
     const email = process.env.ADMIN_EMAIL;
     const password = process.env.ADMIN_PASSWORD;
     if (!mongoUri || !email || !password) {
-      throw new Error('MONGODB_URI/MONGO_URI, ADMIN_EMAIL, and ADMIN_PASSWORD must be set in the environment');
+      throw new Error(
+        'MONGODB_URI/MONGO_URI, ADMIN_EMAIL, and ADMIN_PASSWORD must be set in the environment',
+      );
     }
 
     await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB');
-    
+
     // Check if exists
     const existing = await AdminModel.findOne({ email }).select('+password');
     if (existing) {

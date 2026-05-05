@@ -10,24 +10,30 @@ const buildAdminAuthPayload = (admin: any) => ({
   fullName: admin.fullName,
   role: admin.role,
   roleName: admin.roleId?.name,
-  permissions: Array.from(new Set([...(admin.permissions ?? []), ...(admin.roleId?.permissions ?? [])])),
+  permissions: Array.from(
+    new Set([...(admin.permissions ?? []), ...(admin.roleId?.permissions ?? [])]),
+  ),
   isSuperAdmin: admin.isSuperAdmin || admin.role === 'SUPER_ADMIN',
   mustChangePassword: admin.mustChangePassword,
 });
 
 export class AdminAuthService {
-  
   static async login(email: string, passwordString: string, ip: string, device: string) {
     // 1. Find admin with password selected
-    const admin = await AdminModel.findOne({ email }).select('+password').populate<{ roleId?: { permissions: string[]; name: string } }>('roleId');
-    
+    const admin = await AdminModel.findOne({ email })
+      .select('+password')
+      .populate<{ roleId?: { permissions: string[]; name: string } }>('roleId');
+
     if (!admin) {
       throw new AppError('Invalid credentials', 401);
     }
 
     // 2. Check if locked
     if (admin.lockUntil && admin.lockUntil > new Date()) {
-      throw new AppError('Account temporarily locked due to multiple failed attempts. Try again later.', 403);
+      throw new AppError(
+        'Account temporarily locked due to multiple failed attempts. Try again later.',
+        403,
+      );
     }
 
     // 3. Validate Active
@@ -44,7 +50,7 @@ export class AdminAuthService {
       if (admin.loginAttempts >= 5) {
         admin.lockUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 mins lock
       }
-      
+
       await admin.save();
       throw new AppError('Invalid credentials', 401);
     }
@@ -55,9 +61,9 @@ export class AdminAuthService {
     admin.lastLogin = new Date();
     await admin.save();
 
-    const tokens = generateTokens({ 
-      userId: admin.id, 
-      role: admin.role 
+    const tokens = generateTokens({
+      userId: admin.id,
+      role: admin.role,
     });
 
     // 6. Create dedicated session
@@ -66,12 +72,12 @@ export class AdminAuthService {
       refreshToken: hashToken(tokens.refreshToken),
       ipAddress: ip,
       userAgent: device,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     });
 
     return {
       admin: buildAdminAuthPayload(admin),
-      tokens
+      tokens,
     };
   }
 
@@ -95,23 +101,28 @@ export class AdminAuthService {
       // This handles concurrent refresh requests (e.g. multiple tabs or simultaneous API calls)
       const recentlyRotatedSession = await AdminSessionModel.findOne({
         adminId: decoded.userId,
-        rotatedAt: { $gte: new Date(Date.now() - 30 * 1000) } // 30 second grace period
+        rotatedAt: { $gte: new Date(Date.now() - 30 * 1000) }, // 30 second grace period
       }).sort({ rotatedAt: -1 });
 
       if (recentlyRotatedSession) {
-        const admin = await AdminModel.findById(recentlyRotatedSession.adminId).populate<{ roleId?: { permissions: string[]; name: string } }>('roleId');
+        const admin = await AdminModel.findById(recentlyRotatedSession.adminId).populate<{
+          roleId?: { permissions: string[]; name: string };
+        }>('roleId');
         if (!admin || !admin.isActive) {
           throw new AppError('Administrative account is unavailable.', 401);
         }
 
         // Return a fresh set of tokens based on the current valid session
-        const tokens = generateTokens({ userId: recentlyRotatedSession.adminId.toString(), role: admin.role });
-        
+        const tokens = generateTokens({
+          userId: recentlyRotatedSession.adminId.toString(),
+          role: admin.role,
+        });
+
         // Update the current session with the new token
         recentlyRotatedSession.refreshToken = hashToken(tokens.refreshToken);
         recentlyRotatedSession.lastUsedAt = new Date();
         await recentlyRotatedSession.save();
-        
+
         return tokens;
       }
 
@@ -128,7 +139,9 @@ export class AdminAuthService {
       throw new AppError('Session expired. Please log in again.', 401);
     }
 
-    const admin = await AdminModel.findById(session.adminId).populate<{ roleId?: { permissions: string[]; name: string } }>('roleId');
+    const admin = await AdminModel.findById(session.adminId).populate<{
+      roleId?: { permissions: string[]; name: string };
+    }>('roleId');
     if (!admin || !admin.isActive) {
       session.isValid = false;
       await session.save();
@@ -153,14 +166,11 @@ export class AdminAuthService {
       // Invalidate specific session
       await AdminSessionModel.findOneAndUpdate(
         { adminId, refreshToken: hashToken(refreshToken) },
-        { $set: { isValid: false } }
+        { $set: { isValid: false } },
       );
     } else {
       // Invalidate all sessions (Force logout all devices)
-      await AdminSessionModel.updateMany(
-        { adminId },
-        { $set: { isValid: false } }
-      );
+      await AdminSessionModel.updateMany({ adminId }, { $set: { isValid: false } });
     }
   }
 }

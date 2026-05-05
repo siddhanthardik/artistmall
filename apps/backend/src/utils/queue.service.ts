@@ -42,21 +42,27 @@ export const enqueue = async <T>(job: Job<T>): Promise<void> => {
 // ── Email Job Helpers ─────────────────────────────────────────────────────────
 export const QueueJobs = {
   sendApprovalEmail: (companyEmail: string, artistName: string) =>
-    enqueue({ type: 'SEND_EMAIL', payload: { template: 'ARTIST_APPROVED', to: companyEmail, artistName } }),
+    enqueue({
+      type: 'SEND_EMAIL',
+      payload: { template: 'ARTIST_APPROVED', to: companyEmail, artistName },
+    }),
 
   sendRejectionEmail: (companyEmail: string, artistName: string, reason: string) =>
-    enqueue({ type: 'SEND_EMAIL', payload: { template: 'ARTIST_REJECTED', to: companyEmail, artistName, reason } }),
+    enqueue({
+      type: 'SEND_EMAIL',
+      payload: { template: 'ARTIST_REJECTED', to: companyEmail, artistName, reason },
+    }),
 
   sendBookingUpdate: (to: string, bookingId: string, status: string) =>
     enqueue({ type: 'SEND_EMAIL', payload: { template: 'BOOKING_UPDATE', to, bookingId, status } }),
 
   processCommission: (bookingId: string, gmvAmount: number) =>
-    enqueue({ type: 'PROCESS_COMMISSION', payload: { bookingId, gmvAmount, platformRate: 0.10 } }),
+    enqueue({ type: 'PROCESS_COMMISSION', payload: { bookingId, gmvAmount, platformRate: 0.1 } }),
 
   sendNegotiationReminder: (to: string, bookingId: string, staleDays: number) =>
     enqueue({
       type: 'SEND_REMINDER',
       payload: { template: 'NEGOTIATION_STALE', to, bookingId, staleDays },
-      scheduledAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h delay
+      scheduledAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24h delay
     }),
 };

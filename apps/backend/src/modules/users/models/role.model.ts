@@ -7,11 +7,14 @@ export interface IRole extends Document {
   permissions: string[];
 }
 
-const roleSchema = new Schema<IRole>({
-  name: { type: String, required: true, unique: true, trim: true },
-  roleName: { type: String, required: true, unique: true, trim: true },
-  permissions: [{ type: String, required: true }],
-}, BaseSchemaOptions);
+const roleSchema = new Schema<IRole>(
+  {
+    name: { type: String, required: true, unique: true, trim: true },
+    roleName: { type: String, required: true, unique: true, trim: true },
+    permissions: [{ type: String, required: true }],
+  },
+  BaseSchemaOptions,
+);
 
 roleSchema.pre('validate', function (next) {
   if (!this.roleName && this.name) this.roleName = this.name;

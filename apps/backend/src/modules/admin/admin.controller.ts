@@ -58,28 +58,24 @@ export const provisionArtist = async (req: Request, res: Response, next: NextFun
 
     const newArtist = await ArtistModel.create(artistData);
 
-    await logAdminActivity(
-      adminId,
-      'CREATE_ARTIST',
-      'Artist',
-      newArtist._id.toString(),
-      req.ip,
-      { name: newArtist.name, stageName: newArtist.stageName }
-    );
+    await logAdminActivity(adminId, 'CREATE_ARTIST', 'Artist', newArtist._id.toString(), req.ip, {
+      name: newArtist.name,
+      stageName: newArtist.stageName,
+    });
 
     res.status(201).json({
       status: 'success',
-      data: { artist: newArtist }
+      data: { artist: newArtist },
     });
   } catch (error: any) {
     // PRODUCTION GRADE: Handle Duplicate Key Errors (E11000)
     if (error.code === 11000) {
-       const field = Object.keys(error.keyPattern || {})[0] || 'record';
-       const value = error.keyValue ? error.keyValue[field] : 'this value';
-       return res.status(400).json({
-          status: 'fail',
-          message: `Duplicate Error: An artist with this ${field} ("${value}") already exists. Please use a unique Stage Name.`
-       });
+      const field = Object.keys(error.keyPattern || {})[0] || 'record';
+      const value = error.keyValue ? error.keyValue[field] : 'this value';
+      return res.status(400).json({
+        status: 'fail',
+        message: `Duplicate Error: An artist with this ${field} ("${value}") already exists. Please use a unique Stage Name.`,
+      });
     }
 
     console.error('ARTIST CREATE ERROR:', {
@@ -105,7 +101,7 @@ export const getArtists = async (req: Request, res: Response, next: NextFunction
       status,
       featured,
       showOnHome,
-      includeDeleted = 'false'
+      includeDeleted = 'false',
     } = req.query;
 
     const query: any = {};
@@ -114,7 +110,7 @@ export const getArtists = async (req: Request, res: Response, next: NextFunction
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
-        { stageName: { $regex: search, $options: 'i' } }
+        { stageName: { $regex: search, $options: 'i' } },
       ];
     }
     if (category) query.categoryId = category;
@@ -135,7 +131,7 @@ export const getArtists = async (req: Request, res: Response, next: NextFunction
       status: 'success',
       results: artists.length,
       total,
-      data: { artists }
+      data: { artists },
     });
   } catch (error) {
     next(error);
@@ -149,9 +145,9 @@ export const getArtist = async (req: Request, res: Response, next: NextFunction)
   try {
     const { id } = req.params;
     const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
-    
+
     const query = isObjectId ? { _id: id } : { slug: id };
-    
+
     const artist = await ArtistModel.findOne(query)
       .populate('categoryId', 'name')
       .populate('createdBy', 'email fullName');
@@ -160,7 +156,7 @@ export const getArtist = async (req: Request, res: Response, next: NextFunction)
 
     res.status(200).json({
       status: 'success',
-      data: { artist }
+      data: { artist },
     });
   } catch (error) {
     next(error);
@@ -183,9 +179,12 @@ export const updateArtist = async (req: Request, res: Response, next: NextFuncti
     const oldState = artist.toObject();
 
     // Sanitize numeric fields in updates too
-    if (req.body.startingPrice !== undefined) req.body.startingPrice = Number(req.body.startingPrice) || 0;
-    if (req.body.yearsOfExperience !== undefined) req.body.yearsOfExperience = Number(req.body.yearsOfExperience) || 0;
-    if (req.body.eventsCompleted !== undefined) req.body.eventsCompleted = Number(req.body.eventsCompleted) || 0;
+    if (req.body.startingPrice !== undefined)
+      req.body.startingPrice = Number(req.body.startingPrice) || 0;
+    if (req.body.yearsOfExperience !== undefined)
+      req.body.yearsOfExperience = Number(req.body.yearsOfExperience) || 0;
+    if (req.body.eventsCompleted !== undefined)
+      req.body.eventsCompleted = Number(req.body.eventsCompleted) || 0;
     if (req.body.priceRange) {
       req.body.priceRange.min = Number(req.body.priceRange.min) || 0;
       req.body.priceRange.max = Number(req.body.priceRange.max) || 0;
@@ -203,18 +202,14 @@ export const updateArtist = async (req: Request, res: Response, next: NextFuncti
     artist.updatedBy = adminId as any;
     await artist.save();
 
-    await logAdminActivity(
-      adminId,
-      'UPDATE_ARTIST',
-      'Artist',
-      artist._id.toString(),
-      req.ip,
-      { before: oldState, after: artist.toObject() }
-    );
+    await logAdminActivity(adminId, 'UPDATE_ARTIST', 'Artist', artist._id.toString(), req.ip, {
+      before: oldState,
+      after: artist.toObject(),
+    });
 
     res.status(200).json({
       status: 'success',
-      data: { artist }
+      data: { artist },
     });
   } catch (error) {
     next(error);
@@ -236,19 +231,21 @@ export const updateArtistStep = async (req: Request, res: Response, next: NextFu
 
     // 1. Strict Validation per Step (KYC Level)
     if (step === 'identity') {
-       if (!data.name && !data.fullName) throw new AppError('Full name required', 400);
-       if (!data.stageName) throw new AppError('Stage name required', 400);
-       if (!data.categoryId) throw new AppError('Category required', 400);
-       if (!data.city) throw new AppError('City required', 400);
+      if (!data.name && !data.fullName) throw new AppError('Full name required', 400);
+      if (!data.stageName) throw new AppError('Stage name required', 400);
+      if (!data.categoryId) throw new AppError('Category required', 400);
+      if (!data.city) throw new AppError('City required', 400);
     } else if (step === 'profile') {
-       const shortBio = data.shortBio || '';
-       const longBio = data.longBio || '';
-       if (shortBio.length < 10) throw new AppError('Short Bio too short', 400);
-       if (longBio.length < 50) throw new AppError('Story must be at least 50 characters', 400);
+      const shortBio = data.shortBio || '';
+      const longBio = data.longBio || '';
+      if (shortBio.length < 10) throw new AppError('Short Bio too short', 400);
+      if (longBio.length < 50) throw new AppError('Story must be at least 50 characters', 400);
     } else if (step === 'media') {
-       if (!data.profilePicture && !data.profileImage) throw new AppError('Profile image required', 400);
+      if (!data.profilePicture && !data.profileImage)
+        throw new AppError('Profile image required', 400);
     } else if (step === 'commercial') {
-       if (data.startingPrice === undefined || data.startingPrice === '') throw new AppError('Starting price required', 400);
+      if (data.startingPrice === undefined || data.startingPrice === '')
+        throw new AppError('Starting price required', 400);
     }
 
     // 2. Map Frontend Field Names to DB Field Names
@@ -258,30 +255,31 @@ export const updateArtistStep = async (req: Request, res: Response, next: NextFu
     if (data.portfolioGallery) updateData.gallery = data.portfolioGallery;
     if (data.youtubeLinks) updateData.videoLinks = data.youtubeLinks;
     if (data.brochure) updateData.brochureFile = data.brochure;
-    
+
     // Cast numbers
-    if (data.startingPrice !== undefined) updateData.startingPrice = Number(data.startingPrice) || 0;
+    if (data.startingPrice !== undefined)
+      updateData.startingPrice = Number(data.startingPrice) || 0;
     if (data.priceRange) {
       updateData.priceRange = {
         min: Number(data.priceRange.min) || 0,
-        max: Number(data.priceRange.max) || 0
+        max: Number(data.priceRange.max) || 0,
       };
     }
 
     // 3. Perform Update
     Object.assign(artist, updateData);
-    
+
     // 4. Update Step Status
     if (artist.stepStatus && (artist.stepStatus as any)[step]) {
-       (artist.stepStatus as any)[step].completed = true;
-       (artist.stepStatus as any)[step].updatedAt = new Date();
+      (artist.stepStatus as any)[step].completed = true;
+      (artist.stepStatus as any)[step].updatedAt = new Date();
     }
-    
+
     // Advance currentStep if we just finished it
     const steps = ['identity', 'profile', 'media', 'commercial', 'review'];
     const currentIndex = steps.indexOf(step);
     if (currentIndex !== -1 && currentIndex < steps.length - 1) {
-       artist.currentStep = steps[currentIndex + 1];
+      artist.currentStep = steps[currentIndex + 1];
     }
 
     artist.updatedBy = adminId as any;
@@ -289,16 +287,15 @@ export const updateArtistStep = async (req: Request, res: Response, next: NextFu
 
     res.status(200).json({
       status: 'success',
-      data: { 
+      data: {
         artist,
-        currentStep: artist.currentStep 
-      }
+        currentStep: artist.currentStep,
+      },
     });
   } catch (error) {
     next(error);
   }
 };
-
 
 /**
  * 5. DELETE ARTIST (SOFT)
@@ -314,13 +311,7 @@ export const deleteArtist = async (req: Request, res: Response, next: NextFuncti
     artist.deletedBy = adminId as any;
     await artist.save();
 
-    await logAdminActivity(
-      adminId,
-      'DELETE_ARTIST',
-      'Artist',
-      artist._id.toString(),
-      req.ip
-    );
+    await logAdminActivity(adminId, 'DELETE_ARTIST', 'Artist', artist._id.toString(), req.ip);
 
     res.status(204).send();
   } catch (error) {
@@ -342,17 +333,11 @@ export const restoreArtist = async (req: Request, res: Response, next: NextFunct
     artist.deletedBy = undefined;
     await artist.save();
 
-    await logAdminActivity(
-      adminId,
-      'RESTORE_ARTIST',
-      'Artist',
-      artist._id.toString(),
-      req.ip
-    );
+    await logAdminActivity(adminId, 'RESTORE_ARTIST', 'Artist', artist._id.toString(), req.ip);
 
     res.status(200).json({
       status: 'success',
-      data: { artist }
+      data: { artist },
     });
   } catch (error) {
     next(error);
@@ -365,11 +350,25 @@ export const restoreArtist = async (req: Request, res: Response, next: NextFunct
 export const getAdminStats = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const totalArtists = await ArtistModel.countDocuments({ isDeleted: false });
-    const pendingVerifications = await ArtistModel.countDocuments({ verificationStatus: 'PENDING_REVIEW', isDeleted: false });
-    const featuredArtists = await ArtistModel.countDocuments({ isFeatured: true, isDeleted: false });
-    const publishedArtists = await ArtistModel.countDocuments({ isPublished: true, isDeleted: false });
-    const homepageFeaturedArtists = await ArtistModel.countDocuments({ showOnHome: true, isDeleted: false });
-    const totalStaff = await AdminModel.countDocuments({ role: { $in: ['SUPER_ADMIN', 'SUB_ADMIN', 'INTERNAL_OPS', 'FINANCE', 'SUPPORT'] } });
+    const pendingVerifications = await ArtistModel.countDocuments({
+      verificationStatus: 'PENDING_REVIEW',
+      isDeleted: false,
+    });
+    const featuredArtists = await ArtistModel.countDocuments({
+      isFeatured: true,
+      isDeleted: false,
+    });
+    const publishedArtists = await ArtistModel.countDocuments({
+      isPublished: true,
+      isDeleted: false,
+    });
+    const homepageFeaturedArtists = await ArtistModel.countDocuments({
+      showOnHome: true,
+      isDeleted: false,
+    });
+    const totalStaff = await AdminModel.countDocuments({
+      role: { $in: ['SUPER_ADMIN', 'SUB_ADMIN', 'INTERNAL_OPS', 'FINANCE', 'SUPPORT'] },
+    });
 
     // Recent Activity
     const recentLogs = await AdminActivityLogModel.find()
@@ -386,10 +385,10 @@ export const getAdminStats = async (req: Request, res: Response, next: NextFunct
           featuredArtists,
           publishedArtists,
           homepageFeaturedArtists,
-          totalStaff
+          totalStaff,
         },
-        recentActivity: recentLogs
-      }
+        recentActivity: recentLogs,
+      },
     });
   } catch (error) {
     next(error);
@@ -431,21 +430,27 @@ export const provisionStaff = async (req: Request, res: Response, next: NextFunc
       createdBy: adminId,
     });
 
-    await logAdminActivity(
-      adminId,
-      'PROVISION_STAFF',
-      'User',
-      newUser._id.toString(),
-      req.ip,
-      { email, role, fullName, department, roleId, departmentId }
-    );
+    await logAdminActivity(adminId, 'PROVISION_STAFF', 'User', newUser._id.toString(), req.ip, {
+      email,
+      role,
+      fullName,
+      department,
+      roleId,
+      departmentId,
+    });
 
     res.status(201).json({
       status: 'success',
       data: {
-        user: { id: newUser._id, email: newUser.email, role: newUser.role, roleId: newUser.roleId, departmentId: newUser.departmentId },
-        tempPassword
-      }
+        user: {
+          id: newUser._id,
+          email: newUser.email,
+          role: newUser.role,
+          roleId: newUser.roleId,
+          departmentId: newUser.departmentId,
+        },
+        tempPassword,
+      },
     });
   } catch (error) {
     next(error);
@@ -463,12 +468,8 @@ export const getSettingsPermissions = async (req: Request, res: Response, next: 
 export const seedDefaultRoles = async () => {
   await Promise.all(
     DEFAULT_ROLES.map((role) =>
-      RoleModel.updateOne(
-        { name: role.name },
-        { $setOnInsert: role },
-        { upsert: true }
-      )
-    )
+      RoleModel.updateOne({ name: role.name }, { $setOnInsert: role }, { upsert: true }),
+    ),
   );
 };
 
@@ -489,12 +490,17 @@ export const createSettingsRole = async (req: Request, res: Response, next: Next
     ensureValidPermissions(permissions);
 
     const role = await RoleModel.create({ name, roleName: name, permissions });
-    await logAdminActivity(getAdminId(req), 'CREATE_ROLE', 'Role', role._id.toString(), req.ip, { name, permissions });
+    await logAdminActivity(getAdminId(req), 'CREATE_ROLE', 'Role', role._id.toString(), req.ip, {
+      name,
+      permissions,
+    });
 
     res.status(201).json({ status: 'success', data: { role } });
   } catch (error: any) {
     if (error.code === 11000) {
-      return res.status(400).json({ status: 'fail', message: 'Role with this name already exists' });
+      return res
+        .status(400)
+        .json({ status: 'fail', message: 'Role with this name already exists' });
     }
     next(error);
   }
@@ -515,12 +521,21 @@ export const createSettingsDepartment = async (req: Request, res: Response, next
     if (!name) throw new AppError('Department name is required', 400);
 
     const department = await DepartmentModel.create({ name, description });
-    await logAdminActivity(getAdminId(req), 'CREATE_DEPARTMENT', 'Department', department._id.toString(), req.ip, { name });
+    await logAdminActivity(
+      getAdminId(req),
+      'CREATE_DEPARTMENT',
+      'Department',
+      department._id.toString(),
+      req.ip,
+      { name },
+    );
 
     res.status(201).json({ status: 'success', data: { department } });
   } catch (error: any) {
     if (error.code === 11000) {
-      return res.status(400).json({ status: 'fail', message: 'Department with this name already exists' });
+      return res
+        .status(400)
+        .json({ status: 'fail', message: 'Department with this name already exists' });
     }
     next(error);
   }
@@ -602,7 +617,9 @@ export const updateSettingsUser = async (req: Request, res: Response, next: Next
     }
 
     await user.save();
-    await logAdminActivity(getAdminId(req), 'USER_UPDATED', 'User', user._id.toString(), req.ip, { name: user.fullName });
+    await logAdminActivity(getAdminId(req), 'USER_UPDATED', 'User', user._id.toString(), req.ip, {
+      name: user.fullName,
+    });
 
     const updatedUser = await AdminModel.findById(id)
       .populate('roleId', 'name roleName permissions')
@@ -633,10 +650,15 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
     const { name, slug } = req.body;
     const adminId = getAdminId(req);
 
-    const generatedSlug = slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const generatedSlug =
+      slug ||
+      name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
 
-    const existing = await ArtistCategoryModel.findOne({ 
-      $or: [{ name }, { slug: generatedSlug }] 
+    const existing = await ArtistCategoryModel.findOne({
+      $or: [{ name }, { slug: generatedSlug }],
     });
 
     if (existing) {
@@ -646,14 +668,23 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
     const category = await ArtistCategoryModel.create({
       ...req.body,
       slug: generatedSlug,
-      createdBy: adminId
+      createdBy: adminId,
     });
 
-    await logAdminActivity(adminId, 'CREATE_CATEGORY', 'Category', category._id.toString(), req.ip, { name: category.name });
+    await logAdminActivity(
+      adminId,
+      'CREATE_CATEGORY',
+      'Category',
+      category._id.toString(),
+      req.ip,
+      { name: category.name },
+    );
     res.status(201).json({ status: 'success', data: { category } });
   } catch (error: any) {
     if (error.code === 11000) {
-      return res.status(400).json({ status: 'fail', message: 'Category with this name or slug already exists' });
+      return res
+        .status(400)
+        .json({ status: 'fail', message: 'Category with this name or slug already exists' });
     }
     next(error);
   }
@@ -661,7 +692,8 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
 
 export const uploadCategoryImage = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (!req.file) throw new AppError('No file uploaded. Ensure field name is "categoryImage".', 400);
+    if (!req.file)
+      throw new AppError('No file uploaded. Ensure field name is "categoryImage".', 400);
     const imageUrl = `/uploads/categories/${req.file.filename}`;
     res.status(200).json({ status: 'success', data: { url: imageUrl } });
   } catch (error) {
@@ -671,9 +703,18 @@ export const uploadCategoryImage = async (req: Request, res: Response, next: Nex
 
 export const updateCategory = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const category = await ArtistCategoryModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const category = await ArtistCategoryModel.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (!category) throw new AppError('Category not found', 404);
-    await logAdminActivity(getAdminId(req), 'UPDATE_CATEGORY', 'Category', category._id.toString(), req.ip, { name: category.name });
+    await logAdminActivity(
+      getAdminId(req),
+      'UPDATE_CATEGORY',
+      'Category',
+      category._id.toString(),
+      req.ip,
+      { name: category.name },
+    );
     res.status(200).json({ status: 'success', data: { category } });
   } catch (error) {
     next(error);
@@ -715,20 +756,23 @@ export const reviewArtist = async (req: Request, res: Response, next: NextFuncti
 
     // Auto-publish if status is set to PUBLISHED
     if (status === 'PUBLISHED') updateData.isPublished = true;
-    
+
     // Safety check: if unpublishing, also remove from homepage
     if (updateData.isPublished === false) {
-       updateData.showOnHome = false;
+      updateData.showOnHome = false;
     }
 
-    const artist = await ArtistModel.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true }
-    );
+    const artist = await ArtistModel.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!artist) throw new AppError('Artist not found', 404);
 
-    await logAdminActivity(getAdminId(req), 'REVIEW_ARTIST', 'Artist', artist._id.toString(), req.ip, { status, adminNotes, isPublished, showOnHome });
+    await logAdminActivity(
+      getAdminId(req),
+      'REVIEW_ARTIST',
+      'Artist',
+      artist._id.toString(),
+      req.ip,
+      { status, adminNotes, isPublished, showOnHome },
+    );
 
     res.status(200).json({ status: 'success', data: { artist } });
   } catch (error) {
@@ -747,7 +791,14 @@ export const toggleFeatured = async (req: Request, res: Response, next: NextFunc
     artist.isFeatured = !artist.isFeatured;
     await artist.save();
 
-    await logAdminActivity(getAdminId(req), 'TOGGLE_FEATURED', 'Artist', artist._id.toString(), req.ip, { isFeatured: artist.isFeatured });
+    await logAdminActivity(
+      getAdminId(req),
+      'TOGGLE_FEATURED',
+      'Artist',
+      artist._id.toString(),
+      req.ip,
+      { isFeatured: artist.isFeatured },
+    );
 
     res.status(200).json({ status: 'success', data: { artist } });
   } catch (error) {
@@ -762,13 +813,20 @@ export const toggleHome = async (req: Request, res: Response, next: NextFunction
 
     // Rule: showOnHome = true only if published = true
     if (!artist.isPublished && !artist.showOnHome) {
-       throw new AppError('Cannot show unpublished artist on homepage', 400);
+      throw new AppError('Cannot show unpublished artist on homepage', 400);
     }
 
     artist.showOnHome = !artist.showOnHome;
     await artist.save();
 
-    await logAdminActivity(getAdminId(req), 'TOGGLE_HOME', 'Artist', artist._id.toString(), req.ip, { showOnHome: artist.showOnHome });
+    await logAdminActivity(
+      getAdminId(req),
+      'TOGGLE_HOME',
+      'Artist',
+      artist._id.toString(),
+      req.ip,
+      { showOnHome: artist.showOnHome },
+    );
 
     res.status(200).json({ status: 'success', data: { artist } });
   } catch (error) {
@@ -783,13 +841,14 @@ export const toggleHome = async (req: Request, res: Response, next: NextFunction
  */
 export const uploadProfileImage = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (!req.file) throw new AppError('No file uploaded. Ensure field name is "profileImage".', 400);
+    if (!req.file)
+      throw new AppError('No file uploaded. Ensure field name is "profileImage".', 400);
 
     const imageUrl = `/uploads/artists/profile/${req.file.filename}`;
 
     res.status(200).json({
       status: 'success',
-      data: { url: imageUrl }
+      data: { url: imageUrl },
     });
   } catch (error) {
     next(error);
@@ -799,13 +858,14 @@ export const uploadProfileImage = async (req: Request, res: Response, next: Next
 export const uploadGalleryImages = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const files = req.files as Express.Multer.File[];
-    if (!files || files.length === 0) throw new AppError('No files uploaded. Ensure field name is "galleryImages".', 400);
+    if (!files || files.length === 0)
+      throw new AppError('No files uploaded. Ensure field name is "galleryImages".', 400);
 
-    const urls = files.map(file => `/uploads/artists/gallery/${file.filename}`);
+    const urls = files.map((file) => `/uploads/artists/gallery/${file.filename}`);
 
     res.status(200).json({
       status: 'success',
-      data: { urls }
+      data: { urls },
     });
   } catch (error) {
     next(error);
@@ -820,7 +880,7 @@ export const uploadBrochure = async (req: Request, res: Response, next: NextFunc
 
     res.status(200).json({
       status: 'success',
-      data: { url: fileUrl }
+      data: { url: fileUrl },
     });
   } catch (error) {
     next(error);
@@ -848,7 +908,7 @@ export const getAuditLogs = async (req: Request, res: Response, next: NextFuncti
     res.status(200).json({
       status: 'success',
       total,
-      data: { logs }
+      data: { logs },
     });
   } catch (error) {
     next(error);

@@ -13,20 +13,15 @@ export const ArtistStatusEnum = z.enum([
   'APPROVED',
   'REJECTED',
   'HIDDEN',
-  'ARCHIVED'
+  'ARCHIVED',
 ]);
 
-export const CelebrityLevelEnum = z.enum([
-  'A_LIST',
-  'B_LIST',
-  'C_LIST',
-  'RISING'
-]);
+export const CelebrityLevelEnum = z.enum(['A_LIST', 'B_LIST', 'C_LIST', 'RISING']);
 
 export const ArtistSchema = z.object({
   id: z.string().optional(),
   managementCompanyId: z.string(),
-  
+
   // Core Profile
   name: z.string().min(2),
   stageName: z.string().optional(),
@@ -35,27 +30,31 @@ export const ArtistSchema = z.object({
   cityId: z.string(),
   languages: z.array(z.string()).default([]),
   bio: z.string().optional(),
-  
+
   // Financials
   priceRange: z.object({
     min: z.number().min(0),
     max: z.number().min(0),
   }),
   minimumBookingValue: z.number().min(0).default(0),
-  
+
   // Logistics
   performanceDurationMins: z.number().min(0).optional(),
   travelRequirements: z.string().optional(),
   hospitalityRider: z.string().optional(),
-  
+
   // Proof & Portfolio (Simplified for schema, handled via relations/arrays in DB)
-  socialProof: z.array(z.object({
-    type: z.enum(['TESTIMONIAL', 'BRAND_COLLAB']),
-    title: z.string(),
-    description: z.string().optional(),
-    url: z.string().optional()
-  })).default([]),
-  
+  socialProof: z
+    .array(
+      z.object({
+        type: z.enum(['TESTIMONIAL', 'BRAND_COLLAB']),
+        title: z.string(),
+        description: z.string().optional(),
+        url: z.string().optional(),
+      }),
+    )
+    .default([]),
+
   // System Fields
   status: ArtistStatusEnum.default('DRAFT'),
   isVerified: z.boolean().default(false),

@@ -75,7 +75,8 @@ export const StaffManagement: React.FC = () => {
   });
 
   const updateUser = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) => AdminService.updateSettingsUser(id, data),
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
+      AdminService.updateSettingsUser(id, data),
     onSuccess: () => {
       setEditUserId('');
       setEditUserForm({ name: '', email: '', password: '' });
@@ -105,7 +106,10 @@ export const StaffManagement: React.FC = () => {
     onError: handleError,
   });
 
-  const selectedUser = useMemo(() => users.find((user: any) => user._id === editUserId), [editUserId, users]);
+  const selectedUser = useMemo(
+    () => users.find((user: any) => user._id === editUserId),
+    [editUserId, users],
+  );
 
   const beginEditUser = (user: any) => {
     setEditUserId(user._id);
@@ -127,12 +131,32 @@ export const StaffManagement: React.FC = () => {
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Settings</h1>
-          <p className="text-slate-500 font-medium text-sm mt-1">Users, roles, departments, and permissions</p>
+          <p className="text-slate-500 font-medium text-sm mt-1">
+            Users, roles, departments, and permissions
+          </p>
         </div>
         <div className="inline-flex rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
-          <TabButton tab="users" activeTab={activeTab} onClick={setActiveTab} icon={Users} label="Users" />
-          <TabButton tab="roles" activeTab={activeTab} onClick={setActiveTab} icon={ShieldCheck} label="Roles" />
-          <TabButton tab="departments" activeTab={activeTab} onClick={setActiveTab} icon={Building2} label="Departments" />
+          <TabButton
+            tab="users"
+            activeTab={activeTab}
+            onClick={setActiveTab}
+            icon={Users}
+            label="Users"
+          />
+          <TabButton
+            tab="roles"
+            activeTab={activeTab}
+            onClick={setActiveTab}
+            icon={ShieldCheck}
+            label="Roles"
+          />
+          <TabButton
+            tab="departments"
+            activeTab={activeTab}
+            onClick={setActiveTab}
+            icon={Building2}
+            label="Departments"
+          />
         </div>
       </div>
 
@@ -167,12 +191,17 @@ export const StaffManagement: React.FC = () => {
                       <td className="px-6 py-4">{user.email}</td>
                       <td className="px-6 py-4">
                         <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
-                          {user.isSuperAdmin ? 'Super Admin' : user.roleId?.name || user.roleId?.roleName || user.role}
+                          {user.isSuperAdmin
+                            ? 'Super Admin'
+                            : user.roleId?.name || user.roleId?.roleName || user.role}
                         </span>
                       </td>
                       <td className="px-6 py-4">{user.departmentId?.name || 'Unassigned'}</td>
                       <td className="px-6 py-4 text-right">
-                        <button onClick={() => beginEditUser(user)} className="text-sm font-bold text-brand-blue hover:text-blue-700">
+                        <button
+                          onClick={() => beginEditUser(user)}
+                          className="text-sm font-bold text-brand-blue hover:text-blue-700"
+                        >
                           Edit
                         </button>
                       </td>
@@ -184,23 +213,59 @@ export const StaffManagement: React.FC = () => {
           </section>
 
           <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-900 mb-5">{selectedUser ? 'Update User' : 'Create User'}</h2>
+            <h2 className="text-lg font-bold text-slate-900 mb-5">
+              {selectedUser ? 'Update User' : 'Create User'}
+            </h2>
             {selectedUser ? (
               <form
                 className="space-y-4"
                 onSubmit={(event) => {
                   event.preventDefault();
-                  updateUser.mutate({ id: editUserId, data: { name: editUserForm.name, password: editUserForm.password } });
+                  updateUser.mutate({
+                    id: editUserId,
+                    data: { name: editUserForm.name, password: editUserForm.password },
+                  });
                 }}
               >
-                <Field label="Name" value={editUserForm.name} onChange={(value) => setEditUserForm({ ...editUserForm, name: value })} required />
-                <Field label="Email" value={editUserForm.email} onChange={() => undefined} readonly tooltip="Email cannot be changed after creation" />
-                <Field label="New Password" type="password" value={editUserForm.password} onChange={(value) => setEditUserForm({ ...editUserForm, password: value })} placeholder="Leave blank to keep current password" />
+                <Field
+                  label="Name"
+                  value={editUserForm.name}
+                  onChange={(value) => setEditUserForm({ ...editUserForm, name: value })}
+                  required
+                />
+                <Field
+                  label="Email"
+                  value={editUserForm.email}
+                  onChange={() => undefined}
+                  readonly
+                  tooltip="Email cannot be changed after creation"
+                />
+                <Field
+                  label="New Password"
+                  type="password"
+                  value={editUserForm.password}
+                  onChange={(value) => setEditUserForm({ ...editUserForm, password: value })}
+                  placeholder="Leave blank to keep current password"
+                />
                 <div className="flex gap-3 pt-2">
-                  <Button type="submit" disabled={updateUser.isPending} className="flex-1 bg-brand-blue hover:bg-blue-700 text-white rounded-xl">
-                    {updateUser.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />} Save
+                  <Button
+                    type="submit"
+                    disabled={updateUser.isPending}
+                    className="flex-1 bg-brand-blue hover:bg-blue-700 text-white rounded-xl"
+                  >
+                    {updateUser.isPending ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <KeyRound className="w-4 h-4" />
+                    )}{' '}
+                    Save
                   </Button>
-                  <Button type="button" variant="outline" onClick={() => setEditUserId('')} className="rounded-xl">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setEditUserId('')}
+                    className="rounded-xl"
+                  >
                     Cancel
                   </Button>
                 </div>
@@ -213,13 +278,56 @@ export const StaffManagement: React.FC = () => {
                   createUser.mutate(userForm);
                 }}
               >
-                <Field label="Name" value={userForm.name} onChange={(value) => setUserForm({ ...userForm, name: value })} required />
-                <Field label="Email" type="email" value={userForm.email} onChange={(value) => setUserForm({ ...userForm, email: value })} required tooltip="Email cannot be changed after creation" />
-                <Field label="Password" type="password" value={userForm.password} onChange={(value) => setUserForm({ ...userForm, password: value })} required />
-                <SelectField label="Role" value={userForm.roleId} onChange={(value) => setUserForm({ ...userForm, roleId: value })} options={roles.map((role: any) => ({ value: role._id, label: role.name || role.roleName }))} />
-                <SelectField label="Department" value={userForm.departmentId} onChange={(value) => setUserForm({ ...userForm, departmentId: value })} options={departments.map((department: any) => ({ value: department._id, label: department.name }))} />
-                <Button type="submit" disabled={createUser.isPending} className="w-full bg-brand-blue hover:bg-blue-700 text-white rounded-xl">
-                  {createUser.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} Create User
+                <Field
+                  label="Name"
+                  value={userForm.name}
+                  onChange={(value) => setUserForm({ ...userForm, name: value })}
+                  required
+                />
+                <Field
+                  label="Email"
+                  type="email"
+                  value={userForm.email}
+                  onChange={(value) => setUserForm({ ...userForm, email: value })}
+                  required
+                  tooltip="Email cannot be changed after creation"
+                />
+                <Field
+                  label="Password"
+                  type="password"
+                  value={userForm.password}
+                  onChange={(value) => setUserForm({ ...userForm, password: value })}
+                  required
+                />
+                <SelectField
+                  label="Role"
+                  value={userForm.roleId}
+                  onChange={(value) => setUserForm({ ...userForm, roleId: value })}
+                  options={roles.map((role: any) => ({
+                    value: role._id,
+                    label: role.name || role.roleName,
+                  }))}
+                />
+                <SelectField
+                  label="Department"
+                  value={userForm.departmentId}
+                  onChange={(value) => setUserForm({ ...userForm, departmentId: value })}
+                  options={departments.map((department: any) => ({
+                    value: department._id,
+                    label: department.name,
+                  }))}
+                />
+                <Button
+                  type="submit"
+                  disabled={createUser.isPending}
+                  className="w-full bg-brand-blue hover:bg-blue-700 text-white rounded-xl"
+                >
+                  {createUser.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Plus className="w-4 h-4" />
+                  )}{' '}
+                  Create User
                 </Button>
               </form>
             )}
@@ -239,7 +347,10 @@ export const StaffManagement: React.FC = () => {
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {role.permissions.map((permission: string) => (
-                      <span key={permission} className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-600">
+                      <span
+                        key={permission}
+                        className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-600"
+                      >
                         {permission}
                       </span>
                     ))}
@@ -257,12 +368,22 @@ export const StaffManagement: React.FC = () => {
                 createRole.mutate(roleForm);
               }}
             >
-              <Field label="Role Name" value={roleForm.name} onChange={(value) => setRoleForm({ ...roleForm, name: value })} required />
+              <Field
+                label="Role Name"
+                value={roleForm.name}
+                onChange={(value) => setRoleForm({ ...roleForm, name: value })}
+                required
+              />
               <div>
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3">Permissions</label>
+                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3">
+                  Permissions
+                </label>
                 <div className="space-y-2">
                   {permissions.map((permission) => (
-                    <label key={permission} className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 text-sm font-semibold text-slate-700">
+                    <label
+                      key={permission}
+                      className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 text-sm font-semibold text-slate-700"
+                    >
                       <input
                         type="checkbox"
                         checked={roleForm.permissions.includes(permission)}
@@ -274,8 +395,17 @@ export const StaffManagement: React.FC = () => {
                   ))}
                 </div>
               </div>
-              <Button type="submit" disabled={createRole.isPending} className="w-full bg-brand-blue hover:bg-blue-700 text-white rounded-xl">
-                {createRole.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} Create Role
+              <Button
+                type="submit"
+                disabled={createRole.isPending}
+                className="w-full bg-brand-blue hover:bg-blue-700 text-white rounded-xl"
+              >
+                {createRole.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Check className="w-4 h-4" />
+                )}{' '}
+                Create Role
               </Button>
             </form>
           </section>
@@ -290,7 +420,9 @@ export const StaffManagement: React.FC = () => {
               {departments.map((department: any) => (
                 <div key={department._id} className="rounded-xl border border-slate-200 p-5">
                   <div className="font-bold text-slate-900">{department.name}</div>
-                  <p className="mt-1 text-sm text-slate-500">{department.description || 'No description'}</p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    {department.description || 'No description'}
+                  </p>
                 </div>
               ))}
             </div>
@@ -304,10 +436,28 @@ export const StaffManagement: React.FC = () => {
                 createDepartment.mutate(departmentForm);
               }}
             >
-              <Field label="Name" value={departmentForm.name} onChange={(value) => setDepartmentForm({ ...departmentForm, name: value })} required />
-              <Field label="Description" value={departmentForm.description} onChange={(value) => setDepartmentForm({ ...departmentForm, description: value })} />
-              <Button type="submit" disabled={createDepartment.isPending} className="w-full bg-brand-blue hover:bg-blue-700 text-white rounded-xl">
-                {createDepartment.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Building2 className="w-4 h-4" />} Create Department
+              <Field
+                label="Name"
+                value={departmentForm.name}
+                onChange={(value) => setDepartmentForm({ ...departmentForm, name: value })}
+                required
+              />
+              <Field
+                label="Description"
+                value={departmentForm.description}
+                onChange={(value) => setDepartmentForm({ ...departmentForm, description: value })}
+              />
+              <Button
+                type="submit"
+                disabled={createDepartment.isPending}
+                className="w-full bg-brand-blue hover:bg-blue-700 text-white rounded-xl"
+              >
+                {createDepartment.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Building2 className="w-4 h-4" />
+                )}{' '}
+                Create Department
               </Button>
             </form>
           </section>
@@ -317,11 +467,25 @@ export const StaffManagement: React.FC = () => {
   );
 };
 
-const TabButton = ({ tab, activeTab, onClick, icon: Icon, label }: { tab: SettingsTab; activeTab: SettingsTab; onClick: (tab: SettingsTab) => void; icon: React.ElementType; label: string }) => (
+const TabButton = ({
+  tab,
+  activeTab,
+  onClick,
+  icon: Icon,
+  label,
+}: {
+  tab: SettingsTab;
+  activeTab: SettingsTab;
+  onClick: (tab: SettingsTab) => void;
+  icon: React.ElementType;
+  label: string;
+}) => (
   <button
     onClick={() => onClick(tab)}
     className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-colors ${
-      activeTab === tab ? 'bg-brand-blue text-white' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+      activeTab === tab
+        ? 'bg-brand-blue text-white'
+        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
     }`}
   >
     <Icon className="w-4 h-4" />
@@ -329,12 +493,34 @@ const TabButton = ({ tab, activeTab, onClick, icon: Icon, label }: { tab: Settin
   </button>
 );
 
-const Field = ({ label, value, onChange, type = 'text', required, readonly, tooltip, placeholder }: { label: string; value: string; onChange: (value: string) => void; type?: string; required?: boolean; readonly?: boolean; tooltip?: string; placeholder?: string }) => (
+const Field = ({
+  label,
+  value,
+  onChange,
+  type = 'text',
+  required,
+  readonly,
+  tooltip,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  required?: boolean;
+  readonly?: boolean;
+  tooltip?: string;
+  placeholder?: string;
+}) => (
   <div className="space-y-2">
     <label className="flex items-center gap-2 text-[11px] font-bold text-slate-500 uppercase tracking-widest">
       {label}
       {readonly && <Lock className="w-3 h-3 text-slate-400" />}
-      {tooltip && <span title={tooltip} className="inline-flex"><Eye className="w-3 h-3 text-slate-400" /></span>}
+      {tooltip && (
+        <span title={tooltip} className="inline-flex">
+          <Eye className="w-3 h-3 text-slate-400" />
+        </span>
+      )}
     </label>
     <input
       type={type}
@@ -345,16 +531,30 @@ const Field = ({ label, value, onChange, type = 'text', required, readonly, tool
       onChange={(event) => onChange(event.target.value)}
       title={tooltip}
       className={`w-full rounded-xl border px-4 py-3 text-sm font-semibold outline-none transition-all ${
-        readonly ? 'border-slate-200 bg-slate-100 text-slate-500' : 'border-slate-200 bg-white text-slate-900 focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10'
+        readonly
+          ? 'border-slate-200 bg-slate-100 text-slate-500'
+          : 'border-slate-200 bg-white text-slate-900 focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10'
       }`}
     />
     {tooltip && <p className="text-xs font-medium text-slate-500">{tooltip}</p>}
   </div>
 );
 
-const SelectField = ({ label, value, onChange, options }: { label: string; value: string; onChange: (value: string) => void; options: Array<{ value: string; label: string }> }) => (
+const SelectField = ({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: Array<{ value: string; label: string }>;
+}) => (
   <div className="space-y-2">
-    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest">{label}</label>
+    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+      {label}
+    </label>
     <select
       value={value}
       onChange={(event) => onChange(event.target.value)}

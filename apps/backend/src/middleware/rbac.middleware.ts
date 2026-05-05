@@ -4,7 +4,7 @@ import { AppError } from '../core/errors';
 /**
  * Middleware to enforce Role Based Access Control (RBAC).
  * Must be used AFTER `requireAuth` middleware.
- * 
+ *
  * @param allowedRoles Array of role names that are permitted to access the route.
  */
 export const requireRole = (...allowedRoles: string[]) => {

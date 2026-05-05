@@ -22,7 +22,16 @@ interface ArtistCardProps {
 }
 
 export const ArtistCard: React.FC<ArtistCardProps> = ({
-  id, name, categoryName, role, cityName, imageUrl, priceRange, isVerified, isFeatured, shortSummary
+  id,
+  name,
+  categoryName,
+  role,
+  cityName,
+  imageUrl,
+  priceRange,
+  isVerified,
+  isFeatured,
+  shortSummary,
 }) => {
   const [isBookingModalOpen, setIsBookingModalOpen] = React.useState(false);
 
@@ -30,7 +39,7 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({
 
   return (
     <>
-      <motion.div 
+      <motion.div
         whileHover={{ y: -6 }}
         className="bg-surface-lowest border border-surface-container rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-brand-primary/5 transition-all duration-500 group flex flex-col h-full relative"
       >
@@ -53,7 +62,10 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({
           </div>
         </div>
 
-        <Link to={`/artists/${id}`} className="block relative h-64 w-full overflow-hidden bg-surface-low">
+        <Link
+          to={`/artists/${id}`}
+          className="block relative h-64 w-full overflow-hidden bg-surface-low"
+        >
           <ArtistImage
             src={imageUrl}
             alt={name}
@@ -70,16 +82,22 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({
               <h3 className="text-xl font-bold text-neutral-content tracking-tight group-hover:text-brand-primary transition-colors">
                 {name}
               </h3>
-              <p className="text-neutral-content/60 text-sm font-medium mt-0.5">{role || categoryName}</p>
+              <p className="text-neutral-content/60 text-sm font-medium mt-0.5">
+                {role || categoryName}
+              </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-bold text-neutral-content/40 uppercase tracking-widest mb-0.5">Price Range</p>
+              <p className="text-[10px] font-bold text-neutral-content/40 uppercase tracking-widest mb-0.5">
+                Price Range
+              </p>
               <p className="text-brand-secondary font-bold text-base leading-none">
-                {priceRange.min > 0 ? `${formatPrice(priceRange.min)} – ${formatPrice(priceRange.max)}` : "On Request"}
+                {priceRange.min > 0
+                  ? `${formatPrice(priceRange.min)} – ${formatPrice(priceRange.max)}`
+                  : 'On Request'}
               </p>
             </div>
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-4 mb-4 mt-2">
             <div className="flex items-center gap-1.5 text-neutral-content/60 text-xs font-semibold">
               <MapPin className="w-3.5 h-3.5 text-brand-primary" /> {cityName || 'Pan India'}
@@ -90,14 +108,18 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({
           </div>
 
           <p className="text-neutral-content/70 text-sm leading-relaxed mb-6 line-clamp-2 font-medium">
-            {shortSummary || `View booking details, category, location, and pricing information for ${name}.`}
+            {shortSummary ||
+              `View booking details, category, location, and pricing information for ${name}.`}
           </p>
-          
+
           <div className="mt-auto grid grid-cols-2 gap-3 pt-2">
-            <Link to={`/artists/${id}`} className="flex items-center justify-center border-2 border-surface-container hover:border-brand-secondary text-neutral-content/70 hover:text-brand-secondary font-bold py-3 rounded-lg transition-all text-[11px] uppercase tracking-widest bg-surface-lowest">
+            <Link
+              to={`/artists/${id}`}
+              className="flex items-center justify-center border-2 border-surface-container hover:border-brand-secondary text-neutral-content/70 hover:text-brand-secondary font-bold py-3 rounded-lg transition-all text-[11px] uppercase tracking-widest bg-surface-lowest"
+            >
               View Profile
             </Link>
-            <button 
+            <button
               onClick={() => setIsBookingModalOpen(true)}
               className="flex items-center justify-center bg-brand-primary hover:bg-brand-primaryContainer text-white font-bold py-3 rounded-lg shadow-lg shadow-brand-primary/10 transition-all text-[11px] uppercase tracking-widest group/btn relative overflow-hidden"
             >
@@ -108,7 +130,7 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({
         </div>
       </motion.div>
 
-      <BookingModal 
+      <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
         artistName={name}

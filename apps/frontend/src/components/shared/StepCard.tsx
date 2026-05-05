@@ -19,7 +19,9 @@ export const StepCard: React.FC<StepCardProps> = ({ number, title, description, 
           {number}
         </div>
       </div>
-      <h3 className="text-slate-900 font-black text-xl mb-3 tracking-tight group-hover:text-brand-orange transition-colors">{title}</h3>
+      <h3 className="text-slate-900 font-black text-xl mb-3 tracking-tight group-hover:text-brand-orange transition-colors">
+        {title}
+      </h3>
       <p className="text-slate-500 text-sm leading-relaxed max-w-xs font-medium">{description}</p>
     </div>
   );

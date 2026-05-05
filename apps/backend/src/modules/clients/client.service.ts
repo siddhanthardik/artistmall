@@ -26,5 +26,5 @@ export const ClientService = {
     const client = await ClientModel.findByIdAndDelete(id);
     if (!client) throw new AppError('Client not found', 404);
     return client;
-  }
+  },
 };

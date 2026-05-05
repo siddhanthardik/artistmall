@@ -21,8 +21,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       status: 'success',
       data: {
         user,
-        accessToken: tokens.accessToken
-      }
+        accessToken: tokens.accessToken,
+      },
     });
   } catch (error) {
     console.error('LOGIN ERROR:', error);
@@ -40,8 +40,8 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
     res.status(200).json({
       status: 'success',
       data: {
-        accessToken: tokens.accessToken
-      }
+        accessToken: tokens.accessToken,
+      },
     });
   } catch (error) {
     next(error);
@@ -53,7 +53,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     if (req.user) {
       await AuthService.logout(req.user.userId);
     }
-    
+
     res.cookie('refreshToken', 'loggedout', {
       httpOnly: true,
       expires: new Date(Date.now() + 10 * 1000), // Expire quickly
@@ -73,7 +73,7 @@ export const forceResetPassword = async (req: Request, res: Response, next: Next
 
     res.status(200).json({
       status: 'success',
-      message: 'Password updated successfully. Please log in with your new password.'
+      message: 'Password updated successfully. Please log in with your new password.',
     });
   } catch (error) {
     next(error);

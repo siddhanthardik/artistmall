@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../store/authStore';
 
-const API_BASE_URL = ((import.meta as any).env?.VITE_API_BASE_URL as string | undefined) || '/api/v1';
+const API_BASE_URL =
+  ((import.meta as any).env?.VITE_API_BASE_URL as string | undefined) || '/api/v1';
 
 /**
  * Enterprise-Grade API Client
@@ -24,7 +25,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Lock mechanism for concurrent refresh attempts
@@ -50,7 +51,6 @@ api.interceptors.response.use(
 
     // Handle 401 Unauthorized errors
     if (error.response?.status === 401 && !originalRequest._retry) {
-      
       // If the refresh endpoint itself returns 401, the session is dead
       if (originalRequest.url?.includes('/admin/auth/refresh')) {
         useAuthStore.getState().clearAuth();
@@ -75,8 +75,8 @@ api.interceptors.response.use(
       try {
         // Robust refresh URL resolution
         const refreshPath = '/admin/auth/refresh';
-        const refreshUrl = API_BASE_URL.endsWith('/api/v1') 
-          ? `${API_BASE_URL}${refreshPath}` 
+        const refreshUrl = API_BASE_URL.endsWith('/api/v1')
+          ? `${API_BASE_URL}${refreshPath}`
           : `/api/v1${refreshPath}`;
 
         const res = await axios.post(refreshUrl, {}, { withCredentials: true });
@@ -87,21 +87,20 @@ api.interceptors.response.use(
 
         // Notify all queued requests
         processQueue(null, accessToken);
-        
+
         // Retry original request with new token
         originalRequest.headers['Authorization'] = 'Bearer ' + accessToken;
         return api(originalRequest);
-
       } catch (refreshError) {
         // Full session cleanup on refresh failure
         processQueue(refreshError, null);
         useAuthStore.getState().clearAuth();
-        
+
         // Redirect to login if on admin route
         if (window.location.pathname.startsWith('/admin')) {
-           window.location.href = '/admin/login?reason=session_expired';
+          window.location.href = '/admin/login?reason=session_expired';
         }
-        
+
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
@@ -109,5 +108,5 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );

@@ -13,7 +13,9 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 async function resetAdmin() {
   try {
     if (!MONGODB_URI || !ADMIN_EMAIL || !ADMIN_PASSWORD) {
-      throw new Error('MONGODB_URI/MONGO_URI, ADMIN_EMAIL, and ADMIN_PASSWORD must be set before running resetAdmin');
+      throw new Error(
+        'MONGODB_URI/MONGO_URI, ADMIN_EMAIL, and ADMIN_PASSWORD must be set before running resetAdmin',
+      );
     }
 
     console.log('--- ENTERPRISE ADMIN RESET SYSTEM v2 ---');
@@ -22,7 +24,7 @@ async function resetAdmin() {
     console.log('Connected.');
 
     console.log(`Searching for existing admin: ${ADMIN_EMAIL}`);
-    
+
     // Remove broken or legacy admin accounts
     await AdminModel.deleteMany({ email: ADMIN_EMAIL });
     console.log('Cleared existing admin accounts.');
@@ -35,7 +37,7 @@ async function resetAdmin() {
       role: 'SUPER_ADMIN',
       isActive: true,
       mustChangePassword: false,
-      permissions: ['*']
+      permissions: ['*'],
     });
 
     await superAdmin.save();

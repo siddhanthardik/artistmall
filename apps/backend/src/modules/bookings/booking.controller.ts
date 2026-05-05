@@ -12,7 +12,11 @@ export const createDraft = async (req: Request, res: Response, next: NextFunctio
 
 export const submitRequest = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const booking = await BookingService.submitRequest(req.user!.userId, req.user!.userId, req.params.id);
+    const booking = await BookingService.submitRequest(
+      req.user!.userId,
+      req.user!.userId,
+      req.params.id,
+    );
     res.status(200).json({ status: 'success', data: { booking } });
   } catch (error) {
     next(error);
@@ -22,7 +26,13 @@ export const submitRequest = async (req: Request, res: Response, next: NextFunct
 export const negotiate = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { message, proposedPrice, isCounterOffer } = req.body;
-    const booking = await BookingService.negotiate(req.user!.userId, req.params.id, message, proposedPrice, isCounterOffer);
+    const booking = await BookingService.negotiate(
+      req.user!.userId,
+      req.params.id,
+      message,
+      proposedPrice,
+      isCounterOffer,
+    );
     res.status(200).json({ status: 'success', data: { booking } });
   } catch (error) {
     next(error);
@@ -31,7 +41,11 @@ export const negotiate = async (req: Request, res: Response, next: NextFunction)
 
 export const acceptByManagement = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const booking = await BookingService.acceptByManagement(req.user!.userId, req.user!.userId, req.params.id);
+    const booking = await BookingService.acceptByManagement(
+      req.user!.userId,
+      req.user!.userId,
+      req.params.id,
+    );
     res.status(200).json({ status: 'success', data: { booking } });
   } catch (error) {
     next(error);
@@ -59,7 +73,12 @@ export const completeBooking = async (req: Request, res: Response, next: NextFun
 export const adminOverrideStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { newStatus, reason } = req.body;
-    const booking = await BookingService.adminOverrideStatus(req.user!.userId, req.params.id, newStatus, reason);
+    const booking = await BookingService.adminOverrideStatus(
+      req.user!.userId,
+      req.params.id,
+      newStatus,
+      reason,
+    );
     res.status(200).json({ status: 'success', data: { booking } });
   } catch (error) {
     next(error);

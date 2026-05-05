@@ -13,9 +13,7 @@ interface PublicLayoutProps {
 export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => (
   <div className="flex flex-col min-h-screen bg-slate-900">
     <Navbar />
-    <main className="flex-grow">
-      {children}
-    </main>
+    <main className="flex-grow">{children}</main>
     <Footer />
   </div>
 );

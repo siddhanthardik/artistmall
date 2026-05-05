@@ -10,16 +10,26 @@ export interface IManagementCompany extends Document {
   commissionRate?: number;
 }
 
-const managementCompanySchema = new Schema<IManagementCompany>({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
-  companyName: { type: String, required: true },
-  gstNumber: { type: String },
-  registrationDocUrl: { type: String },
-  verificationStatus: { type: String, enum: ['PENDING', 'VERIFIED', 'REJECTED'], default: 'PENDING' },
-  commissionRate: { type: Number, min: 0, max: 100 },
-}, BaseSchemaOptions);
+const managementCompanySchema = new Schema<IManagementCompany>(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+    companyName: { type: String, required: true },
+    gstNumber: { type: String },
+    registrationDocUrl: { type: String },
+    verificationStatus: {
+      type: String,
+      enum: ['PENDING', 'VERIFIED', 'REJECTED'],
+      default: 'PENDING',
+    },
+    commissionRate: { type: Number, min: 0, max: 100 },
+  },
+  BaseSchemaOptions,
+);
 
 managementCompanySchema.plugin(auditPlugin);
 managementCompanySchema.index({ verificationStatus: 1 });
 
-export const ManagementCompanyModel = mongoose.model<IManagementCompany>('ManagementCompany', managementCompanySchema);
+export const ManagementCompanyModel = mongoose.model<IManagementCompany>(
+  'ManagementCompany',
+  managementCompanySchema,
+);

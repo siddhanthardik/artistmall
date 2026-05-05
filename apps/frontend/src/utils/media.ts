@@ -86,7 +86,7 @@ export const formatCurrencyShorthand = (amount: number | string | undefined | nu
   if (isNaN(num)) return '';
 
   if (num >= 10_000_000) return `₹${(num / 10_000_000).toFixed(1)}Cr`;
-  if (num >= 100_000)    return `₹${(num / 100_000).toFixed(1)}L`;
-  if (num >= 1_000)      return `₹${(num / 1_000).toFixed(1)}K`;
+  if (num >= 100_000) return `₹${(num / 100_000).toFixed(1)}L`;
+  if (num >= 1_000) return `₹${(num / 1_000).toFixed(1)}K`;
   return `₹${num.toLocaleString('en-IN')}`;
 };

@@ -25,11 +25,11 @@ const sanitizeFilename = (originalname: string): string => {
   const basename = path.basename(originalname, path.extname(originalname));
   const slug = basename
     .toLowerCase()
-    .replace(/\s+/g, '-')          // spaces → hyphens
-    .replace(/[^a-z0-9-]/g, '')  // strip special chars
-    .replace(/-+/g, '-')           // collapse multiple hyphens
-    .replace(/^-+|-+$/g, '')       // trim leading/trailing hyphens
-    .slice(0, 60);                 // cap length
+    .replace(/\s+/g, '-') // spaces → hyphens
+    .replace(/[^a-z0-9-]/g, '') // strip special chars
+    .replace(/-+/g, '-') // collapse multiple hyphens
+    .replace(/^-+|-+$/g, '') // trim leading/trailing hyphens
+    .slice(0, 60); // cap length
 
   const timestamp = Date.now();
   return `${slug || 'file'}-${timestamp}${ext}`;
@@ -45,9 +45,11 @@ const imageFilter: multer.Options['fileFilter'] = (_req, file, cb) => {
   if (ALLOWED_IMAGE_MIMETYPES.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error(
-      `Invalid file type: "${file.mimetype}". Only JPG, JPEG, and PNG images are accepted.`
-    ));
+    cb(
+      new Error(
+        `Invalid file type: "${file.mimetype}". Only JPG, JPEG, and PNG images are accepted.`,
+      ),
+    );
   }
 };
 
@@ -64,9 +66,7 @@ const brochureFilter: multer.Options['fileFilter'] = (_req, file, cb) => {
   if (ALLOWED_DOCUMENT_MIMETYPES.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error(
-      `Invalid file type: "${file.mimetype}". Only PDF, DOC, and DOCX are accepted.`
-    ));
+    cb(new Error(`Invalid file type: "${file.mimetype}". Only PDF, DOC, and DOCX are accepted.`));
   }
 };
 

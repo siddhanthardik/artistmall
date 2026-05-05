@@ -45,7 +45,11 @@ export const deleteArtist = async (req: Request, res: Response, next: NextFuncti
 
 export const adminApproveArtist = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const artist = await ArtistService.adminUpdateStatus(req.user!.userId, req.params.id, 'APPROVED');
+    const artist = await ArtistService.adminUpdateStatus(
+      req.user!.userId,
+      req.params.id,
+      'APPROVED',
+    );
     res.status(200).json({ status: 'success', data: { artist } });
   } catch (error) {
     next(error);
@@ -54,7 +58,11 @@ export const adminApproveArtist = async (req: Request, res: Response, next: Next
 
 export const adminRejectArtist = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const artist = await ArtistService.adminUpdateStatus(req.user!.userId, req.params.id, 'REJECTED');
+    const artist = await ArtistService.adminUpdateStatus(
+      req.user!.userId,
+      req.params.id,
+      'REJECTED',
+    );
     res.status(200).json({ status: 'success', data: { artist } });
   } catch (error) {
     next(error);
@@ -64,7 +72,13 @@ export const adminRejectArtist = async (req: Request, res: Response, next: NextF
 export const adminFeatureArtist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { tier, startDate, endDate } = req.body;
-    const feature = await ArtistService.adminFeatureArtist(req.user!.userId, req.params.id, tier, new Date(startDate), new Date(endDate));
+    const feature = await ArtistService.adminFeatureArtist(
+      req.user!.userId,
+      req.params.id,
+      tier,
+      new Date(startDate),
+      new Date(endDate),
+    );
     res.status(201).json({ status: 'success', data: { feature } });
   } catch (error) {
     next(error);
@@ -130,7 +144,7 @@ export const getHomepageFeatured = async (req: Request, res: Response, next: Nex
 export const getArtistDetail = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const artist = await ArtistService.getArtistBySlugOrId(req.params.id);
-    
+
     if (!artist.isPublished) {
       throw new AppError('Artist profile is not public yet', 403);
     }
@@ -145,11 +159,11 @@ export const uploadArtistMedia = async (req: Request, res: Response, next: NextF
   try {
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     const profileImage = files['profileImage']?.[0]?.filename;
-    const gallery = files['gallery']?.map(file => file.filename) || [];
+    const gallery = files['gallery']?.map((file) => file.filename) || [];
 
     const artist = await ArtistService.updateArtistMedia(req.user!.userId, req.params.id, {
       profileImage,
-      gallery
+      gallery,
     });
 
     res.status(200).json({ status: 'success', data: { artist } });
@@ -160,8 +174,10 @@ export const uploadArtistMedia = async (req: Request, res: Response, next: NextF
 
 export const getCategories = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const categories = await ArtistCategoryModel.find({ isActive: true })
-      .sort({ sortOrder: 1, name: 1 });
+    const categories = await ArtistCategoryModel.find({ isActive: true }).sort({
+      sortOrder: 1,
+      name: 1,
+    });
     res.status(200).json({ status: 'success', data: { categories } });
   } catch (error) {
     next(error);

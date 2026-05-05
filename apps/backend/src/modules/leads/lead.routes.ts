@@ -11,7 +11,11 @@ router.post('/create', LeadController.createLead);
 // Admin Routes
 router.use(protectAdmin);
 router.get('/', checkPermission(PERMISSIONS.LEAD_VIEW), LeadController.getLeads);
-router.patch('/:id/status', checkPermission(PERMISSIONS.LEAD_UPDATE), LeadController.updateLeadStatus);
+router.patch(
+  '/:id/status',
+  checkPermission(PERMISSIONS.LEAD_UPDATE),
+  LeadController.updateLeadStatus,
+);
 router.delete('/:id', checkPermission(PERMISSIONS.LEAD_UPDATE), LeadController.deleteLead);
 
 export const leadRoutes = router;

@@ -16,7 +16,7 @@ declare global {
 export const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let token;
-    
+
     // Check if token exists in headers
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];

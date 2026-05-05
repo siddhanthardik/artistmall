@@ -52,9 +52,9 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
               <div className="relative w-full h-full">
                 {/* Background Image */}
                 <div className="absolute inset-0">
-                  <img 
-                    src={banner.imageUrl} 
-                    alt={banner.title} 
+                  <img
+                    src={banner.imageUrl}
+                    alt={banner.title}
                     className={`w-full h-full object-cover transition-transform duration-[8s] ease-linear ${
                       isActive ? 'scale-110' : 'scale-100'
                     }`}
@@ -76,7 +76,10 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
                         >
                           <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white tracking-tighter leading-[1.1]">
                             {banner.title?.split(' ').map((word, i) => (
-                              <span key={i} className={i % 3 === 0 ? 'text-white' : 'text-white/90'}>
+                              <span
+                                key={i}
+                                className={i % 3 === 0 ? 'text-white' : 'text-white/90'}
+                              >
                                 {word}{' '}
                               </span>
                             )) || 'Experience Excellence'}
@@ -89,7 +92,8 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
                           transition={{ duration: 0.8, delay: 0.4 }}
                           className="text-lg md:text-xl text-white/60 font-medium max-w-2xl leading-relaxed"
                         >
-                          {banner.subtitle || 'Book world-class verified artists for your next high-impact event with India\'s premier talent marketplace.'}
+                          {banner.subtitle ||
+                            "Book world-class verified artists for your next high-impact event with India's premier talent marketplace."}
                         </motion.p>
 
                         <motion.div
@@ -99,7 +103,7 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
                           className="flex flex-wrap gap-4 pt-4"
                         >
                           {banner.ctaText && (
-                            <Link 
+                            <Link
                               to={banner.ctaLink || '/artists'}
                               target={banner.openInNewTab ? '_blank' : '_self'}
                               className="group bg-brand-primary hover:bg-brand-primaryContainer text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-2xl shadow-brand-primary/20 flex items-center gap-3 active:scale-95"
@@ -108,7 +112,7 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
                               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </Link>
                           )}
-                          <Link 
+                          <Link
                             to="/contact"
                             className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all hover:bg-white/20 active:scale-95"
                           >

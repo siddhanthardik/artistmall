@@ -20,13 +20,33 @@ router.use(requireAuth);
 // Management Routes
 router.post('/', requireRole('MANAGEMENT_COMPANY'), ArtistController.createArtist);
 router.patch('/:id', requireRole('MANAGEMENT_COMPANY'), ArtistController.updateArtist);
-router.post('/:id/submit', requireRole('MANAGEMENT_COMPANY'), ArtistController.submitArtistForApproval);
+router.post(
+  '/:id/submit',
+  requireRole('MANAGEMENT_COMPANY'),
+  ArtistController.submitArtistForApproval,
+);
 router.delete('/:id', requireRole('MANAGEMENT_COMPANY'), ArtistController.deleteArtist);
-router.patch('/:id/media', requireRole('MANAGEMENT_COMPANY'), upload.fields([{ name: 'profileImage', maxCount: 1 }, { name: 'gallery', maxCount: 10 }]), ArtistController.uploadArtistMedia);
+router.patch(
+  '/:id/media',
+  requireRole('MANAGEMENT_COMPANY'),
+  upload.fields([
+    { name: 'profileImage', maxCount: 1 },
+    { name: 'gallery', maxCount: 10 },
+  ]),
+  ArtistController.uploadArtistMedia,
+);
 
 // Admin Routes
-router.patch('/:id/approve', requireRole('SUPER_ADMIN', 'SUB_ADMIN'), ArtistController.adminApproveArtist);
-router.patch('/:id/reject', requireRole('SUPER_ADMIN', 'SUB_ADMIN'), ArtistController.adminRejectArtist);
+router.patch(
+  '/:id/approve',
+  requireRole('SUPER_ADMIN', 'SUB_ADMIN'),
+  ArtistController.adminApproveArtist,
+);
+router.patch(
+  '/:id/reject',
+  requireRole('SUPER_ADMIN', 'SUB_ADMIN'),
+  ArtistController.adminRejectArtist,
+);
 router.post('/:id/feature', requireRole('SUPER_ADMIN'), ArtistController.adminFeatureArtist);
 
 export const artistRoutes = router;

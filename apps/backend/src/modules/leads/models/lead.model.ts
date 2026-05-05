@@ -69,13 +69,15 @@ const leadSchema = new Schema(
       enum: ['website', 'admin', 'other'],
       default: 'website',
     },
-    tags: [{
-      type: String,
-    }],
+    tags: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const LeadModel = mongoose.model<ILead>('Lead', leadSchema);

@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --primary-orange: 25 100% 31%; /* #a04100 */
-    --primary-blue: 204 100% 32%;   /* #0061a5 */
+    --primary-blue: 204 100% 32%; /* #0061a5 */
   }
 
   body {
@@ -53,7 +53,7 @@
   .glass-panel-dark {
     @apply bg-surface-container/95 backdrop-blur-2xl border border-surface-high rounded-lg shadow-md;
   }
-  
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-[#ff6b00];
   }

@@ -4,12 +4,13 @@ import { Activity, TrendingUp, ArrowUpRight, ArrowDownRight, Map } from 'lucide-
 export const ReportingOverview: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      
       <div>
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           <Activity className="w-6 h-6 text-blue-500" /> Executive Business Intelligence
         </h2>
-        <p className="text-slate-400">Founder control layer. Track platform health, growth, and supply-demand imbalances.</p>
+        <p className="text-slate-400">
+          Founder control layer. Track platform health, growth, and supply-demand imbalances.
+        </p>
       </div>
 
       {/* Top Level KPIs */}
@@ -18,21 +19,27 @@ export const ReportingOverview: React.FC = () => {
           <p className="text-xs text-slate-500 font-bold tracking-wider mb-1">MOM GMV GROWTH</p>
           <div className="flex items-end gap-2">
             <h3 className="text-2xl font-bold text-white">+18.4%</h3>
-            <span className="flex items-center text-emerald-400 text-xs font-medium mb-1"><ArrowUpRight className="w-3 h-3" /></span>
+            <span className="flex items-center text-emerald-400 text-xs font-medium mb-1">
+              <ArrowUpRight className="w-3 h-3" />
+            </span>
           </div>
         </div>
         <div className="bg-[#111] border border-slate-800 p-5 rounded-lg">
           <p className="text-xs text-slate-500 font-bold tracking-wider mb-1">LEAD CONVERSION</p>
           <div className="flex items-end gap-2">
             <h3 className="text-2xl font-bold text-white">24.2%</h3>
-            <span className="flex items-center text-red-400 text-xs font-medium mb-1"><ArrowDownRight className="w-3 h-3" /> -2.1%</span>
+            <span className="flex items-center text-red-400 text-xs font-medium mb-1">
+              <ArrowDownRight className="w-3 h-3" /> -2.1%
+            </span>
           </div>
         </div>
         <div className="bg-[#111] border border-slate-800 p-5 rounded-lg">
           <p className="text-xs text-slate-500 font-bold tracking-wider mb-1">ACTIVE AGENCIES</p>
           <div className="flex items-end gap-2">
             <h3 className="text-2xl font-bold text-white">142</h3>
-            <span className="flex items-center text-emerald-400 text-xs font-medium mb-1"><ArrowUpRight className="w-3 h-3" /> 12</span>
+            <span className="flex items-center text-emerald-400 text-xs font-medium mb-1">
+              <ArrowUpRight className="w-3 h-3" /> 12
+            </span>
           </div>
         </div>
         <div className="bg-[#111] border border-slate-800 p-5 rounded-lg">
@@ -59,9 +66,11 @@ export const ReportingOverview: React.FC = () => {
                 <div className="bg-blue-500 h-full" style={{ width: '80%' }}></div>
                 <div className="bg-emerald-500 h-full" style={{ width: '20%' }}></div>
               </div>
-              <p className="text-[10px] text-slate-500 mt-1">Demand outpaces supply 4:1. Action: Acquire more Pune artists.</p>
+              <p className="text-[10px] text-slate-500 mt-1">
+                Demand outpaces supply 4:1. Action: Acquire more Pune artists.
+              </p>
             </div>
-            
+
             <div>
               <div className="flex justify-between text-xs mb-1">
                 <span className="text-white font-medium">Delhi (Balanced)</span>
@@ -100,7 +109,6 @@ export const ReportingOverview: React.FC = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };

@@ -24,11 +24,14 @@ const INITIAL_MESSAGES: Message[] = [
     senderName: 'Platform Admin',
     senderRole: 'SUPER_ADMIN',
     text: 'Please upload a higher resolution PDF for the Technical Rider. The current one is illegible.',
-    timestamp: '2 hours ago'
-  }
+    timestamp: '2 hours ago',
+  },
 ];
 
-export const CommunicationThread: React.FC<CommunicationThreadProps> = ({ entityType, entityId }) => {
+export const CommunicationThread: React.FC<CommunicationThreadProps> = ({
+  entityType,
+  entityId,
+}) => {
   const { user } = useAuthStore();
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [inputText, setInputText] = useState('');
@@ -43,7 +46,7 @@ export const CommunicationThread: React.FC<CommunicationThreadProps> = ({ entity
       senderName: user?.email || 'You',
       senderRole: user?.role || 'USER',
       text: inputText,
-      timestamp: 'Just now'
+      timestamp: 'Just now',
     };
 
     setMessages([...messages, newMessage]);
@@ -54,7 +57,6 @@ export const CommunicationThread: React.FC<CommunicationThreadProps> = ({ entity
 
   return (
     <div className="flex flex-col h-full bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
-      
       {/* Header */}
       <div className="p-3 bg-slate-800/50 border-b border-slate-700/50 flex items-center gap-2">
         <MessageSquare className="w-4 h-4 text-slate-400" />
@@ -78,19 +80,23 @@ export const CommunicationThread: React.FC<CommunicationThreadProps> = ({ entity
                 ) : (
                   <User className="w-3 h-3 text-slate-500" />
                 )}
-                <span className={`text-[10px] font-medium ${fromAdmin ? 'text-red-400' : 'text-slate-500'}`}>
+                <span
+                  className={`text-[10px] font-medium ${fromAdmin ? 'text-red-400' : 'text-slate-500'}`}
+                >
                   {msg.senderName}
                 </span>
                 <span className="text-[10px] text-slate-600 font-mono">• {msg.timestamp}</span>
               </div>
-              
-              <div className={`max-w-[85%] rounded-lg p-3 text-sm ${
-                isMe 
-                  ? 'bg-blue-600 text-white rounded-tr-none' 
-                  : fromAdmin
-                    ? 'bg-slate-800 border border-red-500/20 text-white rounded-tl-none'
-                    : 'bg-slate-800 text-white rounded-tl-none'
-              }`}>
+
+              <div
+                className={`max-w-[85%] rounded-lg p-3 text-sm ${
+                  isMe
+                    ? 'bg-blue-600 text-white rounded-tr-none'
+                    : fromAdmin
+                      ? 'bg-slate-800 border border-red-500/20 text-white rounded-tl-none'
+                      : 'bg-slate-800 text-white rounded-tl-none'
+                }`}
+              >
                 {msg.text}
               </div>
             </div>
@@ -101,14 +107,14 @@ export const CommunicationThread: React.FC<CommunicationThreadProps> = ({ entity
       {/* Input Area */}
       <div className="p-3 bg-slate-800/30 border-t border-slate-700/50">
         <form onSubmit={handleSend} className="relative">
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Reply to this thread..."
             className="w-full bg-slate-900 border border-slate-700 rounded-full py-2 pl-4 pr-10 text-sm text-white focus:outline-none focus:border-blue-500"
           />
-          <button 
+          <button
             type="submit"
             disabled={!inputText.trim()}
             className="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-blue-600 text-white disabled:opacity-50 hover:bg-blue-500 transition-colors"
@@ -117,7 +123,6 @@ export const CommunicationThread: React.FC<CommunicationThreadProps> = ({ entity
           </button>
         </form>
       </div>
-      
     </div>
   );
 };

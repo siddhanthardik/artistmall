@@ -9,10 +9,10 @@ interface ProtectedRouteProps {
   redirectPath?: string;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
   allowedRoles,
-  redirectPath = '/admin/login'
+  redirectPath = '/admin/login',
 }) => {
   const { isAuthenticated, user, isHydrated } = useAuthStore();
   const location = useLocation();
@@ -23,7 +23,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-[#FF7A2F]" />
-        <p className="text-[10px] font-black text-white uppercase tracking-[0.3em] animate-pulse">Syncing Secure Session...</p>
+        <p className="text-[10px] font-black text-white uppercase tracking-[0.3em] animate-pulse">
+          Syncing Secure Session...
+        </p>
       </div>
     );
   }

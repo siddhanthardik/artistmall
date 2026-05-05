@@ -10,16 +10,22 @@ export interface IAdminActivityLog extends Document {
   details?: Record<string, any>;
 }
 
-const adminActivityLogSchema = new Schema<IAdminActivityLog>({
-  adminId: { type: Schema.Types.ObjectId, ref: 'Admin', required: true },
-  action: { type: String, required: true }, // e.g., 'VERIFY_COMPANY', 'REJECT_COMPANY', 'FORCE_CANCEL_BOOKING'
-  targetResource: { type: String, required: true }, // e.g., 'ManagementCompany'
-  targetId: { type: String, required: true }, // The ID of the affected document
-  ipAddress: { type: String },
-  details: { type: Schema.Types.Mixed }, // Arbitrary payload describing the change
-}, BaseSchemaOptions);
+const adminActivityLogSchema = new Schema<IAdminActivityLog>(
+  {
+    adminId: { type: Schema.Types.ObjectId, ref: 'Admin', required: true },
+    action: { type: String, required: true }, // e.g., 'VERIFY_COMPANY', 'REJECT_COMPANY', 'FORCE_CANCEL_BOOKING'
+    targetResource: { type: String, required: true }, // e.g., 'ManagementCompany'
+    targetId: { type: String, required: true }, // The ID of the affected document
+    ipAddress: { type: String },
+    details: { type: Schema.Types.Mixed }, // Arbitrary payload describing the change
+  },
+  BaseSchemaOptions,
+);
 
 // Audit logs are immutable generally, but we still apply the plugin for consistency in createdBy etc.
 adminActivityLogSchema.plugin(auditPlugin);
 
-export const AdminActivityLogModel = mongoose.model<IAdminActivityLog>('AdminActivityLog', adminActivityLogSchema);
+export const AdminActivityLogModel = mongoose.model<IAdminActivityLog>(
+  'AdminActivityLog',
+  adminActivityLogSchema,
+);

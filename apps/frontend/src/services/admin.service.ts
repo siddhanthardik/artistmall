@@ -107,9 +107,14 @@ export const AdminService = {
     return response.data;
   },
 
+  getPendingVerifications: async () => {
+    const response = await api.get('/admin/verifications');
+    return response.data;
+  },
+
   reviewArtist: async (
     id: string,
-    data: { status: string; adminNotes: string; isPublished?: boolean; showOnHome?: boolean }
+    data: { status: string; adminNotes: string; isPublished?: boolean; showOnHome?: boolean },
   ) => {
     const response = await api.patch(`/admin/artists/${id}/review`, data);
     return response.data;

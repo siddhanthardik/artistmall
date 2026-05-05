@@ -34,33 +34,37 @@ const PORT = process.env.PORT || 5000;
 app.set('trust proxy', 1);
 
 // ── 2. HTTP Security Headers (Helmet) ────────────────────────────────────────
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:*', 'https://res.cloudinary.com'],
-      connectSrc: ["'self'"],
-      fontSrc: ["'self'"],
-      objectSrc: ["'none'"],
-      frameSrc: ["'none'"],
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:*', 'https://res.cloudinary.com'],
+        connectSrc: ["'self'"],
+        fontSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        frameSrc: ["'none'"],
+      },
     },
-  },
-  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
-  noSniff: true,
-  xssFilter: true,
-  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-}));
+    hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+    noSniff: true,
+    xssFilter: true,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  }),
+);
 
 // ── 3. CORS ───────────────────────────────────────────────────────────────────
 // Only the exact registered frontend origin is allowed — no wildcards in prod
-app.use(cors({
-  origin: process.env.FRONTEND_URL ?? 'http://localhost:5173',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL ?? 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+);
 
 // ── 4. Global API Rate Limiter ───────────────────────────────────────────────
 // Throttle all /api/* routes: 100 requests per 15 minutes per IP
@@ -107,12 +111,14 @@ app.use(cookieParser());
 // ── 7. NoSQL Injection Prevention ────────────────────────────────────────────
 // Strips MongoDB operators ($, .) from req.body, req.query, req.params
 // Prevents attacks like { "email": { "$gt": "" } } which bypass auth checks
-app.use(mongoSanitize({
-  replaceWith: '_',          // Replace $ and . with underscore (safer than silent removal)
-  onSanitize: ({ req, key }) => {
-    console.warn(`[SECURITY] Sanitized potentially dangerous key: ${key} from ${req.ip}`);
-  },
-}));
+app.use(
+  mongoSanitize({
+    replaceWith: '_', // Replace $ and . with underscore (safer than silent removal)
+    onSanitize: ({ req, key }) => {
+      console.warn(`[SECURITY] Sanitized potentially dangerous key: ${key} from ${req.ip}`);
+    },
+  }),
+);
 
 // ── 8. Structured Request Logging ────────────────────────────────────────────
 app.use(requestLogger);
@@ -122,11 +128,18 @@ app.use(requestLogger);
 // IMPORTANT: Must set Cross-Origin-Resource-Policy: cross-origin BEFORE express.static
 // or Helmet's default 'same-origin' policy silently blocks <img> tags on the frontend
 // (which runs on a different port in dev, and potentially a different domain in prod).
-app.use('/uploads', (req, res, next) => {
-  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL ?? 'http://localhost:5173');
-  next();
-}, express.static(path.join(process.cwd(), 'uploads')));
+app.use(
+  '/uploads',
+  (req, res, next) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.setHeader(
+      'Access-Control-Allow-Origin',
+      process.env.FRONTEND_URL ?? 'http://localhost:5173',
+    );
+    next();
+  },
+  express.static(path.join(process.cwd(), 'uploads')),
+);
 
 app.use('/api/v1/artists', artistRoutes);
 app.use('/api/v1/bookings', bookingRoutes);
@@ -152,7 +165,7 @@ app.use(globalErrorHandler);
 app.listen(PORT, async () => {
   const env = process.env.NODE_ENV ?? 'development';
   console.log(`[${env.toUpperCase()}] Artist Mall API running on port ${PORT}`);
-  
+
   // Initialize async services
   await connectDB();
   await connectRedis();

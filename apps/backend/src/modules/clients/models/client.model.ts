@@ -12,31 +12,31 @@ export interface IClient extends Document {
 
 const clientSchema = new Schema(
   {
-    name: { 
-      type: String, 
-      required: true,
-      trim: true
-    },
-    logo: { 
-      type: String, 
-      required: true 
-    },
-    website: { 
+    name: {
       type: String,
-      trim: true 
+      required: true,
+      trim: true,
     },
-    isActive: { 
-      type: Boolean, 
-      default: true 
+    logo: {
+      type: String,
+      required: true,
     },
-    order: { 
-      type: Number, 
-      default: 0 
-    }
+    website: {
+      type: String,
+      trim: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    order: {
+      type: Number,
+      default: 0,
+    },
   },
-  { 
-    timestamps: true 
-  }
+  {
+    timestamps: true,
+  },
 );
 
 export const ClientModel = mongoose.model<IClient>('Client', clientSchema);

@@ -6,7 +6,7 @@ import { useNotificationStore, AppNotification } from '../../store/notificationS
 export const NotificationDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotificationStore();
 
   // Close dropdown when clicking outside
@@ -21,11 +21,16 @@ export const NotificationDropdown: React.FC = () => {
   }, []);
 
   const getIcon = (type: AppNotification['type']) => {
-    switch(type) {
-      case 'SUCCESS': return <CheckCircle2 className="w-5 h-5 text-emerald-400" />;
-      case 'WARNING': return <AlertTriangle className="w-5 h-5 text-amber-400" />;
-      case 'ERROR': return <XCircle className="w-5 h-5 text-red-400" />;
-      case 'INFO': default: return <Info className="w-5 h-5 text-blue-400" />;
+    switch (type) {
+      case 'SUCCESS':
+        return <CheckCircle2 className="w-5 h-5 text-emerald-400" />;
+      case 'WARNING':
+        return <AlertTriangle className="w-5 h-5 text-amber-400" />;
+      case 'ERROR':
+        return <XCircle className="w-5 h-5 text-red-400" />;
+      case 'INFO':
+      default:
+        return <Info className="w-5 h-5 text-blue-400" />;
     }
   };
 
@@ -42,7 +47,7 @@ export const NotificationDropdown: React.FC = () => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 text-slate-400 hover:text-white transition-colors focus:outline-none"
       >
@@ -60,7 +65,7 @@ export const NotificationDropdown: React.FC = () => {
           <div className="p-4 border-b border-slate-800 bg-slate-800/50 flex justify-between items-center">
             <h3 className="font-semibold text-white">Notifications</h3>
             {unreadCount > 0 && (
-              <button 
+              <button
                 onClick={markAllAsRead}
                 className="text-xs text-gold-400 hover:text-gold-300 flex items-center gap-1"
               >
@@ -72,24 +77,22 @@ export const NotificationDropdown: React.FC = () => {
           {/* List */}
           <div className="overflow-y-auto flex-1">
             {notifications.length === 0 ? (
-              <div className="p-8 text-center text-slate-500 text-sm">
-                You're all caught up!
-              </div>
+              <div className="p-8 text-center text-slate-500 text-sm">You're all caught up!</div>
             ) : (
               <div className="divide-y divide-slate-800">
-                {notifications.map(notif => {
+                {notifications.map((notif) => {
                   const content = (
-                    <div 
-                      key={notif.id} 
+                    <div
+                      key={notif.id}
                       className={`p-4 flex gap-4 transition-colors ${notif.read ? 'opacity-70 hover:bg-slate-800/50' : 'bg-slate-800/20 hover:bg-slate-800/80 cursor-pointer'}`}
                       onClick={() => !notif.read && markAsRead(notif.id)}
                     >
-                      <div className="mt-1 flex-shrink-0">
-                        {getIcon(notif.type)}
-                      </div>
+                      <div className="mt-1 flex-shrink-0">{getIcon(notif.type)}</div>
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-1">
-                          <p className={`text-sm truncate ${notif.read ? 'text-slate-300 font-medium' : 'text-white font-semibold'}`}>
+                          <p
+                            className={`text-sm truncate ${notif.read ? 'text-slate-300 font-medium' : 'text-white font-semibold'}`}
+                          >
                             {notif.title}
                           </p>
                           {notif.priority === 'HIGH' && !notif.read && (
@@ -110,12 +113,14 @@ export const NotificationDropdown: React.FC = () => {
                     <Link to={notif.linkTo} key={notif.id} onClick={() => setIsOpen(false)}>
                       {content}
                     </Link>
-                  ) : content;
+                  ) : (
+                    content
+                  );
                 })}
               </div>
             )}
           </div>
-          
+
           {/* Footer */}
           <div className="p-3 border-t border-slate-800 bg-slate-900 text-center">
             <button className="text-xs text-slate-400 hover:text-white transition-colors">

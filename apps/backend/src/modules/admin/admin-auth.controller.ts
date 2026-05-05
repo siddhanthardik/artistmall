@@ -26,8 +26,8 @@ export const adminLogin = async (req: Request, res: Response, next: NextFunction
       status: 'success',
       data: {
         user: admin,
-        accessToken: tokens.accessToken
-      }
+        accessToken: tokens.accessToken,
+      },
     });
   } catch (error) {
     next(error);
@@ -44,8 +44,8 @@ export const adminRefresh = async (req: Request, res: Response, next: NextFuncti
     res.status(200).json({
       status: 'success',
       data: {
-        accessToken: tokens.accessToken
-      }
+        accessToken: tokens.accessToken,
+      },
     });
   } catch (error) {
     next(error);
@@ -60,12 +60,12 @@ export const adminLogout = async (req: Request, res: Response, next: NextFunctio
     if (adminId) {
       await AdminAuthService.logout(adminId, refreshToken);
     }
-    
+
     res.clearCookie('adminRefreshToken', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: '/'
+      path: '/',
     });
 
     res.status(200).json({ status: 'success' });

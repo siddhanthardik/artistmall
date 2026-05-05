@@ -26,45 +26,43 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav 
+    <nav
       className={`fixed w-full z-50 top-0 transition-all duration-300 ${
         isScrolled || location.pathname !== '/'
-          ? 'bg-white py-4 shadow-sm border-b border-surface-container' 
+          ? 'bg-white py-4 shadow-sm border-b border-surface-container'
           : 'bg-white py-6 shadow-sm border-b border-surface-container'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex justify-between items-center">
-          
           {/* ── Logo ──────────────────────────────────────────────────────── */}
           <Link to="/" className="relative z-10">
-            <img 
-              src="/logo.png" 
-              alt="The Artist Mall" 
-              className="h-10 md:h-11 w-auto"
-            />
+            <img src="/logo.png" alt="The Artist Mall" className="h-10 md:h-11 w-auto" />
           </Link>
 
           {/* ── Desktop Navigation ────────────────────────────────────────── */}
           <div className="hidden lg:flex items-center space-x-10">
             {navLinks.map((link) => (
               <div key={link.label} className="relative group py-2">
-                <Link 
-                  to={link.to} 
+                <Link
+                  to={link.to}
                   className={`text-[15px] font-medium transition-all duration-300 relative px-1 ${
                     location.pathname === link.to || (link.to === '/' && location.pathname === '/')
-                      ? 'text-brand-primary' 
+                      ? 'text-brand-primary'
                       : 'text-neutral-content/70 hover:text-brand-primary'
                   }`}
                 >
                   {link.label}
-                  
+
                   {/* Underline for active/hover */}
-                  <span className={`absolute bottom-[-14px] left-0 h-[2px] bg-brand-primary transition-all duration-300 ${
-                    location.pathname === link.to || (link.to === '/' && location.pathname === '/')
-                      ? 'w-full' 
-                      : 'w-0 group-hover:w-full'
-                  }`}></span>
+                  <span
+                    className={`absolute bottom-[-14px] left-0 h-[2px] bg-brand-primary transition-all duration-300 ${
+                      location.pathname === link.to ||
+                      (link.to === '/' && location.pathname === '/')
+                        ? 'w-full'
+                        : 'w-0 group-hover:w-full'
+                    }`}
+                  ></span>
                 </Link>
 
                 {link.hasDropdown && (
@@ -76,8 +74,12 @@ export const Navbar: React.FC = () => {
                       <DropdownItem label="Comedians" to="/artists?categoryName=Comedian" />
                       <DropdownItem label="Celebrity Anchors" to="/artists?categoryName=Anchor" />
                       <div className="mx-3 my-2 h-[1px] bg-surface-container"></div>
-                      <Link to="/artist-categories" className="px-4 py-2 text-xs font-bold text-brand-primary hover:text-brand-primaryContainer flex items-center justify-between group/link">
-                        View All Categories <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                      <Link
+                        to="/artist-categories"
+                        className="px-4 py-2 text-xs font-bold text-brand-primary hover:text-brand-primaryContainer flex items-center justify-between group/link"
+                      >
+                        View All Categories{' '}
+                        <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                       </Link>
                     </div>
                   </div>
@@ -88,8 +90,8 @@ export const Navbar: React.FC = () => {
 
           {/* ── Desktop Action ───────────────────────────────────────────── */}
           <div className="hidden lg:flex items-center">
-            <Link 
-              to="/contact" 
+            <Link
+              to="/contact"
               className="bg-brand-primary text-white px-7 py-3 rounded-xl text-[15px] font-bold transition-all duration-300 shadow-lg hover:bg-brand-primaryContainer hover:shadow-brand-primary/20 flex items-center justify-center whitespace-nowrap"
             >
               Book an Artist
@@ -98,21 +100,20 @@ export const Navbar: React.FC = () => {
 
           {/* ── Mobile menu button ────────────────────────────────────────── */}
           <div className="lg:hidden relative z-10">
-            <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 transition-colors text-neutral-content"
             >
               {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
             </button>
           </div>
-
         </div>
       </div>
 
       {/* ── Mobile Menu ─────────────────────────────────────────────────── */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: '100vh' }}
             exit={{ opacity: 0, height: 0 }}
@@ -130,8 +131,9 @@ export const Navbar: React.FC = () => {
                   <Link
                     to={link.to}
                     className={`text-2xl font-bold tracking-tight transition-colors flex items-center justify-between ${
-                      location.pathname === link.to || (link.to === '/' && location.pathname === '/')
-                        ? 'text-brand-primary' 
+                      location.pathname === link.to ||
+                      (link.to === '/' && location.pathname === '/')
+                        ? 'text-brand-primary'
                         : 'text-neutral-content hover:text-brand-primary'
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
@@ -142,9 +144,9 @@ export const Navbar: React.FC = () => {
                 </motion.div>
               ))}
             </div>
-            
+
             <div className="mt-auto pb-10 pt-6 bg-surface">
-              <Link 
+              <Link
                 to="/contact"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block w-full bg-brand-primary hover:bg-brand-primaryContainer transition-colors text-white text-center py-4 rounded-xl font-bold text-lg shadow-lg shadow-brand-primary/20"
@@ -159,8 +161,11 @@ export const Navbar: React.FC = () => {
   );
 };
 
-const DropdownItem: React.FC<{ label: string, to: string }> = ({ label, to }) => (
-  <Link to={to} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-neutral-content hover:text-brand-primary hover:bg-surface-low rounded-lg transition-all">
+const DropdownItem: React.FC<{ label: string; to: string }> = ({ label, to }) => (
+  <Link
+    to={to}
+    className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-neutral-content hover:text-brand-primary hover:bg-surface-low rounded-lg transition-all"
+  >
     {label}
   </Link>
 );

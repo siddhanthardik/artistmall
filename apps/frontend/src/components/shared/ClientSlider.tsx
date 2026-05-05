@@ -13,7 +13,7 @@ export const ClientSlider: React.FC = () => {
     queryFn: async () => {
       const res = await api.get('/clients');
       return res.data;
-    }
+    },
   });
 
   const clients = data?.data?.clients || [];
@@ -26,8 +26,12 @@ export const ClientSlider: React.FC = () => {
   return (
     <section className="py-20 bg-white border-t border-slate-100 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-10 text-center mb-12">
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">Trusted By</p>
-        <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-3">Our Clients</h2>
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">
+          Trusted By
+        </p>
+        <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-3">
+          Our Clients
+        </h2>
         <p className="text-slate-400 font-medium">Client Success is our Ultimate Reward.</p>
       </div>
 
@@ -49,8 +53,8 @@ export const ClientSlider: React.FC = () => {
             pauseOnMouseEnter: true,
           }}
           breakpoints={{
-            480:  { slidesPerView: 3, spaceBetween: 24 },
-            768:  { slidesPerView: 4, spaceBetween: 32 },
+            480: { slidesPerView: 3, spaceBetween: 24 },
+            768: { slidesPerView: 4, spaceBetween: 32 },
             1024: { slidesPerView: 5, spaceBetween: 40 },
             1280: { slidesPerView: 6, spaceBetween: 48 },
           }}

@@ -1,11 +1,28 @@
 import React from 'react';
-import { Clock, CheckCircle2, AlertCircle, XCircle, FileWarning, HeartHandshake } from 'lucide-react';
+import {
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  XCircle,
+  FileWarning,
+  HeartHandshake,
+} from 'lucide-react';
 
-export type StatusType = 
+export type StatusType =
   // Artist States
-  | 'DRAFT' | 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'HIDDEN' | 'ARCHIVED'
+  | 'DRAFT'
+  | 'PENDING_APPROVAL'
+  | 'APPROVED'
+  | 'REJECTED'
+  | 'HIDDEN'
+  | 'ARCHIVED'
   // Booking States
-  | 'REQUESTED' | 'NEGOTIATING' | 'ADVANCE_PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
+  | 'REQUESTED'
+  | 'NEGOTIATING'
+  | 'ADVANCE_PENDING'
+  | 'CONFIRMED'
+  | 'COMPLETED'
+  | 'CANCELLED';
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -13,24 +30,36 @@ interface StatusBadgeProps {
   showIcon?: boolean;
 }
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = '', showIcon = true }) => {
+export const StatusBadge: React.FC<StatusBadgeProps> = ({
+  status,
+  className = '',
+  showIcon = true,
+}) => {
   const getConfig = () => {
     switch (status) {
       // Pending / Warning states (Amber)
       case 'PENDING_APPROVAL':
       case 'REQUESTED':
-        return { color: 'amber', icon: Clock, label: status === 'REQUESTED' ? 'Awaiting Mgmt' : 'In Review' };
-      
+        return {
+          color: 'amber',
+          icon: Clock,
+          label: status === 'REQUESTED' ? 'Awaiting Mgmt' : 'In Review',
+        };
+
       // Active / Negotiating states (Gold)
       case 'NEGOTIATING':
         return { color: 'gold', icon: HeartHandshake, label: 'Deal Room' };
-      
+
       // Success / Live states (Emerald)
       case 'APPROVED':
       case 'CONFIRMED':
       case 'COMPLETED':
-        return { color: 'emerald', icon: CheckCircle2, label: status === 'APPROVED' ? 'Live' : status };
-      
+        return {
+          color: 'emerald',
+          icon: CheckCircle2,
+          label: status === 'APPROVED' ? 'Live' : status,
+        };
+
       // Action Required states (Blue)
       case 'ADVANCE_PENDING':
         return { color: 'blue', icon: AlertCircle, label: 'Advance Pending' };
@@ -64,7 +93,9 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = ''
   }[config.color];
 
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${colorStyles} ${className}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full ${colorStyles} ${className}`}
+    >
       {showIcon && <Icon className="w-3.5 h-3.5" />}
       {config.label}
     </span>

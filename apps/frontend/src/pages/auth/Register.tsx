@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Button } from '../../components/ui/Button';
 import { AuthService } from '../../services/auth.service';
+import { User, Mail, Building, Lock, Loader2, ArrowRight } from 'lucide-react';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export const Register: React.FC = () => {
     lastName: '',
     email: '',
     password: '',
-    role: 'BOOKING_COMPANY' // Default role for registration
+    role: 'BOOKING_COMPANY', // Default role for registration
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -24,12 +25,11 @@ export const Register: React.FC = () => {
 
     try {
       const user = await AuthService.register(formData);
-      
+
       // Route based on role
       if (user.role === 'MANAGEMENT_COMPANY') navigate('/dashboard/management');
       else if (user.role === 'BOOKING_COMPANY') navigate('/dashboard/booking');
       else navigate('/');
-      
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.message || 'Failed to register.');
@@ -59,13 +59,16 @@ export const Register: React.FC = () => {
         <h2 className="text-center text-3xl font-extrabold text-white">Apply for an Account</h2>
         <p className="mt-2 text-center text-sm text-slate-400">
           Already have an account?{' '}
-          <Link to="/login" className="font-medium text-gold-400 hover:text-gold-300 transition-colors">
+          <Link
+            to="/login"
+            className="font-medium text-gold-400 hover:text-gold-300 transition-colors"
+          >
             Sign in here
           </Link>
         </p>
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10"
@@ -161,12 +164,16 @@ export const Register: React.FC = () => {
             </div>
 
             <div className="pt-2">
-              <Button type="submit" className="w-full flex justify-center gap-2" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full flex justify-center gap-2"
+                disabled={isLoading}
+              >
                 {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Create Account'}
                 {!isLoading && <ArrowRight className="w-5 h-5" />}
               </Button>
             </div>
-            
+
             <p className="text-xs text-center text-slate-500 mt-4">
               By registering, you agree to our stringent B2B Verification Policy.
             </p>

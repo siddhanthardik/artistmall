@@ -1,12 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Search, 
-  ChevronRight,
-  Star,
-  CheckSquare, Calendar,
-  Loader2
-} from 'lucide-react';
+import { Search, ChevronRight, Star, CheckSquare, Calendar, Loader2 } from 'lucide-react';
 import { HeroSlider } from '../components/home/HeroSlider';
 import { ClientSlider } from '../components/shared/ClientSlider';
 import { useQuery } from '@tanstack/react-query';
@@ -32,11 +26,11 @@ export const Home: React.FC = () => {
   const { data: popularArtists, isLoading: isPopularLoading } = useQuery({
     queryKey: ['popular-artists-home'],
     queryFn: async () => {
-       const env = (import.meta as any).env;
-       const baseUrl = env.VITE_API_URL || 'http://localhost:5000';
-       const res = await fetch(`${baseUrl}/api/v1/artists/homepage-featured`).then(r => r.json());
-       return res.data?.artists || [];
-    }
+      const env = (import.meta as any).env;
+      const baseUrl = env.VITE_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${baseUrl}/api/v1/artists/homepage-featured`).then((r) => r.json());
+      return res.data?.artists || [];
+    },
   });
 
   const { data: bannersResponse, isLoading: isBannersLoading } = useQuery({
@@ -56,11 +50,13 @@ export const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-surface">
-      
       {/* ANNOUNCEMENT BAR */}
       <div className="bg-brand-primary text-white py-3 px-4 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-10 text-sm font-medium">
         <span>New Artist Marketplace is Live! Limited time booking discounts.</span>
-        <Link to="/artists" className="bg-white text-brand-primary px-6 py-1.5 rounded-full text-xs font-bold hover:bg-white/90 transition-all uppercase tracking-wider">
+        <Link
+          to="/artists"
+          className="bg-white text-brand-primary px-6 py-1.5 rounded-full text-xs font-bold hover:bg-white/90 transition-all uppercase tracking-wider"
+        >
           Check Offers
         </Link>
       </div>
@@ -79,25 +75,35 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex items-center justify-between mb-16">
             <div>
-              <h2 className="text-4xl font-bold text-neutral-content tracking-tight">🔥 Featured Artists</h2>
-              <p className="text-neutral-content/40 font-medium mt-2">The most sought-after performers in our network.</p>
+              <h2 className="text-4xl font-bold text-neutral-content tracking-tight">
+                🔥 Featured Artists
+              </h2>
+              <p className="text-neutral-content/40 font-medium mt-2">
+                The most sought-after performers in our network.
+              </p>
             </div>
-            <Link to="/artists?featured=true" className="text-brand-primary font-bold text-xs uppercase tracking-widest flex items-center gap-2 group">
-              View All <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <Link
+              to="/artists?featured=true"
+              className="text-brand-primary font-bold text-xs uppercase tracking-widest flex items-center gap-2 group"
+            >
+              View All{' '}
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
           {isFeaturedLoading ? (
-            <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-brand-primary" /></div>
+            <div className="flex justify-center py-20">
+              <Loader2 className="w-10 h-10 animate-spin text-brand-primary" />
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {featuredList.map((artist: any) => (
-                <SpotlightCard 
+                <SpotlightCard
                   key={artist._id}
                   id={artist.slug || artist._id}
                   name={artist.stageName || artist.name}
                   role={artist.categoryName}
-                  rating={artist.rating || "New"}
+                  rating={artist.rating || 'New'}
                   badge="FEATURED"
                   minPrice={artist.priceRange?.min || artist.startingPrice}
                   maxPrice={artist.priceRange?.max || artist.startingPrice}
@@ -115,43 +121,63 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
             <div>
-              <h2 className="text-4xl font-bold text-neutral-content mb-4 tracking-tight">Popular Categories</h2>
-              <p className="text-neutral-content/50 font-medium">Find the perfect match for every occasion.</p>
+              <h2 className="text-4xl font-bold text-neutral-content mb-4 tracking-tight">
+                Popular Categories
+              </h2>
+              <p className="text-neutral-content/50 font-medium">
+                Find the perfect match for every occasion.
+              </p>
             </div>
-            <Link to="/artists" className="flex items-center gap-2 text-brand-primary font-bold text-xs uppercase tracking-widest group">
-              View all categories <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <Link
+              to="/artists"
+              className="flex items-center gap-2 text-brand-primary font-bold text-xs uppercase tracking-widest group"
+            >
+              View all categories{' '}
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-6 h-auto md:h-[700px]">
             {isCategoriesLoading ? (
-              <div className="col-span-full py-20 flex justify-center"><Loader2 className="w-10 h-10 animate-spin text-brand-primary" /></div>
+              <div className="col-span-full py-20 flex justify-center">
+                <Loader2 className="w-10 h-10 animate-spin text-brand-primary" />
+              </div>
             ) : categories.length === 0 ? (
-              <div className="col-span-full py-20 text-center text-neutral-content/40 font-bold uppercase tracking-widest">No categories available</div>
+              <div className="col-span-full py-20 text-center text-neutral-content/40 font-bold uppercase tracking-widest">
+                No categories available
+              </div>
             ) : (
               categories.slice(0, 4).map((cat: any, idx: number) => {
                 const isLarge = idx === 0;
                 const isWide = idx === 1;
-                const gridClass = isLarge ? "md:col-span-2 md:row-span-2" : isWide ? "md:col-span-2" : "";
-                const img = cat.image_url ? resolveMediaUrl(cat.image_url) : [BENTO_SINGER, BENTO_DJ, BENTO_DRUMMER, BENTO_DANCER][idx % 4];
+                const gridClass = isLarge
+                  ? 'md:col-span-2 md:row-span-2'
+                  : isWide
+                    ? 'md:col-span-2'
+                    : '';
+                const img = cat.image_url
+                  ? resolveMediaUrl(cat.image_url)
+                  : [BENTO_SINGER, BENTO_DJ, BENTO_DRUMMER, BENTO_DANCER][idx % 4];
 
                 return (
-                  <Link 
+                  <Link
                     key={cat._id}
                     to={`/artists?categoryId=${cat._id}&categoryName=${encodeURIComponent(cat.name)}`}
                     className={`${gridClass} relative rounded-3xl overflow-hidden group block aspect-square md:aspect-auto`}
                   >
-                    <img 
-                      src={img} 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                      alt={cat.name} 
+                    <img
+                      src={img}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      alt={cat.name}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                     <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 text-white">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-brand-primary mb-2 block">
-                        {isLarge ? "Top Performers" : "Popular"}
+                        {isLarge ? 'Top Performers' : 'Popular'}
                       </span>
-                      <h3 className={`${isLarge ? 'text-3xl' : 'text-xl'} font-bold`}>{cat.name}</h3>
+                      <h3 className={`${isLarge ? 'text-3xl' : 'text-xl'} font-bold`}>
+                        {cat.name}
+                      </h3>
                     </div>
                   </Link>
                 );
@@ -166,21 +192,25 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex items-center justify-between mb-16">
             <div>
-              <h2 className="text-4xl font-bold text-neutral-content tracking-tight">⭐ Popular Picks</h2>
+              <h2 className="text-4xl font-bold text-neutral-content tracking-tight">
+                ⭐ Popular Picks
+              </h2>
             </div>
           </div>
 
           {isPopularLoading ? (
-            <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-brand-primary" /></div>
+            <div className="flex justify-center py-20">
+              <Loader2 className="w-10 h-10 animate-spin text-brand-primary" />
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {popularList.map((artist: any) => (
-                <SpotlightCard 
+                <SpotlightCard
                   key={artist._id}
                   id={artist.slug || artist._id}
                   name={artist.stageName || artist.name}
                   role={artist.categoryName}
-                  rating={artist.rating || "New"}
+                  rating={artist.rating || 'New'}
                   badge="POPULAR"
                   minPrice={artist.priceRange?.min || artist.startingPrice}
                   maxPrice={artist.priceRange?.max || artist.startingPrice}
@@ -196,41 +226,47 @@ export const Home: React.FC = () => {
       {/* 5. SEAMLESS PROFESSIONAL BOOKING */}
       <section className="py-32 bg-surface-lowest">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 text-center mb-20">
-          <h2 className="text-4xl font-bold text-neutral-content mb-4 tracking-tight">Seamless Professional Booking</h2>
-          <p className="text-neutral-content/40 font-bold uppercase tracking-[0.2em] text-[10px]">The elite standard for talent acquisition in India.</p>
+          <h2 className="text-4xl font-bold text-neutral-content mb-4 tracking-tight">
+            Seamless Professional Booking
+          </h2>
+          <p className="text-neutral-content/40 font-bold uppercase tracking-[0.2em] text-[10px]">
+            The elite standard for talent acquisition in India.
+          </p>
         </div>
-        
+
         <div className="max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <BookingStep 
-            number={1} 
-            title="Discover" 
-            description="Browse through our curated list of verified top-tier artists." 
-            icon={Search} 
+          <BookingStep
+            number={1}
+            title="Discover"
+            description="Browse through our curated list of verified top-tier artists."
+            icon={Search}
           />
-          <BookingStep 
-            number={2} 
-            title="Shortlist" 
-            description="Review portfolios, high-definition videos, and past performance ratings." 
-            icon={CheckSquare} 
+          <BookingStep
+            number={2}
+            title="Shortlist"
+            description="Review portfolios, high-definition videos, and past performance ratings."
+            icon={CheckSquare}
           />
-          <BookingStep 
-            number={3} 
-            title="Book Securely" 
-            description="Confirm dates and manage payments through our secure escrow system." 
-            icon={Calendar} 
+          <BookingStep
+            number={3}
+            title="Book Securely"
+            description="Confirm dates and manage payments through our secure escrow system."
+            icon={Calendar}
           />
-          <BookingStep 
-            number={4} 
-            title="Experience" 
-            description="Enjoy a world-class performance tailored to your specific event needs." 
-            icon={Star} 
+          <BookingStep
+            number={4}
+            title="Experience"
+            description="Enjoy a world-class performance tailored to your specific event needs."
+            icon={Star}
           />
         </div>
       </section>
 
       {/* CALL TO ACTION */}
-      <section className="relative overflow-hidden py-36" style={{ background: 'linear-gradient(135deg, #2d0f00 0%, #1a1a2e 50%, #16213e 100%)' }}>
-
+      <section
+        className="relative overflow-hidden py-36"
+        style={{ background: 'linear-gradient(135deg, #2d0f00 0%, #1a1a2e 50%, #16213e 100%)' }}
+      >
         {/* Background stage image at low opacity */}
         <div className="absolute inset-0 overflow-hidden">
           <img
@@ -243,7 +279,12 @@ export const Home: React.FC = () => {
         </div>
 
         {/* Colour overlay */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(45,15,0,0.85) 0%, rgba(26,26,46,0.75) 100%)' }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(135deg, rgba(45,15,0,0.85) 0%, rgba(26,26,46,0.75) 100%)',
+          }}
+        />
 
         {/* Animated glow orbs */}
         <motion.div
@@ -277,7 +318,6 @@ export const Home: React.FC = () => {
         ))}
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-
           {/* Eyebrow */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -304,7 +344,13 @@ export const Home: React.FC = () => {
           >
             <span className="text-white">Plan Your</span>
             <br />
-            <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(90deg, #ff6b00, #ffaa44, #ff6b00)', backgroundSize: '200%' }}>
+            <span
+              className="text-transparent bg-clip-text"
+              style={{
+                backgroundImage: 'linear-gradient(90deg, #ff6b00, #ffaa44, #ff6b00)',
+                backgroundSize: '200%',
+              }}
+            >
               Event Booking.
             </span>
           </motion.h2>
@@ -317,7 +363,8 @@ export const Home: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-white/50 text-lg md:text-xl font-medium leading-relaxed mb-12 max-w-2xl mx-auto"
           >
-            Work with a verified artist network and a dedicated team that supports every booking — from first inquiry to event day.
+            Work with a verified artist network and a dedicated team that supports every booking —
+            from first inquiry to event day.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -376,22 +423,20 @@ export const Home: React.FC = () => {
                 className="flex flex-col items-center"
               >
                 <span className="text-2xl font-black text-white tracking-tight">{stat.value}</span>
-                <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mt-0.5">{stat.label}</span>
+                <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mt-0.5">
+                  {stat.label}
+                </span>
               </motion.div>
             ))}
           </motion.div>
 
           {/* Trust bar */}
-          <p className="text-white/20 text-[10px] font-bold uppercase tracking-widest">
-            
-          </p>
-
+          <p className="text-white/20 text-[10px] font-bold uppercase tracking-widest"></p>
         </div>
       </section>
 
       {/* OUR CLIENTS SLIDER */}
       <ClientSlider />
-
     </div>
   );
 };
@@ -408,7 +453,9 @@ const BookingStep = ({ number, title, description, icon: Icon }: BookingStepProp
     <div className="w-12 h-12 bg-brand-primary/5 rounded-2xl flex items-center justify-center text-brand-primary mb-8 border border-brand-primary/10">
       <Icon className="w-6 h-6" />
     </div>
-    <h3 className="text-xl font-bold mb-4">{number}. {title}</h3>
+    <h3 className="text-xl font-bold mb-4">
+      {number}. {title}
+    </h3>
     <p className="text-neutral-content/50 leading-relaxed text-sm">{description}</p>
   </div>
 );
@@ -425,10 +472,27 @@ interface SpotlightCardProps {
   description: string;
 }
 
-const SpotlightCard = ({ id, name, role, rating, badge, minPrice, maxPrice, image, description }: SpotlightCardProps) => (
-  <Link to={`/artists/${id}`} className="group bg-white rounded-[32px] overflow-hidden border border-surface-container shadow-sm hover:shadow-2xl transition-all duration-700 block">
+const SpotlightCard = ({
+  id,
+  name,
+  role,
+  rating,
+  badge,
+  minPrice,
+  maxPrice,
+  image,
+  description,
+}: SpotlightCardProps) => (
+  <Link
+    to={`/artists/${id}`}
+    className="group bg-white rounded-[32px] overflow-hidden border border-surface-container shadow-sm hover:shadow-2xl transition-all duration-700 block"
+  >
     <div className="relative h-72 overflow-hidden">
-      <img src={image} alt={name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+      <img
+        src={image}
+        alt={name}
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+      />
       <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg">
         <Star className="w-3 h-3 fill-brand-primary text-brand-primary" /> {rating}
       </div>
@@ -436,15 +500,23 @@ const SpotlightCard = ({ id, name, role, rating, badge, minPrice, maxPrice, imag
     <div className="p-8">
       <div className="flex items-center justify-between mb-4">
         <h4 className="text-xl font-bold text-neutral-content">{name}</h4>
-        <span className="text-[9px] font-bold bg-brand-secondary/5 text-brand-secondary px-3 py-1 rounded-full border border-brand-secondary/10 tracking-widest">{badge}</span>
+        <span className="text-[9px] font-bold bg-brand-secondary/5 text-brand-secondary px-3 py-1 rounded-full border border-brand-secondary/10 tracking-widest">
+          {badge}
+        </span>
       </div>
       <p className="text-brand-primary font-bold text-xs uppercase tracking-widest mb-4">{role}</p>
-      <p className="text-neutral-content/40 text-sm leading-relaxed mb-8 line-clamp-2">{description}</p>
+      <p className="text-neutral-content/40 text-sm leading-relaxed mb-8 line-clamp-2">
+        {description}
+      </p>
       <div className="flex items-center justify-between border-t border-surface-container pt-8">
         <div className="flex flex-col">
-          <span className="text-[10px] font-bold text-neutral-content/30 uppercase tracking-widest mb-1">Price Range</span>
+          <span className="text-[10px] font-bold text-neutral-content/30 uppercase tracking-widest mb-1">
+            Price Range
+          </span>
           <span className="text-xl font-bold text-neutral-content">
-             {minPrice > 0 ? `${formatCurrencyShorthand(minPrice)} – ${formatCurrencyShorthand(maxPrice)}` : "On Request"}
+            {minPrice > 0
+              ? `${formatCurrencyShorthand(minPrice)} – ${formatCurrencyShorthand(maxPrice)}`
+              : 'On Request'}
           </span>
         </div>
         <div className="text-brand-primary font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 hover:gap-4 transition-all">

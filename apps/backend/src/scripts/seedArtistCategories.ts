@@ -17,11 +17,14 @@ const DEFAULT_CATEGORIES = [
   'Guest Appearance',
   'Celebrity',
   'Solo Singer',
-  'Model'
+  'Model',
 ];
 
-const slugify = (text: string) => 
-  text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
 
 const seedCategories = async () => {
   try {
@@ -34,8 +37,8 @@ const seedCategories = async () => {
       const name = DEFAULT_CATEGORIES[i];
       const slug = slugify(name);
 
-      const existing = await ArtistCategoryModel.findOne({ 
-        $or: [{ name }, { slug }] 
+      const existing = await ArtistCategoryModel.findOne({
+        $or: [{ name }, { slug }],
       });
 
       if (!existing) {

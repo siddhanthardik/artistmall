@@ -38,7 +38,7 @@ export const useAuthStore = create<AuthState>()(
         // This is usually handled by the axios interceptor on the first request
         // but can be explicitly called on app mount
         return !!get().accessToken;
-      }
+      },
     }),
     {
       name: 'artistmall-auth-storage',
@@ -55,6 +55,6 @@ export const useAuthStore = create<AuthState>()(
       onRehydrateStorage: () => (state) => {
         state?.setHydrated(true);
       },
-    }
-  )
+    },
+  ),
 );

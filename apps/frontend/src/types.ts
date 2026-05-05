@@ -5,13 +5,17 @@ export interface Artist {
   name: string;
   stageName: string;
   slug: string;
-  categoryId?: string | {
+  categoryId?: {
     _id: string;
     name: string;
   };
   categoryName: string;
   categorySlug: string;
-  city: string;
+  city?: string;
+  cityId?: {
+    _id: string;
+    name: string;
+  };
   state: string;
   languages?: string[];
   performanceTypes?: string[];
@@ -34,9 +38,20 @@ export interface Artist {
   premiumTier?: 'STANDARD' | 'FEATURED' | 'SILVER' | 'GOLD' | 'PREMIUM' | 'EXCLUSIVE';
   shortBio: string;
   longBio?: string;
-  verificationStatus: 'DRAFT' | 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED' | 'NEEDS_UPDATE' | 'PUBLISHED';
+  status: 'DRAFT' | 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'HIDDEN' | 'ARCHIVED';
+  verificationStatus?: string;
   yearsOfExperience?: number;
   isPublished: boolean;
+  createdBy?: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  kycDocuments?: Array<{
+    type: string;
+    url: string;
+    status: string;
+  }>;
   createdAt: string;
 }
 

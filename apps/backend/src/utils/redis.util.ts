@@ -9,8 +9,8 @@ const redisClient = createClient({
         return false; // Stop retrying
       }
       return Math.min(retries * 100, 3000);
-    }
-  }
+    },
+  },
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
@@ -42,7 +42,7 @@ export const setCache = async (key: string, value: any, ttlSeconds = 3600) => {
   if (!isRedisConnected) return;
   try {
     await redisClient.set(key, JSON.stringify(value), {
-      EX: ttlSeconds
+      EX: ttlSeconds,
     });
   } catch (error) {
     console.error(`[REDIS] Set error for key ${key}:`, error);

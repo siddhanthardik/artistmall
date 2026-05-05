@@ -5,14 +5,13 @@ import { AppError } from '../../core/errors';
 import mongoose from 'mongoose';
 
 export class CompanyService {
-  
   // --- SUPPLY SIDE (MANAGEMENT) ---
 
   static async createOrUpdateManagementProfile(userId: string, data: any) {
     const profile = await ManagementCompanyModel.findOneAndUpdate(
       { userId },
       { ...data, userId },
-      { new: true, upsert: true, runValidators: true }
+      { new: true, upsert: true, runValidators: true },
     );
     return profile;
   }
@@ -35,7 +34,7 @@ export class CompanyService {
     const profile = await BookingCompanyModel.findOneAndUpdate(
       { userId },
       { ...data, userId },
-      { new: true, upsert: true, runValidators: true }
+      { new: true, upsert: true, runValidators: true },
     );
     return profile;
   }
@@ -55,11 +54,11 @@ export class CompanyService {
   // --- ADMIN VERIFICATION & AUDIT LOGGING ---
 
   static async verifyCompany(
-    adminId: string, 
-    companyId: string, 
-    type: 'MANAGEMENT' | 'BOOKING', 
+    adminId: string,
+    companyId: string,
+    type: 'MANAGEMENT' | 'BOOKING',
     status: 'VERIFIED' | 'REJECTED',
-    ipAddress?: string
+    ipAddress?: string,
   ) {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -71,13 +70,13 @@ export class CompanyService {
         updatedCompany = await ManagementCompanyModel.findByIdAndUpdate(
           companyId,
           { verificationStatus: status },
-          { new: true, session }
+          { new: true, session },
         );
       } else {
         updatedCompany = await BookingCompanyModel.findByIdAndUpdate(
           companyId,
           { kycStatus: status },
-          { new: true, session }
+          { new: true, session },
         );
       }
 
@@ -86,14 +85,19 @@ export class CompanyService {
       }
 
       // Secure Audit Log
-      await AdminActivityLogModel.create([{
-        adminId,
-        action: status === 'VERIFIED' ? 'VERIFY_COMPANY' : 'REJECT_COMPANY',
-        targetResource: type === 'MANAGEMENT' ? 'ManagementCompany' : 'BookingCompany',
-        targetId: companyId,
-        ipAddress,
-        details: { newStatus: status }
-      }], { session });
+      await AdminActivityLogModel.create(
+        [
+          {
+            adminId,
+            action: status === 'VERIFIED' ? 'VERIFY_COMPANY' : 'REJECT_COMPANY',
+            targetResource: type === 'MANAGEMENT' ? 'ManagementCompany' : 'BookingCompany',
+            targetId: companyId,
+            ipAddress,
+            details: { newStatus: status },
+          },
+        ],
+        { session },
+      );
 
       await session.commitTransaction();
       session.endSession();

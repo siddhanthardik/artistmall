@@ -10,10 +10,18 @@ export const createLead = async (req: Request, res: Response, next: NextFunction
 
     // Validation
     if (!data.customerName || !data.phone) {
-      return res.status(400).json({ status: 'fail', message: 'Missing required fields: customerName, phone' });
+      return res
+        .status(400)
+        .json({ status: 'fail', message: 'Missing required fields: customerName, phone' });
     }
 
-    if (!data.artistName || !data.eventType || !data.eventDate || !data.eventCity || !data.guestCount) {
+    if (
+      !data.artistName ||
+      !data.eventType ||
+      !data.eventDate ||
+      !data.eventCity ||
+      !data.guestCount
+    ) {
       return res.status(400).json({ status: 'fail', message: 'Missing required event fields' });
     }
 
@@ -40,7 +48,9 @@ export const createLead = async (req: Request, res: Response, next: NextFunction
 
     // Guest count > 0
     if (data.guestCount <= 0) {
-      return res.status(400).json({ status: 'fail', message: 'Guest count must be greater than 0' });
+      return res
+        .status(400)
+        .json({ status: 'fail', message: 'Guest count must be greater than 0' });
     }
 
     // Email optional but validated
@@ -66,7 +76,7 @@ export const getLeads = async (req: Request, res: Response, next: NextFunction) 
       tag: req.query.tag as string,
       today: req.query.today === 'true',
       page: req.query.page ? parseInt(req.query.page as string, 10) : 1,
-      limit: req.query.limit ? parseInt(req.query.limit as string, 10) : 50
+      limit: req.query.limit ? parseInt(req.query.limit as string, 10) : 50,
     };
 
     const result = await LeadService.getLeads(filters);

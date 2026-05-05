@@ -6,10 +6,10 @@ export const AdminAuthService = {
     // Phase 4 & 8: Deterministic Login Logic
     const response = await api.post('/admin/auth/login', credentials);
     const { user, accessToken } = response.data.data;
-    
+
     // Phase 7: Proper Hydration & Persistence
     useAuthStore.getState().setAuth(user, accessToken);
-    
+
     return { user, accessToken };
   },
 
@@ -29,5 +29,5 @@ export const AdminAuthService = {
       localStorage.removeItem('artistmall-auth-storage');
       window.location.href = '/admin/login';
     }
-  }
+  },
 };

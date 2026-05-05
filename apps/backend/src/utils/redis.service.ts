@@ -41,7 +41,11 @@ export const cacheGet = async <T>(key: string): Promise<T | null> => {
   }
 };
 
-export const cacheSet = async (key: string, value: unknown, ttl = DEFAULT_TTL_SECONDS): Promise<void> => {
+export const cacheSet = async (
+  key: string,
+  value: unknown,
+  ttl = DEFAULT_TTL_SECONDS,
+): Promise<void> => {
   if (!client) return;
   try {
     await client.setEx(key, ttl, JSON.stringify(value));

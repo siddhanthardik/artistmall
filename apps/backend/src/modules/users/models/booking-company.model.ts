@@ -14,19 +14,25 @@ export interface IBookingCompany extends Document {
   };
 }
 
-const bookingCompanySchema = new Schema<IBookingCompany>({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
-  companyName: { type: String, required: true },
-  industryType: { type: String },
-  kycStatus: { type: String, enum: ['PENDING', 'VERIFIED', 'REJECTED'], default: 'PENDING' },
-  billingAddress: {
-    street: String,
-    city: String,
-    state: String,
-    zip: String,
+const bookingCompanySchema = new Schema<IBookingCompany>(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+    companyName: { type: String, required: true },
+    industryType: { type: String },
+    kycStatus: { type: String, enum: ['PENDING', 'VERIFIED', 'REJECTED'], default: 'PENDING' },
+    billingAddress: {
+      street: String,
+      city: String,
+      state: String,
+      zip: String,
+    },
   },
-}, BaseSchemaOptions);
+  BaseSchemaOptions,
+);
 
 bookingCompanySchema.plugin(auditPlugin);
 
-export const BookingCompanyModel = mongoose.model<IBookingCompany>('BookingCompany', bookingCompanySchema);
+export const BookingCompanyModel = mongoose.model<IBookingCompany>(
+  'BookingCompany',
+  bookingCompanySchema,
+);

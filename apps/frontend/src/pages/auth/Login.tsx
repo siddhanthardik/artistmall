@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Button } from '../../components/ui/Button';
 import { AuthService } from '../../services/auth.service';
+import { Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export const Login: React.FC = () => {
 
     try {
       const user = await AuthService.login({ email, password });
-      
+
       // Route based on role if no specific return path
       if (location.state?.from?.pathname) {
         navigate(from, { replace: true });
@@ -57,13 +58,16 @@ export const Login: React.FC = () => {
         <h2 className="text-center text-3xl font-extrabold text-white">Sign in to your account</h2>
         <p className="mt-2 text-center text-sm text-slate-400">
           Or{' '}
-          <Link to="/register" className="font-medium text-gold-400 hover:text-gold-300 transition-colors">
+          <Link
+            to="/register"
+            className="font-medium text-gold-400 hover:text-gold-300 transition-colors"
+          >
             apply for a corporate account
           </Link>
         </p>
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10"
@@ -131,7 +135,11 @@ export const Login: React.FC = () => {
             </div>
 
             <div>
-              <Button type="submit" className="w-full flex justify-center gap-2" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full flex justify-center gap-2"
+                disabled={isLoading}
+              >
                 {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
                 {!isLoading && <ArrowRight className="w-5 h-5" />}
               </Button>

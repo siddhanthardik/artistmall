@@ -2,7 +2,13 @@ import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { auditPlugin, BaseSchemaOptions } from '../../../core/base.schema';
 
-export type AdminRole = 'SUPER_ADMIN' | 'ADMIN' | 'SUB_ADMIN' | 'INTERNAL_OPS' | 'FINANCE' | 'SUPPORT';
+export type AdminRole =
+  | 'SUPER_ADMIN'
+  | 'ADMIN'
+  | 'SUB_ADMIN'
+  | 'INTERNAL_OPS'
+  | 'FINANCE'
+  | 'SUPPORT';
 
 export interface IAdmin extends Document {
   fullName: string;
@@ -22,26 +28,36 @@ export interface IAdmin extends Document {
   comparePassword(candidate: string): Promise<boolean>;
 }
 
-const adminSchema = new Schema<IAdmin>({
-  fullName: { type: String, required: true },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true, immutable: true },
-  password: { type: String, required: true, select: false },
-  role: { 
-    type: String, 
-    enum: ['SUPER_ADMIN', 'ADMIN', 'SUB_ADMIN', 'INTERNAL_OPS', 'FINANCE', 'SUPPORT'],
-    default: 'INTERNAL_OPS'
+const adminSchema = new Schema<IAdmin>(
+  {
+    fullName: { type: String, required: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      immutable: true,
+    },
+    password: { type: String, required: true, select: false },
+    role: {
+      type: String,
+      enum: ['SUPER_ADMIN', 'ADMIN', 'SUB_ADMIN', 'INTERNAL_OPS', 'FINANCE', 'SUPPORT'],
+      default: 'INTERNAL_OPS',
+    },
+    roleId: { type: Schema.Types.ObjectId, ref: 'Role' },
+    departmentId: { type: Schema.Types.ObjectId, ref: 'Department' },
+    isSuperAdmin: { type: Boolean, default: false },
+    permissions: [{ type: String }],
+    isActive: { type: Boolean, default: true },
+    mustChangePassword: { type: Boolean, default: false },
+    lastLogin: { type: Date },
+    loginAttempts: { type: Number, default: 0 },
+    lockUntil: { type: Date },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'Admin' },
   },
-  roleId: { type: Schema.Types.ObjectId, ref: 'Role' },
-  departmentId: { type: Schema.Types.ObjectId, ref: 'Department' },
-  isSuperAdmin: { type: Boolean, default: false },
-  permissions: [{ type: String }],
-  isActive: { type: Boolean, default: true },
-  mustChangePassword: { type: Boolean, default: false },
-  lastLogin: { type: Date },
-  loginAttempts: { type: Number, default: 0 },
-  lockUntil: { type: Date },
-  createdBy: { type: Schema.Types.ObjectId, ref: 'Admin' }
-}, BaseSchemaOptions);
+  BaseSchemaOptions,
+);
 
 // Password Hashing (Deterministic v2 Rebuild)
 adminSchema.pre('save', async function (next) {

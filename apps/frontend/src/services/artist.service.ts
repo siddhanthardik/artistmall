@@ -19,9 +19,9 @@ export const ArtistService = {
   searchArtists: async (filters: SearchFilters) => {
     // Clean up undefined values
     const cleanedFilters = Object.fromEntries(
-      Object.entries(filters).filter(([, v]) => v != null && v !== '')
+      Object.entries(filters).filter(([, v]) => v != null && v !== ''),
     );
-    
+
     const response = await api.get('/artists/search', { params: cleanedFilters });
     return response.data; // { status: 'success', data: [...], meta: {...} }
   },
@@ -49,5 +49,5 @@ export const ArtistService = {
   getCategories: async () => {
     const response = await api.get('/artists/categories');
     return response.data;
-  }
+  },
 };

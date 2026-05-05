@@ -31,7 +31,7 @@ const DUMMY_NOTIFICATIONS: AppNotification[] = [
     priority: 'HIGH',
     read: false,
     createdAt: new Date().toISOString(),
-    linkTo: '/dashboard/booking/negotiations'
+    linkTo: '/dashboard/booking/negotiations',
   },
   {
     id: 'n2',
@@ -41,36 +41,40 @@ const DUMMY_NOTIFICATIONS: AppNotification[] = [
     priority: 'MEDIUM',
     read: false,
     createdAt: new Date(Date.now() - 3600000).toISOString(),
-  }
+  },
 ];
 
 export const useNotificationStore = create<NotificationState>((set) => ({
   notifications: DUMMY_NOTIFICATIONS,
-  unreadCount: DUMMY_NOTIFICATIONS.filter(n => !n.read).length,
-  
-  addNotification: (notif) => set((state) => {
-    const newNotif: AppNotification = {
-      ...notif,
-      id: Math.random().toString(36).substring(7),
-      read: false,
-      createdAt: new Date().toISOString()
-    };
-    const newList = [newNotif, ...state.notifications];
-    return { notifications: newList, unreadCount: newList.filter(n => !n.read).length };
-  }),
+  unreadCount: DUMMY_NOTIFICATIONS.filter((n) => !n.read).length,
 
-  markAsRead: (id) => set((state) => {
-    const newList = state.notifications.map(n => n.id === id ? { ...n, read: true } : n);
-    return { notifications: newList, unreadCount: newList.filter(n => !n.read).length };
-  }),
+  addNotification: (notif) =>
+    set((state) => {
+      const newNotif: AppNotification = {
+        ...notif,
+        id: Math.random().toString(36).substring(7),
+        read: false,
+        createdAt: new Date().toISOString(),
+      };
+      const newList = [newNotif, ...state.notifications];
+      return { notifications: newList, unreadCount: newList.filter((n) => !n.read).length };
+    }),
 
-  markAllAsRead: () => set((state) => {
-    const newList = state.notifications.map(n => ({ ...n, read: true }));
-    return { notifications: newList, unreadCount: 0 };
-  }),
+  markAsRead: (id) =>
+    set((state) => {
+      const newList = state.notifications.map((n) => (n.id === id ? { ...n, read: true } : n));
+      return { notifications: newList, unreadCount: newList.filter((n) => !n.read).length };
+    }),
 
-  setNotifications: (notifications) => set({ 
-    notifications, 
-    unreadCount: notifications.filter(n => !n.read).length 
-  })
+  markAllAsRead: () =>
+    set((state) => {
+      const newList = state.notifications.map((n) => ({ ...n, read: true }));
+      return { notifications: newList, unreadCount: 0 };
+    }),
+
+  setNotifications: (notifications) =>
+    set({
+      notifications,
+      unreadCount: notifications.filter((n) => !n.read).length,
+    }),
 }));

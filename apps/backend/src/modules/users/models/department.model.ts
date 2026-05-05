@@ -7,11 +7,14 @@ export interface IDepartment extends Document {
   isActive: boolean;
 }
 
-const departmentSchema = new Schema<IDepartment>({
-  name: { type: String, required: true, unique: true, trim: true },
-  description: { type: String, trim: true },
-  isActive: { type: Boolean, default: true },
-}, BaseSchemaOptions);
+const departmentSchema = new Schema<IDepartment>(
+  {
+    name: { type: String, required: true, unique: true, trim: true },
+    description: { type: String, trim: true },
+    isActive: { type: Boolean, default: true },
+  },
+  BaseSchemaOptions,
+);
 
 departmentSchema.plugin(auditPlugin);
 departmentSchema.index({ name: 1 });

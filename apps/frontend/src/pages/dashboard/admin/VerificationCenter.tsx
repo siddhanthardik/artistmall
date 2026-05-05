@@ -10,14 +10,13 @@ export const VerificationCenter: React.FC = () => {
 
   const { data: verifications, isLoading } = useQuery({
     queryKey: ['pending-verifications'],
-    queryFn: AdminService.getPendingVerifications
+    queryFn: AdminService.getPendingVerifications,
   });
 
-  const pendingArtists = verifications?.artists || [];
+  const pendingArtists = (verifications as any)?.artists || [];
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 h-full flex flex-col">
-      
       <div>
         <h2 className="text-xl font-bold text-white tracking-wide">VERIFICATION CENTER</h2>
         <p className="text-xs text-slate-500 font-mono mt-1">QUEUE MANAGER</p>
@@ -25,19 +24,20 @@ export const VerificationCenter: React.FC = () => {
 
       {/* Tabs */}
       <div className="flex gap-4 border-b border-slate-800">
-        <button 
+        <button
           onClick={() => setActiveTab('artists')}
           className={`pb-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'artists' ? 'border-red-500 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
         >
-          Artist Approvals <span className="ml-2 bg-slate-800 text-xs px-1.5 rounded">{pendingArtists.length}</span>
+          Artist Approvals{' '}
+          <span className="ml-2 bg-slate-800 text-xs px-1.5 rounded">{pendingArtists.length}</span>
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('supply')}
           className={`pb-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'supply' ? 'border-red-500 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
         >
           Management KYC <span className="ml-2 bg-slate-800 text-xs px-1.5 rounded">0</span>
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('demand')}
           className={`pb-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'demand' ? 'border-red-500 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
         >
@@ -54,11 +54,17 @@ export const VerificationCenter: React.FC = () => {
               PENDING QUEUE
             </div>
             <div className="flex-1 overflow-y-auto">
-              {isLoading && <div className="p-4 text-center text-slate-500"><Loader2 className="w-5 h-5 animate-spin mx-auto mb-2 text-red-500" /></div>}
-              {pendingArtists.length === 0 && !isLoading && <div className="p-4 text-center text-slate-500 text-sm">Queue is empty.</div>}
+              {isLoading && (
+                <div className="p-4 text-center text-slate-500">
+                  <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2 text-red-500" />
+                </div>
+              )}
+              {pendingArtists.length === 0 && !isLoading && (
+                <div className="p-4 text-center text-slate-500 text-sm">Queue is empty.</div>
+              )}
               {pendingArtists.map((artist: Artist) => (
-                <div 
-                  key={artist._id} 
+                <div
+                  key={artist._id}
                   onClick={() => setSelectedArtist(artist)}
                   className={`p-4 border-b border-slate-800/50 hover:bg-slate-900 cursor-pointer transition-colors border-l-2 ${selectedArtist?._id === artist._id ? 'bg-slate-900 border-l-red-500' : 'border-l-transparent hover:border-l-red-500/50'}`}
                 >
@@ -86,33 +92,60 @@ export const VerificationCenter: React.FC = () => {
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="bg-amber-500/20 text-amber-500 px-2 py-1 rounded text-xs font-bold">{selectedArtist.status}</span>
+                      <span className="bg-amber-500/20 text-amber-500 px-2 py-1 rounded text-xs font-bold">
+                        {selectedArtist.status}
+                      </span>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-6 mb-8">
                     <div>
-                      <h4 className="text-xs font-bold text-slate-500 mb-2 border-b border-slate-800 pb-1">FINANCIALS</h4>
+                      <h4 className="text-xs font-bold text-slate-500 mb-2 border-b border-slate-800 pb-1">
+                        FINANCIALS
+                      </h4>
                       <div className="space-y-1 text-sm">
-                        <p className="text-slate-300"><span className="text-slate-500">Min Budget:</span> ₹{selectedArtist.priceRange?.min?.toLocaleString()}</p>
-                        <p className="text-slate-300"><span className="text-slate-500">Max Budget:</span> ₹{selectedArtist.priceRange?.max?.toLocaleString()}</p>
+                        <p className="text-slate-300">
+                          <span className="text-slate-500">Min Budget:</span> ₹
+                          {selectedArtist.priceRange?.min?.toLocaleString()}
+                        </p>
+                        <p className="text-slate-300">
+                          <span className="text-slate-500">Max Budget:</span> ₹
+                          {selectedArtist.priceRange?.max?.toLocaleString()}
+                        </p>
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-slate-500 mb-2 border-b border-slate-800 pb-1">LOGISTICS</h4>
+                      <h4 className="text-xs font-bold text-slate-500 mb-2 border-b border-slate-800 pb-1">
+                        LOGISTICS
+                      </h4>
                       <div className="space-y-1 text-sm">
-                        <p className="text-slate-300"><span className="text-slate-500">City:</span> {selectedArtist.cityId?.name}</p>
-                        <p className="text-slate-300"><span className="text-slate-500">Category:</span> {selectedArtist.categoryId?.name}</p>
+                        <p className="text-slate-300">
+                          <span className="text-slate-500">City:</span>{' '}
+                          {selectedArtist.cityId?.name}
+                        </p>
+                        <p className="text-slate-300">
+                          <span className="text-slate-500">Category:</span>{' '}
+                          {selectedArtist.categoryId?.name}
+                        </p>
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <h4 className="text-xs font-bold text-slate-500 mb-2 border-b border-slate-800 pb-1">ATTACHED MEDIA</h4>
+                    <h4 className="text-xs font-bold text-slate-500 mb-2 border-b border-slate-800 pb-1">
+                      ATTACHED MEDIA
+                    </h4>
                     <div className="flex gap-4 flex-wrap">
                       {selectedArtist.kycDocuments?.map((doc, i) => (
-                        <div key={i} className="w-32 h-20 bg-slate-800 rounded flex items-center justify-center text-xs text-slate-500 border border-slate-700 overflow-hidden">
-                          {doc.type === 'IMAGE' ? <img src={doc.url} alt="media" className="w-full h-full object-cover" /> : 'Media'}
+                        <div
+                          key={i}
+                          className="w-32 h-20 bg-slate-800 rounded flex items-center justify-center text-xs text-slate-500 border border-slate-700 overflow-hidden"
+                        >
+                          {doc.type === 'IMAGE' ? (
+                            <img src={doc.url} alt="media" className="w-full h-full object-cover" />
+                          ) : (
+                            'Media'
+                          )}
                         </div>
                       ))}
                       <div className="w-32 h-20 bg-slate-800 rounded flex items-center justify-center text-xs text-slate-500 border border-slate-700 flex-col gap-1">
@@ -140,7 +173,6 @@ export const VerificationCenter: React.FC = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

@@ -2,9 +2,9 @@ name: Enterprise CI Pipeline
 
 on:
   push:
-    branches: [ "main", "staging" ]
+    branches: ['main', 'staging']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   validate-backend:
@@ -15,26 +15,26 @@ jobs:
         working-directory: ./apps/backend
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.x'
-        cache: 'npm'
-        cache-dependency-path: './apps/backend/package-lock.json'
-        
-    - name: Install Dependencies
-      run: npm ci
-      
-    - name: Type Check
-      run: npm run typecheck --if-present
-      
-    - name: Lint
-      run: npm run lint --if-present
-      
-    - name: Build
-      run: npm run build
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          cache-dependency-path: './apps/backend/package-lock.json'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Type Check
+        run: npm run typecheck --if-present
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Build
+        run: npm run build
 
   validate-frontend:
     name: Frontend Validation
@@ -44,22 +44,22 @@ jobs:
         working-directory: ./apps/frontend
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.x'
-        cache: 'npm'
-        cache-dependency-path: './apps/frontend/package-lock.json'
-        
-    - name: Install Dependencies
-      run: npm ci
-      
-    - name: Type Check
-      run: npm run typecheck --if-present
-      
-    - name: Build
-      run: npm run build
-      env:
-        VITE_API_BASE_URL: "https://api.staging.theartistmall.com/api/v1"
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          cache-dependency-path: './apps/frontend/package-lock.json'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Type Check
+        run: npm run typecheck --if-present
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: 'https://api.staging.theartistmall.com/api/v1'

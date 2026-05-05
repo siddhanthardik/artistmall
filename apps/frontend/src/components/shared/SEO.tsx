@@ -64,44 +64,36 @@ export const SEO: React.FC<SEOProps> = ({
 
     // Structured Data (JSON-LD)
     const schemaData = {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "The Artist Mall",
-      "image": "https://www.theartistmall.com/logo.png",
-      "@id": "https://www.theartistmall.com",
-      "url": "https://www.theartistmall.com",
-      "telephone": `+91-${CONTACT_INFO.PHONE}`,
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "A-208, DWARKA SECTOR-28",
-        "addressLocality": "NEW DELHI",
-        "postalCode": "110077",
-        "addressCountry": "IN"
+      '@context': 'https://schema.org',
+      '@type': 'LocalBusiness',
+      name: 'The Artist Mall',
+      image: 'https://www.theartistmall.com/logo.png',
+      '@id': 'https://www.theartistmall.com',
+      url: 'https://www.theartistmall.com',
+      telephone: `+91-${CONTACT_INFO.PHONE}`,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'A-208, DWARKA SECTOR-28',
+        addressLocality: 'NEW DELHI',
+        postalCode: '110077',
+        addressCountry: 'IN',
       },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 28.5450,
-        "longitude": 77.0650
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 28.545,
+        longitude: 77.065,
       },
-      "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday"
-        ],
-        "opens": "00:00",
-        "closes": "23:59"
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '00:00',
+        closes: '23:59',
       },
-      "sameAs": [
+      sameAs: [
         CONTACT_INFO.SOCIAL.FACEBOOK,
         CONTACT_INFO.SOCIAL.INSTAGRAM,
-        CONTACT_INFO.SOCIAL.LINKEDIN
-      ]
+        CONTACT_INFO.SOCIAL.LINKEDIN,
+      ],
     };
 
     let script = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement;
@@ -111,7 +103,6 @@ export const SEO: React.FC<SEOProps> = ({
       document.head.appendChild(script);
     }
     script.text = JSON.stringify(schemaData);
-
   }, [title, description, canonical, ogImage, ogType, noIndex]);
 
   return null;

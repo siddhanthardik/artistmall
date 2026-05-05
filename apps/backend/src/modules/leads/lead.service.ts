@@ -9,11 +9,14 @@ export const LeadService = {
     const existingLead = await LeadModel.findOne({
       phone: data.phone,
       artistId: data.artistId,
-      createdAt: { $gte: tenMinutesAgo }
+      createdAt: { $gte: tenMinutesAgo },
     });
 
     if (existingLead) {
-      throw new AppError('A booking request for this artist was recently sent from this phone number. Please wait before trying again.', 429);
+      throw new AppError(
+        'A booking request for this artist was recently sent from this phone number. Please wait before trying again.',
+        429,
+      );
     }
 
     // Auto Tagging
@@ -27,11 +30,11 @@ export const LeadService = {
     const lead = await LeadModel.create({
       ...data,
       tags,
-      status: 'new'
+      status: 'new',
     });
 
     // Send email asynchronously so it doesn't block response
-    LeadService.sendLeadEmail(lead).catch(err => {
+    LeadService.sendLeadEmail(lead).catch((err) => {
       console.error('Failed to send lead email:', err);
     });
 
@@ -49,8 +52,8 @@ export const LeadService = {
       service: 'gmail',
       auth: {
         user: 'salestheartistmall@gmail.com',
-        pass: pass
-      }
+        pass: pass,
+      },
     });
 
     await transporter.sendMail({
@@ -68,7 +71,7 @@ export const LeadService = {
         <p><b>City:</b> ${lead.eventCity}</p>
         <p><b>Guests:</b> ${lead.guestCount}</p>
         <p><b>Notes:</b> ${lead.message || 'N/A'}</p>
-      `
+      `,
     });
   },
 
@@ -106,5 +109,5 @@ export const LeadService = {
     const lead = await LeadModel.findByIdAndDelete(id);
     if (!lead) throw new AppError('Lead not found', 404);
     return lead;
-  }
+  },
 };
