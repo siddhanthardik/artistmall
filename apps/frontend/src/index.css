@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-orange: 25 100% 31%; /* #a04100 */
+    --primary-blue: 204 100% 32%;   /* #0061a5 */
+  }
+
+  body {
+    @apply bg-surface text-neutral-content font-sans antialiased;
+  }
+
+  /* Typography Scale */
+  .text-display {
+    @apply text-[64px] font-bold leading-[72px] -tracking-[0.02em];
+  }
+  .text-headline-lg {
+    @apply text-[40px] font-bold leading-[48px] -tracking-[0.01em];
+  }
+  .text-headline-md {
+    @apply text-[32px] font-semibold leading-[40px];
+  }
+  .text-headline-sm {
+    @apply text-[24px] font-semibold leading-[32px];
+  }
+  .text-title-lg {
+    @apply text-[20px] font-semibold leading-[28px];
+  }
+  .text-body-lg {
+    @apply text-[18px] font-normal leading-[28px];
+  }
+  .text-body-md {
+    @apply text-[16px] font-normal leading-[24px];
+  }
+  .text-body-sm {
+    @apply text-[14px] font-normal leading-[20px];
+  }
+  .text-label-lg {
+    @apply text-[14px] font-semibold leading-[20px] tracking-[0.02em];
+  }
+  .text-label-sm {
+    @apply text-[12px] font-medium leading-[16px] tracking-[0.05em];
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/90 backdrop-blur-xl border border-surface-container rounded-lg shadow-sm;
+  }
+
+  .glass-panel-dark {
+    @apply bg-surface-container/95 backdrop-blur-2xl border border-surface-high rounded-lg shadow-md;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-[#ff6b00];
+  }
+
+  .btn-orange {
+    @apply bg-brand-primary hover:bg-brand-orangeHover text-white font-bold py-3 px-8 rounded-lg transition-all shadow-lg;
+  }
+
+  .btn-blue {
+    @apply bg-brand-secondary hover:bg-brand-blueHover text-white font-bold py-3 px-8 rounded-lg transition-all shadow-lg;
+  }
+
+  .btn-outline {
+    @apply border-2 border-surface-container text-neutral-content font-bold py-3 px-8 rounded-xl hover:bg-surface-low hover:border-surface-highest transition-all;
+  }
+}
+
+.bg-hero-overlay {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.1) 0%, rgba(248, 250, 252, 0.9) 100%);
+}
