@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowRight } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowRight, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const Navbar: React.FC = () => {
@@ -21,7 +21,6 @@ export const Navbar: React.FC = () => {
     { label: 'About us', to: '/about' },
     { label: 'Browse Artists', to: '/artists' },
     { label: 'Categories', to: '#', hasDropdown: true },
-    { label: 'Blog', to: '/blog' },
     { label: 'Contact us', to: '/contact' },
   ];
 
@@ -89,7 +88,15 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* ── Desktop Action ───────────────────────────────────────────── */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex items-center gap-5">
+            <a
+              href="tel:+918595767684"
+              className="text-neutral-content/75 hover:text-brand-primary transition-colors text-[15px] font-bold flex items-center gap-2 whitespace-nowrap"
+              aria-label="Call The Artist Mall at +91-8595767684"
+            >
+              <Phone className="w-4 h-4" />
+              +91-8595767684
+            </a>
             <Link
               to="/contact"
               className="bg-brand-primary text-white px-7 py-3 rounded-xl text-[15px] font-bold transition-all duration-300 shadow-lg hover:bg-brand-primaryContainer hover:shadow-brand-primary/20 flex items-center justify-center whitespace-nowrap"
@@ -146,6 +153,13 @@ export const Navbar: React.FC = () => {
             </div>
 
             <div className="mt-auto pb-10 pt-6 bg-surface">
+              <a
+                href="tel:+918595767684"
+                className="mb-4 flex w-full items-center justify-center gap-2 text-neutral-content font-bold"
+              >
+                <Phone className="w-5 h-5 text-brand-primary" />
+                +91-8595767684
+              </a>
               <Link
                 to="/contact"
                 onClick={() => setMobileMenuOpen(false)}

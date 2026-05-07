@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { UPLOAD_ROOT } from '../config/uploads';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helper: ensure upload directory exists
@@ -9,7 +10,6 @@ const ensureDir = (dir: string) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 };
 
-const UPLOAD_ROOT = path.join(process.cwd(), 'uploads');
 ensureDir(path.join(UPLOAD_ROOT, 'artists', 'profile'));
 ensureDir(path.join(UPLOAD_ROOT, 'artists', 'gallery'));
 ensureDir(path.join(UPLOAD_ROOT, 'artists', 'brochures'));

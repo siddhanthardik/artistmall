@@ -1,4 +1,6 @@
 import HeroBanner, { IHeroBanner } from './models/hero-banner.model';
+import { hasValidMediaField, sanitizeMediaField } from '../../utils/media-integrity.util';
+import { AppError } from '../../core/errors';
 
 export const HeroBannerService = {
   /**
@@ -12,13 +14,19 @@ export const HeroBannerService = {
    * Get active banners (Public)
    */
   getActiveBanners: async () => {
-    return HeroBanner.find({ isActive: true }).sort({ sortOrder: 1 });
+    const banners = await HeroBanner.find({ isActive: true }).sort({ sortOrder: 1 });
+    return banners
+      .filter((banner) => hasValidMediaField(banner as any, 'imageUrl'))
+      .map((banner) => sanitizeMediaField(banner as any, 'imageUrl'));
   },
 
   /**
    * Create a new banner
    */
   createBanner: async (data: Partial<IHeroBanner>) => {
+    if (data.imageUrl && !hasValidMediaField(data as any, 'imageUrl')) {
+      throw new AppError('Banner image file is missing from storage', 400);
+    }
     return HeroBanner.create(data);
   },
 
@@ -26,6 +34,9 @@ export const HeroBannerService = {
    * Update a banner
    */
   updateBanner: async (id: string, data: Partial<IHeroBanner>) => {
+    if (data.imageUrl && !hasValidMediaField(data as any, 'imageUrl')) {
+      throw new AppError('Banner image file is missing from storage', 400);
+    }
     return HeroBanner.findByIdAndUpdate(id, { $set: data }, { new: true });
   },
 

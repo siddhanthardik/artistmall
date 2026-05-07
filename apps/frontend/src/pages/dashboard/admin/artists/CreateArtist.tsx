@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronRight,
@@ -41,6 +43,40 @@ const BOOKING_TYPES = [
   'International Show',
 ];
 
+const BIO_EDITOR_MODULES = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ color: [] }, { background: [] }],
+    [{ align: [] }],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    [{ indent: '-1' }, { indent: '+1' }],
+    ['blockquote', 'link'],
+    ['clean'],
+  ],
+};
+
+const BIO_EDITOR_FORMATS = [
+  'header',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'color',
+  'background',
+  'align',
+  'list',
+  'bullet',
+  'indent',
+  'blockquote',
+  'link',
+];
+
+const getPlainTextLength = (html: string) => {
+  const text = html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+  return text.length;
+};
+
 const ReviewStat = ({ label, value }: { label: string; value: string | number }) => (
   <div className="bg-white border border-surface-container rounded-2xl p-6 text-center shadow-sm">
     <p className="text-2xl font-black text-neutral-content">{value}</p>
@@ -66,23 +102,19 @@ export const CreateArtist: React.FC = () => {
     shortBio: '',
     longBio: '',
     premiumHighlights: [] as string[],
-    trustIndicators: [] as string[],
     profilePicture: '',
     portfolioGallery: [] as string[],
     youtubeLinks: [] as string[],
     brochure: '',
-    startingPrice: '',
     priceRange: { min: '', max: '' },
     bookingTypes: [] as string[],
     pricingNotes: '',
-    premiumTier: 'STANDARD',
     isPublished: true,
     isFeatured: false,
     showOnHome: false,
   });
 
   const [highlightInput, setHighlightInput] = useState('');
-  const [trustInput, setTrustInput] = useState('');
   const [videoLinkInput, setVideoLinkInput] = useState('');
 
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -138,19 +170,16 @@ export const CreateArtist: React.FC = () => {
         shortBio: artist.shortBio || '',
         longBio: artist.longBio || '',
         premiumHighlights: artist.premiumHighlights || [],
-        trustIndicators: artist.trustIndicators || [],
         profilePicture: artist.profileImage || '',
         portfolioGallery: artist.gallery || [],
         youtubeLinks: artist.videoLinks || [],
         brochure: artist.brochureFile || '',
-        startingPrice: artist.startingPrice?.toString() || '',
         priceRange: {
           min: artist.priceRange?.min?.toString() || '',
           max: artist.priceRange?.max?.toString() || '',
         },
         bookingTypes: artist.bookingTypes || [],
         pricingNotes: artist.pricingNotes || '',
-        premiumTier: artist.premiumTier || 'STANDARD',
         isPublished: artist.isPublished ?? false,
         isFeatured: artist.isFeatured || false,
         showOnHome: artist.showOnHome || false,
@@ -179,12 +208,13 @@ export const CreateArtist: React.FC = () => {
     } else if (step === 2) {
       if (!formData.shortBio || formData.shortBio.length < 10)
         errs.shortBio = 'Bio must be at least 10 chars';
-      if (!formData.longBio || formData.longBio.length < 50)
+      if (!formData.longBio || getPlainTextLength(formData.longBio) < 50)
         errs.longBio = 'Story must be at least 50 chars';
     } else if (step === 3) {
       if (!formData.profilePicture) errs.profilePicture = 'Profile image required';
     } else if (step === 4) {
-      if (!formData.startingPrice) errs.startingPrice = 'Base pricing required';
+      if (!formData.priceRange.min) errs.priceRangeMin = 'Price floor required';
+      if (!formData.priceRange.max) errs.priceRangeMax = 'Price ceiling required';
     }
     return errs;
   };
@@ -252,7 +282,9 @@ export const CreateArtist: React.FC = () => {
         gallery: formData.portfolioGallery,
         videoLinks: formData.youtubeLinks,
         brochureFile: formData.brochure,
-        startingPrice: Number(formData.startingPrice) || 0,
+        trustIndicators: [],
+        premiumTier: 'STANDARD',
+        startingPrice: Number(formData.priceRange.min) || 0,
         priceRange: {
           min: Number(formData.priceRange.min) || 0,
           max: Number(formData.priceRange.max) || 0,
@@ -281,18 +313,14 @@ export const CreateArtist: React.FC = () => {
   };
 
   // Tag Management
-  const addTag = (
-    field: 'premiumHighlights' | 'trustIndicators',
-    value: string,
-    setter: (v: string) => void,
-  ) => {
+  const addTag = (field: 'premiumHighlights', value: string, setter: (v: string) => void) => {
     if (value.trim() && !formData[field].includes(value.trim())) {
       setFormData((prev) => ({ ...prev, [field]: [...prev[field], value.trim()] }));
       setter('');
     }
   };
 
-  const removeTag = (field: 'premiumHighlights' | 'trustIndicators', idx: number) => {
+  const removeTag = (field: 'premiumHighlights', idx: number) => {
     setFormData((prev) => ({ ...prev, [field]: prev[field].filter((_, i) => i !== idx) }));
   };
 
@@ -624,12 +652,17 @@ export const CreateArtist: React.FC = () => {
                       <label className="block text-[10px] font-black text-neutral-content/40 uppercase tracking-widest ml-1">
                         Comprehensive Story
                       </label>
-                      <textarea
-                        placeholder="Describe the artist's legacy, major achievements, and unique style..."
-                        value={formData.longBio}
-                        onChange={(e) => setFormData({ ...formData, longBio: e.target.value })}
-                        className="w-full h-80 bg-[#F8F9FA] border border-transparent rounded-[24px] px-6 py-5 text-sm font-semibold text-neutral-content focus:outline-none focus:border-brand-primary focus:bg-white transition-all resize-none shadow-sm"
-                      />
+                      <div className="bg-white rounded-[24px] border border-surface-container overflow-hidden [&_.ql-toolbar]:border-none [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-surface-container [&_.ql-toolbar]:bg-[#F8F9FA] [&_.ql-container]:border-none [&_.ql-editor]:min-h-[380px] [&_.ql-editor]:text-sm [&_.ql-editor]:font-medium [&_.ql-editor]:text-neutral-content [&_.ql-editor]:leading-7 [&_.ql-editor_p]:mb-3 [&_.ql-editor_h1]:text-3xl [&_.ql-editor_h1]:font-bold [&_.ql-editor_h2]:text-2xl [&_.ql-editor_h2]:font-bold [&_.ql-editor_h3]:text-xl [&_.ql-editor_h3]:font-bold [&_.ql-editor_ul]:pl-6 [&_.ql-editor_ol]:pl-6">
+                        <ReactQuill
+                          theme="snow"
+                          value={formData.longBio}
+                          onChange={(content) => setFormData({ ...formData, longBio: content })}
+                          modules={BIO_EDITOR_MODULES}
+                          formats={BIO_EDITOR_FORMATS}
+                          preserveWhitespace
+                          placeholder="Describe the artist's legacy, major achievements, and unique style..."
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="space-y-10">
@@ -642,15 +675,6 @@ export const CreateArtist: React.FC = () => {
                       onAdd={() => addTag('premiumHighlights', highlightInput, setHighlightInput)}
                       onRemove={(i) => removeTag('premiumHighlights', i)}
                     />
-                    <TagArea
-                      label="Trust Indicators"
-                      placeholder="e.g. Official Artist for Coca-Cola"
-                      input={trustInput}
-                      setInput={setTrustInput}
-                      tags={formData.trustIndicators}
-                      onAdd={() => addTag('trustIndicators', trustInput, setTrustInput)}
-                      onRemove={(i) => removeTag('trustIndicators', i)}
-                    />
                     <div className="bg-brand-secondary/5 border border-brand-secondary/10 rounded-3xl p-8 space-y-4">
                       <div className="flex items-center gap-3 text-brand-secondary">
                         <ShieldCheck className="w-5 h-5" />
@@ -659,8 +683,8 @@ export const CreateArtist: React.FC = () => {
                         </span>
                       </div>
                       <p className="text-[11px] font-medium text-neutral-content/60 leading-relaxed uppercase tracking-wide">
-                        Trust indicators and highlights appear in the booking interface to maximize
-                        conversion for this talent.
+                        Premium highlights appear in the booking interface to maximize conversion
+                        for this talent. Add each highlight separately for clean spacing.
                       </p>
                     </div>
                   </div>
@@ -872,13 +896,6 @@ export const CreateArtist: React.FC = () => {
               {activeStep === 4 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
                   <div className="space-y-10">
-                    <InputField
-                      label="Starting Performance Fee (₹)"
-                      placeholder="e.g. 50,000"
-                      type="number"
-                      value={formData.startingPrice}
-                      onChange={(v) => setFormData({ ...formData, startingPrice: v })}
-                    />
                     <div className="grid grid-cols-2 gap-6">
                       <InputField
                         label="Price Floor (₹)"
@@ -941,21 +958,6 @@ export const CreateArtist: React.FC = () => {
                         className="w-full h-44 bg-[#F8F9FA] border border-transparent rounded-[24px] px-6 py-5 text-sm font-semibold text-neutral-content focus:outline-none focus:border-brand-primary transition-all resize-none shadow-sm"
                       />
                     </div>
-                    <div className="space-y-3">
-                      <label className="block text-[10px] font-black text-neutral-content/40 uppercase tracking-widest ml-1">
-                        Market Position (Tier)
-                      </label>
-                      <select
-                        className="w-full bg-[#F8F9FA] border border-transparent rounded-2xl py-4 px-6 text-sm font-bold text-neutral-content appearance-none cursor-pointer focus:outline-none focus:border-brand-primary transition-all"
-                        value={formData.premiumTier}
-                        onChange={(e) => setFormData({ ...formData, premiumTier: e.target.value })}
-                      >
-                        <option value="STANDARD">Standard Elite</option>
-                        <option value="GOLD">Gold Tier</option>
-                        <option value="PREMIUM">Premium Collection</option>
-                        <option value="EXCLUSIVE">Exclusive Access</option>
-                      </select>
-                    </div>
                   </div>
                 </div>
               )}
@@ -982,9 +984,6 @@ export const CreateArtist: React.FC = () => {
                           : 'Uncategorized'}
                       </p>
                       <div className="flex flex-wrap justify-center md:justify-start gap-2 pt-2">
-                        <span className="bg-brand-primary text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-                          {formData.premiumTier}
-                        </span>
                         <span className="bg-brand-secondary text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
                           {formData.isPublished ? 'Live' : 'Draft'}
                         </span>
@@ -992,10 +991,11 @@ export const CreateArtist: React.FC = () => {
                     </div>
                     <div className="text-center md:text-right">
                       <p className="text-2xl font-bold text-neutral-content">
-                        ₹ {Number(formData.startingPrice).toLocaleString()}
+                        Rs. {Number(formData.priceRange.min).toLocaleString()} - Rs.{' '}
+                        {Number(formData.priceRange.max).toLocaleString()}
                       </p>
                       <p className="text-[10px] font-black text-neutral-content/40 uppercase tracking-widest mt-1">
-                        Starting Performance Fee
+                        Price Range
                       </p>
                     </div>
                   </div>
@@ -1116,3 +1116,5 @@ const TagArea = ({ label, placeholder, input, setInput, tags, onAdd, onRemove }:
     </div>
   </div>
 );
+
+

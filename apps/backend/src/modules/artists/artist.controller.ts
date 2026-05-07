@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ArtistService } from './artist.service';
 import { AppError } from '../../core/errors';
 import { ArtistCategoryModel } from './models/artist-category.model';
+import { sanitizeMediaField } from '../../utils/media-integrity.util';
 
 // --- MANAGEMENT CONTROLLERS ---
 
@@ -178,7 +179,10 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
       sortOrder: 1,
       name: 1,
     });
-    res.status(200).json({ status: 'success', data: { categories } });
+    res.status(200).json({
+      status: 'success',
+      data: { categories: categories.map((category) => sanitizeMediaField(category as any, 'image_url')) },
+    });
   } catch (error) {
     next(error);
   }

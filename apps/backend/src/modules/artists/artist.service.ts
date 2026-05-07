@@ -4,6 +4,7 @@ import { AdminActivityLogModel } from '../admin/models/admin-activity.model';
 import { AppError } from '../../core/errors';
 import mongoose from 'mongoose';
 import { getCache, setCache, invalidateCache } from '../../utils/redis.util';
+import { sanitizeArtistMedia, sanitizeArtistsMedia } from '../../utils/media-integrity.util';
 
 export class ArtistService {
   // --- MANAGEMENT ACTIONS ---
@@ -270,7 +271,7 @@ export class ArtistService {
     pipeline.push({ $limit: limit });
     pipeline.push({ $project: { activeFeatures: 0, sortWeight: 0 } });
 
-    const results = await ArtistModel.aggregate(pipeline);
+    const results = sanitizeArtistsMedia(await ArtistModel.aggregate(pipeline));
     const totalCount = await ArtistModel.countDocuments(matchStage);
 
     const result = {
@@ -285,17 +286,19 @@ export class ArtistService {
   }
 
   static async getTrendingArtists(limit = 10) {
-    return await ArtistModel.find({
+    const artists = await ArtistModel.find({
       isDeleted: false,
       isPublished: true,
       verificationStatus: 'PUBLISHED',
     })
       .sort({ rating: -1 })
       .limit(limit);
+
+    return sanitizeArtistsMedia(artists);
   }
 
   static async getHomepageFeatured(limit = 8) {
-    return await ArtistModel.find({
+    const artists = await ArtistModel.find({
       isDeleted: false,
       isPublished: true,
       verificationStatus: 'PUBLISHED',
@@ -303,6 +306,8 @@ export class ArtistService {
     })
       .sort({ createdAt: -1 })
       .limit(limit);
+
+    return sanitizeArtistsMedia(artists);
   }
 
   static async getFeaturedArtists(limit = 10) {
@@ -317,7 +322,7 @@ export class ArtistService {
       verificationStatus: 'PUBLISHED',
     }).limit(limit);
 
-    if (directFeatured.length >= limit) return directFeatured;
+    if (directFeatured.length >= limit) return sanitizeArtistsMedia(directFeatured);
 
     // If we need more, fallback to the paid listings
     const currentDate = new Date();
@@ -335,7 +340,7 @@ export class ArtistService {
       .map((f) => f.artistId)
       .filter((a) => a && !directFeatured.find((df) => df._id.equals((a as any)._id)));
 
-    return [...directFeatured, ...paidFeatured];
+    return sanitizeArtistsMedia([...directFeatured, ...paidFeatured]);
   }
 
   static async getArtistBySlugOrId(slugOrId: string) {
@@ -352,6 +357,6 @@ export class ArtistService {
 
     // For public detail, we should also check if published unless explicitly allowed
     // But usually this service method is used by both. Let's keep it generic but enforce isPublished in the controller if needed.
-    return artist;
+    return sanitizeArtistMedia(artist);
   }
 }

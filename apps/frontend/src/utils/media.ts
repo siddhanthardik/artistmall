@@ -1,70 +1,93 @@
 /**
- * Centralized media utility for The Artist Mall.
+ * Centralized media URL handling.
  *
- * URL Strategy:
- * - In DEVELOPMENT: returns relative paths (e.g. /uploads/artists/...)
- *   → Vite proxy forwards these to the backend at localhost:5000
- *   → This avoids Cross-Origin-Resource-Policy issues between ports 5173/5000
- * - In PRODUCTION: prepends VITE_API_BASE_URL (stripped of /api/v1)
- *   → e.g. https://api.theartistmall.com/uploads/artists/...
- *
- * FALLBACK: returns a transparent 1x1 SVG data URL instead of an empty string
- * so <img> tags never render the browser's broken-image icon.
+ * Uploaded files are rendered as same-origin relative URLs whenever possible.
+ * That keeps https://theartistmall.com and https://www.theartistmall.com tabs
+ * from depending on stale absolute URLs saved in the database.
  */
 
-// A transparent SVG used as a safe no-image placeholder.
-// This prevents broken-image icons when the src is empty/null.
-export const FALLBACK_IMAGE =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E";
+export const FALLBACK_IMAGE = '';
 
-const isDev = (import.meta as any).env?.DEV ?? true;
+const env = (import.meta as any).env ?? {};
+const isDev = Boolean(env.DEV);
+const API_BASE_URL: string = env.VITE_API_BASE_URL ?? '/api/v1';
 
-const VITE_API_BASE_URL: string =
-  (import.meta as any).env?.VITE_API_BASE_URL ?? 'http://localhost:5000/api/v1';
+const trimApiPath = (value: string) => value.replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
 
-// Strip "/api/v1" suffix to get the bare server origin
-const BASE_URL = VITE_API_BASE_URL.replace(/\/api\/v1\/?$/, '');
+const getApiOrigin = (): string => {
+  if (API_BASE_URL.startsWith('/')) return '';
+
+  try {
+    return trimApiPath(new URL(API_BASE_URL).origin);
+  } catch {
+    return '';
+  }
+};
+
+const stripWww = (hostname: string) => hostname.replace(/^www\./i, '');
+
+const isSameSiteHost = (hostname: string) => {
+  if (typeof window === 'undefined') return false;
+  return stripWww(hostname) === stripWww(window.location.hostname);
+};
+
+const isConfiguredApiHost = (hostname: string) => {
+  const apiOrigin = getApiOrigin();
+  if (!apiOrigin) return false;
+
+  try {
+    return stripWww(hostname) === stripWww(new URL(apiOrigin).hostname);
+  } catch {
+    return false;
+  }
+};
+
+const isUploadedAssetPath = (pathname: string) => /^\/uploads(\/|$)/i.test(pathname);
+
+const normalizePath = (value: string) => {
+  const [pathPart, suffix = ''] = value.split(/([?#].*)/, 2);
+  const normalizedPath = `/${pathPart}`.replace(/\/+/g, '/');
+  return `${normalizedPath}${suffix}`;
+};
 
 /**
- * Resolves a media path from the database into a fully usable URL.
- *
- * @param url  The raw path stored in DB (e.g. "/uploads/artists/profile/xyz.jpg")
- *             or an existing absolute URL (https://...)
- * @returns    A URL safe to use as <img src> or <a href>
+ * Resolves a database media value into a browser-safe URL.
  */
 export const resolveMediaUrl = (url: string | undefined | null): string => {
-  if (!url || url.trim() === '') return FALLBACK_IMAGE;
+  if (!url || typeof url !== 'string') return '';
 
-  // Already an absolute URL (http / https / data:) — return as-is
-  if (/^(https?:\/\/|data:)/.test(url)) return url;
+  const rawUrl = url.trim();
+  if (!rawUrl) return '';
+  if (/^(data:|blob:)/i.test(rawUrl)) return rawUrl;
 
-  // Ensure a leading slash
-  const cleanPath = url.startsWith('/') ? url : `/${url}`;
+  try {
+    const parsed = new URL(rawUrl);
 
-  // Dev: use relative path so Vite proxy handles cross-port routing
-  if (isDev) return cleanPath;
+    if (
+      isUploadedAssetPath(parsed.pathname) &&
+      (isSameSiteHost(parsed.hostname) || isConfiguredApiHost(parsed.hostname))
+    ) {
+      return `${normalizePath(parsed.pathname)}${parsed.search}${parsed.hash}`;
+    }
 
-  // Production: prepend the server origin
-  return `${BASE_URL}${cleanPath}`;
+    if (parsed.protocol === 'http:' && typeof window !== 'undefined' && window.location.protocol === 'https:') {
+      parsed.protocol = 'https:';
+    }
+
+    return parsed.toString();
+  } catch {
+    const withoutApiPrefix = rawUrl.replace(/^\/api\/v1(?=\/uploads(?:\/|$))/i, '');
+    const normalized = normalizePath(withoutApiPrefix);
+
+    if (isDev || normalized.startsWith('/uploads')) return normalized;
+
+    const apiOrigin = getApiOrigin();
+    return apiOrigin ? `${apiOrigin}${normalized}` : normalized;
+  }
 };
 
-/**
- * Returns a resolved URL, or FALLBACK_IMAGE if the result would be empty.
- * Use this where you need a guaranteed non-empty src.
- */
-export const resolveMediaUrlOrFallback = (url: string | undefined | null): string => {
-  const resolved = resolveMediaUrl(url);
-  return resolved === FALLBACK_IMAGE || resolved === '' ? FALLBACK_IMAGE : resolved;
-};
+export const resolveMediaUrlOrFallback = resolveMediaUrl;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Currency formatting for Indian Rupee (INR)
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * Formats a number in full INR notation with commas.
- * e.g. 500000 → ₹5,00,000
- */
 export const formatCurrency = (amount: number | string | undefined | null): string => {
   if (amount === undefined || amount === null || amount === '') return '';
   const num = typeof amount === 'string' ? parseFloat(amount) : amount;
@@ -76,10 +99,6 @@ export const formatCurrency = (amount: number | string | undefined | null): stri
   }).format(num);
 };
 
-/**
- * Formats large numbers as compact shorthand.
- * e.g. 150000 → ₹1.5L | 10000000 → ₹1.0Cr
- */
 export const formatCurrencyShorthand = (amount: number | string | undefined | null): string => {
   if (amount === undefined || amount === null || amount === '') return '';
   const num = typeof amount === 'string' ? parseFloat(amount) : amount;

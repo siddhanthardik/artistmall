@@ -2,6 +2,8 @@ import React from 'react';
 import { LucideIcon, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+import { resolveMediaUrl } from '../../utils/media';
+
 interface CategoryCardProps {
   name: string;
   count: number;
@@ -23,7 +25,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
       <div className="w-full h-40 relative overflow-hidden bg-slate-50">
         {imageUrl ? (
           <img
-            src={imageUrl}
+            src={resolveMediaUrl(imageUrl)}
             alt={name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
           />

@@ -3,8 +3,6 @@ import { useSearchParams, Link } from 'react-router-dom';
 import {
   ChevronDown,
   Search,
-  BadgeCheck,
-  X,
   LayoutGrid,
   List,
   ChevronRight,
@@ -48,9 +46,8 @@ export const Discovery: React.FC = () => {
     categoryId: searchParams.get('categoryId') || searchParams.get('category') || '',
     categoryName: searchParams.get('categoryName') || '',
     minPrice: 0,
-    maxPrice: 5000000,
+    maxPrice: 50000000,
     city: searchParams.get('city') || '',
-    isVerified: false,
     isFeatured: false,
   });
   const debouncedFilters = useDebounce(filters, 500);
@@ -132,19 +129,19 @@ export const Discovery: React.FC = () => {
                 </div>
               </div>
 
-              {/* Budget Range */}
               <div>
                 <h3 className="text-sm font-bold text-neutral-content mb-6">Budget Range</h3>
                 <div className="space-y-4">
                   {[
-                    { label: 'Under ₹40,000', min: 0, max: 40000 },
-                    { label: '₹40,000 - ₹1,25,000', min: 40000, max: 125000 },
-                    { label: '₹1,25,000 - ₹4,00,000', min: 125000, max: 400000 },
-                    { label: '₹4,00,000+', min: 400000, max: 5000000 },
+                    { label: '₹1 Lakh to ₹5 Lakh', min: 100000, max: 500000 },
+                    { label: '₹5 Lakh to ₹10 Lakh', min: 500000, max: 1000000 },
+                    { label: '₹10 Lakh to ₹15 Lakh', min: 1000000, max: 1500000 },
+                    { label: '₹15 Lakh to ₹20 Lakh', min: 1500000, max: 2000000 },
+                    { label: 'Above ₹20 Lakh', min: 2000000, max: 50000000 },
                   ].map((range) => (
                     <label
                       key={range.label}
-                      className="flex items-center gap-3 cursor-pointer group"
+                      className="flex items-center gap-4 cursor-pointer group p-2 -ml-2 hover:bg-white rounded-xl transition-all"
                     >
                       <div className="relative flex items-center justify-center">
                         <input
@@ -158,7 +155,7 @@ export const Discovery: React.FC = () => {
                         />
                         <div className="absolute w-2.5 h-2.5 bg-brand-primary rounded-full opacity-0 peer-checked:opacity-100 transition-all"></div>
                       </div>
-                      <span className="text-sm font-medium text-neutral-content/60 group-hover:text-neutral-content transition-colors">
+                      <span className="text-sm font-medium text-slate-700 group-hover:text-brand-primary transition-colors">
                         {range.label}
                       </span>
                     </label>
@@ -185,20 +182,6 @@ export const Discovery: React.FC = () => {
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-content/30 pointer-events-none" />
                 </div>
               </div>
-
-              {/* Verified Toggle */}
-              <button
-                onClick={() => setFilters((p) => ({ ...p, isVerified: !p.isVerified }))}
-                className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${filters.isVerified ? 'bg-brand-primary/5 border-brand-primary text-brand-primary' : 'bg-white border-surface-container text-neutral-content/60'}`}
-              >
-                <div className="flex items-center gap-3">
-                  <BadgeCheck
-                    className={`w-5 h-5 ${filters.isVerified ? 'text-brand-primary' : 'text-neutral-content/30'}`}
-                  />
-                  <span className="text-sm font-bold">Verified Only</span>
-                </div>
-                {filters.isVerified && <X className="w-4 h-4" />}
-              </button>
             </div>
           </aside>
 

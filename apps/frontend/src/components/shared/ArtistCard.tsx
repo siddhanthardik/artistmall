@@ -4,8 +4,7 @@ import { BadgeCheck, MapPin, CalendarCheck, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { BookingModal } from './BookingModal';
-import { ArtistImage } from './ArtistImage';
-import { formatCurrencyShorthand } from '../../utils/media';
+import { formatCurrencyShorthand, resolveMediaUrl } from '../../utils/media';
 
 interface ArtistCardProps {
   id: string;
@@ -34,6 +33,7 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({
   shortSummary,
 }) => {
   const [isBookingModalOpen, setIsBookingModalOpen] = React.useState(false);
+  const resolvedImageUrl = resolveMediaUrl(imageUrl);
 
   const formatPrice = (num: number) => formatCurrencyShorthand(num);
 
@@ -66,12 +66,13 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({
           to={`/artists/${id}`}
           className="block relative h-64 w-full overflow-hidden bg-surface-low"
         >
-          <ArtistImage
-            src={imageUrl}
-            alt={name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-            fallbackClassName="w-full h-full"
-          />
+          {resolvedImageUrl && (
+            <img
+              src={resolvedImageUrl}
+              alt={name}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-neutral-inverse/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
         </Link>
 

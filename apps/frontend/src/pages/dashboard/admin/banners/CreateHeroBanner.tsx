@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Upload, Loader2, Check, Link as LinkIcon, Type, AlignLeft } from 'lucide-react';
 import { AdminService } from '../../../../services/admin.service';
 import { toast } from 'react-hot-toast';
+import { resolveMediaUrl } from '../../../../utils/media';
 
 export const CreateHeroBanner: React.FC = () => {
   const { id } = useParams();
@@ -141,7 +142,11 @@ export const CreateHeroBanner: React.FC = () => {
           >
             {formData.imageUrl ? (
               <>
-                <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                <img
+                  src={resolveMediaUrl(formData.imageUrl)}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-2">
                   <Upload className="w-8 h-8" />
                   <span className="text-[10px] font-black uppercase tracking-widest">

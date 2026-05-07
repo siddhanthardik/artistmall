@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { AdminService } from '../../../../services/admin.service';
 import { toast } from 'react-hot-toast';
 import { Reorder } from 'framer-motion';
+import { resolveMediaUrl } from '../../../../utils/media';
 
 export const HeroBannerList: React.FC = () => {
   const navigate = useNavigate();
@@ -188,7 +189,7 @@ export const HeroBannerList: React.FC = () => {
                     <td className="px-6 py-6">
                       <div className="w-48 h-24 rounded-2xl overflow-hidden border border-surface-container bg-slate-100 relative group/img">
                         <img
-                          src={banner.imageUrl}
+                          src={resolveMediaUrl(banner.imageUrl)}
                           alt=""
                           className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110"
                         />

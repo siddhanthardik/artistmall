@@ -11,6 +11,7 @@ import { AdminModel } from './models/admin.model';
 import { RoleModel } from '../users/models/role.model';
 import { DepartmentModel } from '../users/models/department.model';
 import { ALL_PERMISSIONS, DEFAULT_ROLES } from './permissions';
+import { localUploadedMediaExists } from '../../utils/media-integrity.util';
 
 // Helper: consistently pull the admin's ID from the v2 auth token payload
 const getAdminId = (req: Request): string => req.user!.userId;
@@ -20,6 +21,15 @@ const ensureValidPermissions = (permissions: string[]) => {
   const allowed = new Set(ALL_PERMISSIONS);
   if (!permissions.every((permission) => allowed.has(permission as any))) {
     throw new AppError('One or more permissions are invalid', 400);
+  }
+};
+
+const assertArtistHasPublishableMedia = (artist: { profileImage?: string; gallery?: string[] }) => {
+  const hasProfileImage = localUploadedMediaExists(artist.profileImage);
+  const hasGalleryImage = (artist.gallery ?? []).some((url) => localUploadedMediaExists(url));
+
+  if (!hasProfileImage && !hasGalleryImage) {
+    throw new AppError('Cannot publish artist because the profile/gallery image file is missing from storage', 400);
   }
 };
 
@@ -55,6 +65,10 @@ export const provisionArtist = async (req: Request, res: Response, next: NextFun
       isPublished: body.verificationStatus === 'PUBLISHED',
       isActive: true,
     };
+
+    if (artistData.isPublished || artistData.showOnHome || artistData.isFeatured) {
+      assertArtistHasPublishableMedia(artistData);
+    }
 
     const newArtist = await ArtistModel.create(artistData);
 
@@ -199,6 +213,11 @@ export const updateArtist = async (req: Request, res: Response, next: NextFuncti
     }
 
     Object.assign(artist, req.body);
+
+    if (artist.isPublished || artist.showOnHome || artist.isFeatured) {
+      assertArtistHasPublishableMedia(artist);
+    }
+
     artist.updatedBy = adminId as any;
     await artist.save();
 
@@ -244,8 +263,10 @@ export const updateArtistStep = async (req: Request, res: Response, next: NextFu
       if (!data.profilePicture && !data.profileImage)
         throw new AppError('Profile image required', 400);
     } else if (step === 'commercial') {
-      if (data.startingPrice === undefined || data.startingPrice === '')
-        throw new AppError('Starting price required', 400);
+      if (data.priceRange?.min === undefined || data.priceRange.min === '')
+        throw new AppError('Price floor required', 400);
+      if (data.priceRange?.max === undefined || data.priceRange.max === '')
+        throw new AppError('Price ceiling required', 400);
     }
 
     // 2. Map Frontend Field Names to DB Field Names
@@ -264,6 +285,7 @@ export const updateArtistStep = async (req: Request, res: Response, next: NextFu
         min: Number(data.priceRange.min) || 0,
         max: Number(data.priceRange.max) || 0,
       };
+      updateData.startingPrice = updateData.priceRange.min;
     }
 
     // 3. Perform Update
@@ -762,7 +784,15 @@ export const reviewArtist = async (req: Request, res: Response, next: NextFuncti
       updateData.showOnHome = false;
     }
 
-    const artist = await ArtistModel.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    const existingArtist = await ArtistModel.findById(req.params.id);
+    if (!existingArtist) throw new AppError('Artist not found', 404);
+
+    Object.assign(existingArtist, updateData);
+    if (existingArtist.isPublished || existingArtist.showOnHome || existingArtist.isFeatured) {
+      assertArtistHasPublishableMedia(existingArtist);
+    }
+
+    const artist = await existingArtist.save();
     if (!artist) throw new AppError('Artist not found', 404);
 
     await logAdminActivity(
@@ -787,6 +817,10 @@ export const toggleFeatured = async (req: Request, res: Response, next: NextFunc
   try {
     const artist = await ArtistModel.findById(req.params.id);
     if (!artist) throw new AppError('Artist not found', 404);
+
+    if (!artist.isFeatured) {
+      assertArtistHasPublishableMedia(artist);
+    }
 
     artist.isFeatured = !artist.isFeatured;
     await artist.save();
@@ -814,6 +848,10 @@ export const toggleHome = async (req: Request, res: Response, next: NextFunction
     // Rule: showOnHome = true only if published = true
     if (!artist.isPublished && !artist.showOnHome) {
       throw new AppError('Cannot show unpublished artist on homepage', 400);
+    }
+
+    if (!artist.showOnHome) {
+      assertArtistHasPublishableMedia(artist);
     }
 
     artist.showOnHome = !artist.showOnHome;

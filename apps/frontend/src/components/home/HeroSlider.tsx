@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { resolveMediaUrl } from '../../utils/media';
+
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-fade';
@@ -46,19 +48,24 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
         loop={banners.length > 1}
         className="w-full h-full"
       >
-        {banners.map((banner) => (
+        {banners.map((banner) => {
+          const resolvedImageUrl = resolveMediaUrl(banner.imageUrl);
+
+          return (
           <SwiperSlide key={banner._id}>
             {({ isActive }) => (
               <div className="relative w-full h-full">
                 {/* Background Image */}
                 <div className="absolute inset-0">
-                  <img
-                    src={banner.imageUrl}
-                    alt={banner.title}
-                    className={`w-full h-full object-cover transition-transform duration-[8s] ease-linear ${
-                      isActive ? 'scale-110' : 'scale-100'
-                    }`}
-                  />
+                  {resolvedImageUrl && (
+                    <img
+                      src={resolvedImageUrl}
+                      alt={banner.title}
+                      className={`w-full h-full object-cover transition-transform duration-[8s] ease-linear ${
+                        isActive ? 'scale-110' : 'scale-100'
+                      }`}
+                    />
+                  )}
                   {/* Premium Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
@@ -126,7 +133,8 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
               </div>
             )}
           </SwiperSlide>
-        ))}
+          );
+        })}
       </Swiper>
 
       <style>{`

@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
+import fs from 'fs';
 import { artistRoutes } from './modules/artists/artist.routes';
 import { bookingRoutes } from './modules/bookings/booking.routes';
 import { adminRoutes } from './modules/admin/admin.routes';
@@ -16,6 +17,7 @@ import { globalErrorHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { connectRedis } from './utils/redis.util';
 import { connectDB } from './config/database';
+import { UPLOAD_ROOT } from './config/uploads';
 
 // ── Model Registration (Ensures refs can always be populated) ──
 import './modules/users/models/user.model';
@@ -27,6 +29,69 @@ import './modules/artists/models/artist-category.model';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+const parseOrigin = (value?: string): URL | null => {
+  if (!value) return null;
+  try {
+    return new URL(value);
+  } catch {
+    console.warn(`[CONFIG] Ignoring invalid origin: ${value}`);
+    return null;
+  }
+};
+
+const isLocalHostname = (hostname: string) =>
+  hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+
+const addOriginVariants = (origins: Set<string>, value?: string) => {
+  const parsed = parseOrigin(value);
+  if (!parsed) return;
+
+  const hostnames = new Set([parsed.hostname]);
+  if (parsed.hostname.startsWith('www.')) {
+    hostnames.add(parsed.hostname.slice(4));
+  } else if (!isLocalHostname(parsed.hostname)) {
+    hostnames.add(`www.${parsed.hostname}`);
+  }
+
+  const protocols = isLocalHostname(parsed.hostname) ? [parsed.protocol] : ['https:', 'http:'];
+  for (const protocol of protocols) {
+    for (const hostname of hostnames) {
+      const url = new URL(parsed.toString());
+      url.protocol = protocol;
+      url.hostname = hostname;
+      origins.add(url.origin);
+    }
+  }
+};
+
+const getAllowedOrigins = () => {
+  const origins = new Set<string>();
+  const configuredOrigins = [
+    process.env.FRONTEND_URL,
+    process.env.PUBLIC_SITE_URL,
+    ...(process.env.CORS_ORIGINS ?? '')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean),
+  ];
+
+  configuredOrigins.forEach((origin) => addOriginVariants(origins, origin));
+
+  if (origins.size === 0) {
+    addOriginVariants(origins, 'http://localhost:5173');
+  }
+
+  return origins;
+};
+
+const allowedOrigins = getAllowedOrigins();
+
+const isAllowedOrigin = (origin?: string) => {
+  if (!origin) return true;
+  const parsed = parseOrigin(origin);
+  return Boolean(parsed && allowedOrigins.has(parsed.origin));
+};
 
 // ── 1. Proxy Trust ────────────────────────────────────────────────────────────
 // Required for accurate IP detection behind Render / AWS ALB / Vercel
@@ -41,8 +106,8 @@ app.use(
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:*', 'https://res.cloudinary.com'],
-        connectSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:*', 'https:'],
+        connectSrc: ["'self'", ...Array.from(allowedOrigins)],
         fontSrc: ["'self'"],
         objectSrc: ["'none'"],
         frameSrc: ["'none'"],
@@ -59,10 +124,18 @@ app.use(
 // Only the exact registered frontend origin is allowed — no wildcards in prod
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL ?? 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origin ${origin} is not allowed by CORS`));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 204,
   }),
 );
 
@@ -132,13 +205,19 @@ app.use(
   '/uploads',
   (req, res, next) => {
     res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-    res.setHeader(
-      'Access-Control-Allow-Origin',
-      process.env.FRONTEND_URL ?? 'http://localhost:5173',
-    );
+    const requestOrigin = req.get('origin');
+    if (requestOrigin && isAllowedOrigin(requestOrigin)) {
+      res.setHeader('Access-Control-Allow-Origin', requestOrigin);
+      res.setHeader('Vary', 'Origin');
+    }
+    // Immutable cache for 30 days for uploaded assets
+    res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
     next();
   },
-  express.static(path.join(process.cwd(), 'uploads')),
+  express.static(UPLOAD_ROOT, {
+    maxAge: '30d',
+    immutable: true,
+  }),
 );
 
 app.use('/api/v1/artists', artistRoutes);
@@ -169,6 +248,24 @@ app.listen(PORT, async () => {
   // Initialize async services
   await connectDB();
   await connectRedis();
+
+  // Startup Validation
+  const dbUri = process.env.MONGODB_URI || '';
+  const dbName = dbUri.split('/').pop()?.split('?')[0] || 'unknown';
+
+  console.log(`\n--- Startup Validation ---`);
+  console.log(`Database Name: ${dbName}`);
+  console.log(`Upload Root:   ${UPLOAD_ROOT}`);
+  console.log(`Media Path:    /uploads -> ${UPLOAD_ROOT}`);
+
+  if (!fs.existsSync(UPLOAD_ROOT)) {
+    console.warn(`[WARNING] Upload directory does not exist at ${UPLOAD_ROOT}`);
+    fs.mkdirSync(UPLOAD_ROOT, { recursive: true });
+    console.log(`[INFO] Created missing upload directory.`);
+  } else {
+    console.log(`[OK] Upload directory validated.`);
+  }
+  console.log(`--------------------------\n`);
 });
 
 export default app;
