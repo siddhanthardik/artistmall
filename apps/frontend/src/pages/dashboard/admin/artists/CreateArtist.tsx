@@ -656,7 +656,7 @@ export const CreateArtist: React.FC = () => {
                         <ReactQuill
                           theme="snow"
                           value={formData.longBio}
-                          onChange={(content) => setFormData({ ...formData, longBio: content })}
+                          onChange={(content: string) => setFormData({ ...formData, longBio: content })}
                           modules={BIO_EDITOR_MODULES}
                           formats={BIO_EDITOR_FORMATS}
                           preserveWhitespace
