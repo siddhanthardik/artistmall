@@ -29,6 +29,7 @@ import './modules/artists/models/artist-category.model';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 const parseOrigin = (value?: string): URL | null => {
   if (!value) return null;
