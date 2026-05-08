@@ -231,7 +231,15 @@ export const CreateArtist: React.FC = () => {
         setIsLoading(true);
         try {
           const stepKey = ARTIST_STEPS[activeStep - 1].key;
-          await AdminService.updateArtistStep(id, stepKey, formData);
+          // Coerce priceRange values to numbers but DO NOT attach startingPrice here.
+          const stepPayload = {
+            ...formData,
+            priceRange: {
+              min: Number(formData.priceRange?.min) || 0,
+              max: Number(formData.priceRange?.max) || 0,
+            },
+          };
+          await AdminService.updateArtistStep(id, stepKey, stepPayload);
           setActiveStep(activeStep + 1);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err: any) {
