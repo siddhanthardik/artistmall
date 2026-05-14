@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   ChevronDown,
   Search,
@@ -14,16 +14,12 @@ import { ArtistService } from '../services/artist.service';
 import { useDebounce } from '../hooks/useDebounce';
 import { Artist } from '../types';
 
-// removed unused CATEGORIES
-const CITIES = [
-  'Mumbai',
-  'Delhi',
-  'Bengaluru',
-  'Hyderabad',
-  'Chennai',
-  'Kolkata',
-  'Pune',
-  'Jaipur',
+const BUDGET_RANGES = [
+  { label: '₹1 Lakh to ₹5 Lakh', value: '1-5', min: 100000, max: 500000 },
+  { label: '₹5 Lakh to ₹10 Lakh', value: '5-10', min: 500000, max: 1000000 },
+  { label: '₹10 Lakh to ₹15 Lakh', value: '10-15', min: 1000000, max: 1500000 },
+  { label: '₹15 Lakh to ₹20 Lakh', value: '15-20', min: 1500000, max: 2000000 },
+  { label: 'Above ₹20 Lakh', value: '20-plus', min: 2000000, max: 50000000 },
 ];
 
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
@@ -38,16 +34,17 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
     'Explore our comprehensive directory of professional talent across various artistic disciplines.',
 };
 
+import { Breadcrumbs } from '../components/shared/Breadcrumbs';
+
 export const Discovery: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filters, setFilters] = useState({
     q: searchParams.get('q') || '',
     categoryId: searchParams.get('categoryId') || searchParams.get('category') || '',
     categoryName: searchParams.get('categoryName') || '',
-    minPrice: 0,
-    maxPrice: 50000000,
-    city: searchParams.get('city') || '',
+    budget: searchParams.get('budget') || '',
+    page: Number(searchParams.get('page')) || 1,
     isFeatured: false,
   });
   const debouncedFilters = useDebounce(filters, 500);
@@ -67,21 +64,7 @@ export const Discovery: React.FC = () => {
       {/* ─── Breadcrumbs & Header ────────────────────────────────────────── */}
       <div className="bg-white border-b border-surface-container pt-32 pb-16">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          <nav className="flex items-center gap-2 text-xs font-bold text-neutral-content/40 uppercase tracking-widest mb-8">
-            <Link to="/" className="hover:text-brand-primary transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-3 h-3" />
-            <Link to="/artists" className="hover:text-brand-primary transition-colors">
-              Marketplace
-            </Link>
-            {filters.categoryName && (
-              <>
-                <ChevronRight className="w-3 h-3" />
-                <span className="text-brand-primary">{filters.categoryName}s</span>
-              </>
-            )}
-          </nav>
+          <Breadcrumbs className="mb-8" />
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="max-w-2xl">
@@ -123,7 +106,15 @@ export const Discovery: React.FC = () => {
                     type="text"
                     placeholder="Search artists..."
                     value={filters.q}
-                    onChange={(e) => setFilters((prev) => ({ ...prev, q: e.target.value }))}
+                    onChange={(e) => {
+                      const newQ = e.target.value;
+                      setFilters((prev) => ({ ...prev, q: newQ, page: 1 }));
+                      const params = new URLSearchParams(searchParams);
+                      if (newQ) params.set('q', newQ);
+                      else params.delete('q');
+                      params.set('page', '1');
+                      setSearchParams(params);
+                    }}
                     className="w-full bg-white border border-surface-container rounded-xl py-3.5 pl-12 pr-4 text-sm font-semibold text-neutral-content placeholder:text-neutral-content/30 focus:outline-none focus:border-brand-primary transition-all"
                   />
                 </div>
@@ -132,25 +123,24 @@ export const Discovery: React.FC = () => {
               <div>
                 <h3 className="text-sm font-bold text-neutral-content mb-6">Budget Range</h3>
                 <div className="space-y-4">
-                  {[
-                    { label: '₹1 Lakh to ₹5 Lakh', min: 100000, max: 500000 },
-                    { label: '₹5 Lakh to ₹10 Lakh', min: 500000, max: 1000000 },
-                    { label: '₹10 Lakh to ₹15 Lakh', min: 1000000, max: 1500000 },
-                    { label: '₹15 Lakh to ₹20 Lakh', min: 1500000, max: 2000000 },
-                    { label: 'Above ₹20 Lakh', min: 2000000, max: 50000000 },
-                  ].map((range) => (
+                  {BUDGET_RANGES.map((range) => (
                     <label
-                      key={range.label}
+                      key={range.value}
                       className="flex items-center gap-4 cursor-pointer group p-2 -ml-2 hover:bg-white rounded-xl transition-all"
                     >
                       <div className="relative flex items-center justify-center">
                         <input
                           type="radio"
                           name="budget"
-                          checked={filters.maxPrice === range.max}
-                          onChange={() =>
-                            setFilters((p) => ({ ...p, minPrice: range.min, maxPrice: range.max }))
-                          }
+                          checked={filters.budget === range.value}
+                          onChange={() => {
+                            const newFilters = { ...filters, budget: range.value, page: 1 };
+                            setFilters(newFilters);
+                            const params = new URLSearchParams(searchParams);
+                            params.set('budget', range.value);
+                            params.set('page', '1');
+                            setSearchParams(params);
+                          }}
                           className="peer appearance-none w-5 h-5 border-2 border-surface-container rounded-full checked:border-brand-primary transition-all cursor-pointer"
                         />
                         <div className="absolute w-2.5 h-2.5 bg-brand-primary rounded-full opacity-0 peer-checked:opacity-100 transition-all"></div>
@@ -160,28 +150,24 @@ export const Discovery: React.FC = () => {
                       </span>
                     </label>
                   ))}
+                  {filters.budget && (
+                    <button
+                      onClick={() => {
+                        const newFilters = { ...filters, budget: '', page: 1 };
+                        setFilters(newFilters);
+                        const params = new URLSearchParams(searchParams);
+                        params.delete('budget');
+                        params.set('page', '1');
+                        setSearchParams(params);
+                      }}
+                      className="text-[10px] font-black uppercase tracking-widest text-brand-primary hover:underline mt-2 ml-1"
+                    >
+                      Clear Budget
+                    </button>
+                  )}
                 </div>
               </div>
 
-              {/* Location */}
-              <div>
-                <h3 className="text-sm font-bold text-neutral-content mb-4">Location</h3>
-                <div className="relative">
-                  <select
-                    value={filters.city}
-                    onChange={(e) => setFilters((p) => ({ ...p, city: e.target.value }))}
-                    className="w-full bg-white border border-surface-container rounded-xl px-4 py-3.5 text-sm font-semibold text-neutral-content focus:outline-none focus:border-brand-primary appearance-none transition-all"
-                  >
-                    <option value="">All Locations</option>
-                    {CITIES.map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-content/30 pointer-events-none" />
-                </div>
-              </div>
             </div>
           </aside>
 
@@ -241,27 +227,54 @@ export const Discovery: React.FC = () => {
                 </div>
 
                 {/* Pagination */}
-                <div className="mt-20 flex items-center justify-center gap-2">
-                  <button className="w-10 h-10 rounded-xl border border-surface-container flex items-center justify-center text-neutral-content/40 hover:bg-white transition-all">
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <button className="w-10 h-10 rounded-xl bg-brand-primary text-white font-bold text-sm shadow-lg shadow-brand-primary/20">
-                    1
-                  </button>
-                  <button className="w-10 h-10 rounded-xl border border-surface-container font-bold text-sm text-neutral-content/40 hover:bg-white transition-all">
-                    2
-                  </button>
-                  <button className="w-10 h-10 rounded-xl border border-surface-container font-bold text-sm text-neutral-content/40 hover:bg-white transition-all">
-                    3
-                  </button>
-                  <span className="px-2 text-neutral-content/20">...</span>
-                  <button className="w-10 h-10 rounded-xl border border-surface-container font-bold text-sm text-neutral-content/40 hover:bg-white transition-all">
-                    12
-                  </button>
-                  <button className="w-10 h-10 rounded-xl border border-surface-container flex items-center justify-center text-neutral-content/40 hover:bg-white transition-all">
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
+                {data?.meta?.totalPages > 1 && (
+                  <div className="mt-20 flex items-center justify-center gap-2">
+                    <button
+                      disabled={filters.page === 1}
+                      onClick={() => {
+                        const newPage = filters.page - 1;
+                        setFilters({ ...filters, page: newPage });
+                        const params = new URLSearchParams(searchParams);
+                        params.set('page', newPage.toString());
+                        setSearchParams(params);
+                      }}
+                      className="w-10 h-10 rounded-xl border border-surface-container flex items-center justify-center text-neutral-content/40 hover:bg-white transition-all disabled:opacity-20"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    {Array.from({ length: data.meta.totalPages }, (_, i) => i + 1).map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => {
+                          setFilters({ ...filters, page: p });
+                          const params = new URLSearchParams(searchParams);
+                          params.set('page', p.toString());
+                          setSearchParams(params);
+                        }}
+                        className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${
+                          filters.page === p
+                            ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/20'
+                            : 'border border-surface-container text-neutral-content/40 hover:bg-white'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    ))}
+                    <button
+                      disabled={filters.page === data.meta.totalPages}
+                      onClick={() => {
+                        const newPage = filters.page + 1;
+                        setFilters({ ...filters, page: newPage });
+                        const params = new URLSearchParams(searchParams);
+                        params.set('page', newPage.toString());
+                        setSearchParams(params);
+                      }}
+                      className="w-10 h-10 rounded-xl border border-surface-container flex items-center justify-center text-neutral-content/40 hover:bg-white transition-all disabled:opacity-20"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>

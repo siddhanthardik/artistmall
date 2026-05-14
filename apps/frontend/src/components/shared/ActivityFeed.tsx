@@ -14,7 +14,7 @@ const DUMMY_FEED: FeedItem[] = [
     id: '1',
     type: 'SUCCESS',
     title: 'Artist Approved',
-    description: 'Zakir Khan is now LIVE on the marketplace.',
+    description: 'Zakir Khan is now LIVE on the platform.',
     timeAgo: '2h ago',
   },
   {

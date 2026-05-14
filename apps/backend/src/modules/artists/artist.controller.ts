@@ -90,6 +90,29 @@ export const adminFeatureArtist = async (req: Request, res: Response, next: Next
 
 export const searchArtists = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    let minPrice = req.query.minPrice ? Number(req.query.minPrice) : undefined;
+    let maxPrice = req.query.maxPrice ? Number(req.query.maxPrice) : undefined;
+
+    const budget = req.query.budget as string;
+    if (budget) {
+      if (budget === '1-5') {
+        minPrice = 100000;
+        maxPrice = 500000;
+      } else if (budget === '5-10') {
+        minPrice = 500000;
+        maxPrice = 1000000;
+      } else if (budget === '10-15') {
+        minPrice = 1000000;
+        maxPrice = 1500000;
+      } else if (budget === '15-20') {
+        minPrice = 1500000;
+        maxPrice = 2000000;
+      } else if (budget === '20-plus') {
+        minPrice = 2000000;
+        maxPrice = undefined;
+      }
+    }
+
     const filters = {
       categoryId: req.query.categoryId as string,
       categorySlug: req.query.categorySlug as string,
@@ -99,8 +122,9 @@ export const searchArtists = async (req: Request, res: Response, next: NextFunct
       celebrityLevel: req.query.celebrityLevel as string,
       isVerified: req.query.isVerified as string,
       isFeatured: req.query.isFeatured as string,
-      minPrice: req.query.minPrice ? Number(req.query.minPrice) : undefined,
-      maxPrice: req.query.maxPrice ? Number(req.query.maxPrice) : undefined,
+      minPrice,
+      maxPrice,
+      budget,
       searchQuery: req.query.q as string,
       page: req.query.page ? Number(req.query.page) : 1,
       limit: req.query.limit ? Number(req.query.limit) : 20,

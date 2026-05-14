@@ -236,7 +236,7 @@ export const AdminOverview: React.FC = () => {
             />
             <AlertItem
               icon={Zap}
-              title="Marketplace Reach"
+              title="Platform Reach"
               message={`${stats.publishedArtists} artists are currently live and visible to the public.`}
               type="ATTENTION"
               iconBg="bg-[#FEF3C7] text-[#D97706]"

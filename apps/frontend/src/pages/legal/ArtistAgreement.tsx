@@ -51,7 +51,7 @@ export const ArtistAgreement: React.FC = () => (
             The Artist Mall does not require sole representation. Artists may be listed on other
             platforms simultaneously. However, any booking inquiry received through The Artist Mall
             must be processed through the platform's Deal Room. Circumventing the platform for
-            bookings originating from our marketplace is a material breach of these Terms.
+            bookings originating from our platform is a material breach of these Terms.
           </p>
         ),
       },

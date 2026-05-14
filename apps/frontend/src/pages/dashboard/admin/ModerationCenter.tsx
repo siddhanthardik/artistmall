@@ -76,7 +76,7 @@ export const ModerationCenter: React.FC = () => {
                 System Status
               </th>
               <th className="px-6 py-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                Marketplace Visibility
+                Public Visibility
               </th>
               <th className="px-10 py-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">
                 Monetization Controls

@@ -187,7 +187,6 @@ artistSchema.index({ categorySlug: 1, premiumTier: 1 });
 artistSchema.index({ city: 1, state: 1 });
 artistSchema.index({ name: 'text', stageName: 'text', shortBio: 'text' });
 artistSchema.index({ startingPrice: 1 });
-artistSchema.index({ slug: 1 });
 artistSchema.index({ showOnHome: 1, isPublished: 1 });
 
 // Pre-save hook to generate slug

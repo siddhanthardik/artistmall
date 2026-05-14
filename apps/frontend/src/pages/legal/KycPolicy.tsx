@@ -15,7 +15,7 @@ export const KycPolicy: React.FC = () => (
         title: '1. Why We Verify',
         content: (
           <p>
-            The Artist Mall operates a trust-first B2B marketplace. Our KYC (Know Your Customer)
+            The Artist Mall operates a trust-first B2B artist booking platform. Our KYC (Know Your Customer)
             process ensures that every company and artist on the platform is legitimate, legally
             registered, and accountable. KYC verification protects both Booking Companies (who
             commit significant budgets) and Management Companies and artists (who commit their time

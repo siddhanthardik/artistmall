@@ -12,7 +12,7 @@ const ROLES = [
   },
   {
     dept: 'Product',
-    title: 'Product Manager — Marketplace Ops',
+    title: 'Product Manager — Artist Ops',
     type: 'Full-time · Mumbai / Remote',
     tag: 'HIRING',
   },

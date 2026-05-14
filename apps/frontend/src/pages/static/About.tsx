@@ -1,278 +1,243 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Star, Globe, Target, Eye, Zap, Headphones, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Target, Eye, Zap, Layers, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Breadcrumbs } from '../../components/shared/Breadcrumbs';
 
 export const About: React.FC = () => {
+  useEffect(() => {
+    document.title = 'About Us | The Artist Mall';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        'content',
+        'Learn about The Artist Mall — a modern artist booking and entertainment platform powered by Nirala Entertainment Pvt Ltd, connecting brands, events, and audiences with premium talent across India.'
+      );
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
-      {/* 1. HERO SECTION */}
-      <section className="relative h-[80vh] min-h-[600px] w-full overflow-hidden">
-        {/* Background Image with Overlay */}
+    <div className="min-h-screen bg-white">
+      {/* ─── Breadcrumbs ──────────────────────────────────────────────── */}
+      <div className="bg-white border-b border-surface-container py-6 pt-24 md:pt-32">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <Breadcrumbs />
+        </div>
+      </div>
+
+      {/* ─── Section 1: Hero Redesign ─────────────────────────────────── */}
+      <section className="relative h-[70vh] min-h-[550px] w-full overflow-hidden flex items-center">
+        {/* Cinematic Background */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1514525253361-bee8718a7439?auto=format&fit=crop&q=80&w=2000"
-            alt="Luxury Event"
+            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2000"
+            alt="Entertainment Experience"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/60"></div>
+          {/* Premium Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative h-full max-w-7xl mx-auto px-6 lg:px-10 flex flex-col justify-center">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 w-full">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="max-w-4xl"
+            className="max-w-3xl space-y-8"
           >
-            <div className="inline-block bg-brand-primary text-white text-[10px] font-black px-4 py-2 rounded-lg mb-8 tracking-widest">
-              ESTABLISHED 2018
+            <div className="inline-flex items-center gap-2 bg-brand-primary/10 backdrop-blur-md border border-brand-primary/20 text-brand-primary text-[10px] font-black px-4 py-2 rounded-full tracking-[0.2em] uppercase">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span>
+              </span>
+              Premium Entertainment Ecosystem
             </div>
-            <h1 className="text-6xl md:text-8xl font-bold text-white tracking-tighter leading-[1.05] mb-10">
-              Connecting the World's Finest Talent with India's Most Visionary Events.
+
+            <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tighter leading-[1.1]">
+              India’s Trusted Artist Booking <br className="hidden md:block" />
+              & Entertainment Platform
             </h1>
-            <p className="text-white/60 text-xl md:text-2xl font-medium max-w-2xl leading-relaxed">
-              The Artist Mall is India's premier talent ecosystem, curating world-class
-              entertainment for high-stakes corporate summits, luxury weddings, and exclusive
-              cultural festivals.
+
+            <p className="text-white/80 text-lg md:text-xl font-medium leading-relaxed max-w-2xl">
+              Connecting world-class artists, live performers, celebrities, and entertainment
+              experiences with brands, weddings, corporate events, colleges, and celebrations across
+              India.
             </p>
+
+            <p className="text-white/50 text-sm md:text-base leading-relaxed max-w-xl">
+              The Artist Mall simplifies artist discovery, talent booking, and entertainment
+              management through a modern digital experience backed by industry expertise and
+              trusted relationships.
+            </p>
+
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Link
+                to="/artists"
+                className="bg-brand-primary hover:bg-brand-primaryContainer text-white px-10 py-4 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-2xl shadow-brand-primary/20 active:scale-95"
+              >
+                Browse Artists
+              </Link>
+              <Link
+                to="/contact"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-10 py-4 rounded-xl font-bold text-xs uppercase tracking-widest transition-all active:scale-95"
+              >
+                Contact Us
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* 2. OUR STORY SECTION */}
-      <section className="py-32">
+      {/* ─── Section 2: About Story Section ────────────────────────────── */}
+      <section className="py-24 md:py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            {/* Left: Image with Badge */}
-            <div className="relative">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="aspect-square rounded-[48px] overflow-hidden shadow-2xl"
-              >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-8"
+            >
+              <div className="space-y-4">
+                <h2 className="text-brand-primary text-xs font-black uppercase tracking-[0.3em]">
+                  The Brand Story
+                </h2>
+                <h3 className="text-3xl md:text-5xl font-bold text-neutral-content tracking-tighter leading-tight">
+                  Built For Modern <br />
+                  Entertainment Experiences
+                </h3>
+              </div>
+
+              <div className="space-y-6 text-neutral-content/60 text-lg leading-relaxed font-medium">
+                <p>
+                  The Artist Mall was created to simplify the way artists, performers, and event
+                  organisers connect. From celebrity performances and live concerts to weddings,
+                  private celebrations, brand activations, and corporate entertainment, we help
+                  clients discover and book verified talent with confidence.
+                </p>
+                <p className="bg-[#F8FAFC] p-8 rounded-3xl border-l-4 border-brand-primary text-neutral-content italic">
+                  "As a part of the Nirala Entertainment Pvt Ltd group, The Artist Mall combines
+                  creative industry expertise with technology-driven talent discovery to build a
+                  trusted entertainment ecosystem for artists, brands, and event organisers."
+                </p>
+                <p>
+                  Our platform focuses on transparency, premium artist representation, seamless
+                  coordination, and curated entertainment experiences designed for modern India.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="aspect-[4/5] rounded-[48px] overflow-hidden shadow-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=1200"
-                  alt="Pianist"
+                  src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=1200"
+                  alt="Live Concert"
                   className="w-full h-full object-cover"
                 />
-              </motion.div>
-              {/* Floating Badge */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 }}
-                className="absolute -bottom-6 -right-6 bg-brand-secondary text-white p-8 rounded-3xl shadow-2xl border border-white/10"
-              >
-                <p className="text-4xl font-bold mb-1">1,500+</p>
-                <p className="text-xs font-bold opacity-60 uppercase tracking-widest">
-                  Events Orchestrated
-                </p>
-              </motion.div>
-            </div>
-
-            {/* Right: Text Content */}
-            <div className="space-y-10">
-              <div className="flex items-center gap-4">
-                <div className="h-[2px] w-12 bg-brand-primary"></div>
-                <h2 className="text-3xl font-bold text-neutral-content tracking-tight">
-                  Our Story: Redefining the Stage
-                </h2>
               </div>
-              <div className="text-neutral-content/60 text-lg font-medium leading-relaxed space-y-6">
-                <p>
-                  Born out of a desire to bridge the gap between chaotic booking processes and
-                  high-end artistic expression, The Artist Mall began as a boutique agency in
-                  Mumbai. We realized that India's most visionary events were often limited by
-                  logistical friction rather than creative lack.
-                </p>
-                <p>
-                  Today, we have evolved into a sophisticated digital marketplace and concierge
-                  service that manages the complex lifecycle of talent acquisition—from meticulous
-                  verification to seamless on-ground execution.
-                </p>
-                <p>
-                  We don't just book artists; we curate experiences that resonate. Our platform
-                  serves as a trusted filter, ensuring that only the most professional, verified,
-                  and exceptional talent enters your event space.
+              {/* Floating Decorative Elements */}
+              <div className="absolute -bottom-8 -right-8 bg-brand-secondary text-white p-10 rounded-[32px] shadow-2xl hidden md:block">
+                <TrendingUp className="w-8 h-8 mb-4 text-white/50" />
+                <p className="text-4xl font-bold tracking-tighter">100%</p>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">
+                  Verified Talent
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. MISSION & VISION */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Mission Card */}
-            <motion.div
-              whileHover={{ y: -10 }}
-              className="bg-white p-16 rounded-[48px] shadow-sm border border-surface-container space-y-8"
-            >
-              <div className="w-16 h-16 bg-[#FDF0E9] rounded-2xl flex items-center justify-center text-brand-primary">
-                <Target className="w-8 h-8" />
-              </div>
-              <h3 className="text-3xl font-bold text-neutral-content tracking-tight">
-                Our Mission
-              </h3>
-              <p className="text-neutral-content/50 text-lg font-medium leading-relaxed">
-                To empower artists and event planners through a transparent, high-integrity platform
-                that prioritizes artistic quality, financial security, and logistical perfection. We
-                are here to make world-class entertainment accessible to every visionary event in
-                India.
-              </p>
-            </motion.div>
-
-            {/* Vision Card */}
-            <motion.div
-              whileHover={{ y: -10 }}
-              className="bg-brand-secondary p-16 rounded-[48px] shadow-2xl text-white space-y-8"
-            >
-              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-white">
-                <Eye className="w-8 h-8" />
-              </div>
-              <h3 className="text-3xl font-bold tracking-tight">Our Vision</h3>
-              <p className="text-white/60 text-lg font-medium leading-relaxed">
-                To become the definitive global benchmark for talent marketplaces, setting the
-                standard for how the world's most elite artists interact with high-end brands and
-                individual collectors of experiences. We envision a future where India is the global
-                hub for premium curated artistry.
-              </p>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 4. VALUES SECTION */}
-      <section className="py-32">
+      {/* ─── Section 3: Vision & Mission Redesign ─────────────────────── */}
+      <section className="py-24 bg-[#F8FAFC]">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          <div className="text-center mb-24 space-y-4">
-            <h2 className="text-5xl font-bold text-neutral-content tracking-tighter">
-              Values That Guide Us
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
+            {/* Vision */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="group bg-white p-12 md:p-16 rounded-[48px] border border-surface-container hover:shadow-2xl transition-all duration-500"
+            >
+              <div className="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-8 group-hover:scale-110 transition-transform">
+                <Eye className="w-7 h-7" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold text-neutral-content mb-6 tracking-tight">
+                Our Vision
+              </h3>
+              <p className="text-neutral-content/50 text-lg md:text-xl leading-relaxed font-medium">
+                To become India’s most trusted entertainment and artist booking platform by making
+                talent discovery, artist management, and live entertainment experiences more
+                accessible, transparent, and professionally managed.
+              </p>
+            </motion.div>
+
+            {/* Mission */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="group bg-brand-secondary p-12 md:p-16 rounded-[48px] shadow-2xl text-white hover:translate-y-[-8px] transition-all duration-500"
+            >
+              <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-8 group-hover:scale-110 transition-transform">
+                <Target className="w-7 h-7" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold mb-6 tracking-tight">Our Mission</h3>
+              <p className="text-white/70 text-lg md:text-xl leading-relaxed font-medium">
+                To empower artists, event organisers, brands, and audiences through
+                technology-driven entertainment solutions that simplify bookings, strengthen
+                creative opportunities, and deliver memorable live experiences across every scale of
+                event.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Section 4: Why Choose Us ─────────────────────────────────── */}
+      <section className="py-24 md:py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+            <h2 className="text-brand-primary text-xs font-black uppercase tracking-[0.3em]">
+              The Advantage
             </h2>
+            <h3 className="text-4xl md:text-5xl font-bold text-neutral-content tracking-tighter">
+              Why Choose The Artist Mall
+            </h3>
             <p className="text-neutral-content/40 text-lg font-medium">
-              The foundation of every partnership we build and every event we curate.
+              We redefine the entertainment booking landscape with precision and trust.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <ValueCard
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <HighlightCard
               icon={ShieldCheck}
-              title="Verified Artistry"
-              description="Every artist on our platform undergoes a rigorous 5-step vetting process, scanning performance history, technical proficiency, and professional conduct."
-              bgColor="bg-[#FDF0E9]"
-              iconColor="text-brand-primary"
+              title="Verified Artist Network"
+              description="Access trusted and professionally managed performers across multiple entertainment categories."
             />
-            <ValueCard
+            <HighlightCard
+              icon={Layers}
+              title="End-to-End Coordination"
+              description="From enquiry to execution, our team helps streamline the booking experience."
+            />
+            <HighlightCard
               icon={Zap}
-              title="Seamless Logistics"
-              description="From technical riders to hospitality management, we handle the intricacies so you can focus on the applause. Precision in our booking."
-              bgColor="bg-[#E9F0FD]"
-              iconColor="text-brand-secondary"
+              title="Curated Entertainment"
+              description="Quality-driven entertainment suited for weddings, brands, colleges, and corporate gatherings."
             />
-            <ValueCard
-              icon={Headphones}
-              title="Direct Concierge Support"
-              description="A dedicated booking expert is assigned to every premium event, providing real-time solutions and strategic curation tailored to your theme."
-              bgColor="bg-[#E9FDF0]"
-              iconColor="text-brand-success"
+            <HighlightCard
+              icon={CheckCircle2}
+              title="Transparent Commercials"
+              description="Clear pricing guidance, structured communication, and simplified coordination."
             />
-          </div>
-        </div>
-      </section>
-
-      {/* 5. THE CURATORS SECTION */}
-      <section className="py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-10">
-              <h2 className="text-5xl font-bold text-neutral-content tracking-tighter leading-tight">
-                The Curators Behind <br />
-                the Scenes
-              </h2>
-              <p className="text-neutral-content/60 text-lg font-medium leading-relaxed max-w-xl">
-                Our team consists of veteran event producers, former touring musicians, and tech
-                enthusiasts who believe in the power of a perfect performance. We don't just use
-                algorithms; we use our ears and years of experience to recommend the right fit for
-                your audience.
-              </p>
-
-              <div className="grid grid-cols-2 gap-10">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <Star className="w-5 h-5 text-brand-primary" />
-                    <p className="text-xl font-bold text-neutral-content">Expert Curators</p>
-                  </div>
-                  <p className="text-sm text-neutral-content/40 font-bold uppercase tracking-widest">
-                    Industry Veterans
-                  </p>
-                </div>
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <Globe className="w-5 h-5 text-brand-secondary" />
-                    <p className="text-xl font-bold text-neutral-content">Global Network</p>
-                  </div>
-                  <p className="text-sm text-neutral-content/40 font-bold uppercase tracking-widest">
-                    20+ Countries
-                  </p>
-                </div>
-              </div>
-
-              <button className="text-brand-primary font-bold flex items-center gap-2 group">
-                Meet the full concierge team{' '}
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-              <div className="rounded-[40px] overflow-hidden shadow-2xl h-[400px]">
-                <img
-                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800"
-                  alt="Office"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="rounded-[40px] overflow-hidden shadow-2xl h-[400px] mt-12">
-                <img
-                  src="https://images.unsplash.com/photo-1522071823991-b9671f9d7f1f?auto=format&fit=crop&q=80&w=800"
-                  alt="Team Working"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. FINAL CTA */}
-      <section className="py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-[#1a1a1a] rounded-[56px] p-20 md:p-32 text-center space-y-12 shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent"></div>
-
-            <div className="relative z-10 space-y-8">
-              <h2 className="text-5xl md:text-7xl font-bold text-white tracking-tighter leading-tight">
-                Your Event Deserves Nothing <br />
-                Less Than Excellence.
-              </h2>
-              <p className="text-white/40 text-xl font-medium max-w-2xl mx-auto leading-relaxed">
-                Let's create something legendary. Partner with Artist Mall for your next high-impact
-                event and experience the difference of curated artistry.
-              </p>
-            </div>
-
-            <div className="relative z-10 flex flex-wrap justify-center gap-6">
-              <button className="bg-brand-primary hover:bg-brand-primaryContainer text-white font-bold px-12 py-5 rounded-2xl shadow-2xl shadow-brand-primary/20 transition-all uppercase tracking-widest text-xs">
-                Start Your Booking
-              </button>
-              <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 font-bold px-12 py-5 rounded-2xl transition-all uppercase tracking-widest text-xs">
-                Contact Concierge
-              </button>
-            </div>
           </div>
         </div>
       </section>
@@ -280,14 +245,14 @@ export const About: React.FC = () => {
   );
 };
 
-const ValueCard = ({ icon: Icon, title, description, bgColor, iconColor }: any) => (
-  <div className="bg-white p-12 rounded-[48px] shadow-sm border border-surface-container space-y-8 hover:shadow-xl transition-all group">
-    <div
-      className={`w-16 h-16 ${bgColor} rounded-2xl flex items-center justify-center ${iconColor} group-hover:scale-110 transition-transform`}
-    >
-      <Icon className="w-8 h-8" />
+const HighlightCard = ({ icon: Icon, title, description }: any) => (
+  <div className="bg-[#F8FAFC] p-10 rounded-[40px] border border-surface-container space-y-6 hover:bg-white hover:shadow-xl transition-all duration-300 group">
+    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-primary shadow-sm group-hover:bg-brand-primary group-hover:text-white transition-colors duration-300">
+      <Icon className="w-6 h-6" />
     </div>
-    <h3 className="text-2xl font-bold text-neutral-content tracking-tight">{title}</h3>
-    <p className="text-neutral-content/40 font-medium leading-relaxed">{description}</p>
+    <div className="space-y-3">
+      <h4 className="text-lg font-bold text-neutral-content tracking-tight">{title}</h4>
+      <p className="text-neutral-content/40 text-sm font-medium leading-relaxed">{description}</p>
+    </div>
   </div>
 );

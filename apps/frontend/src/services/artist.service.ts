@@ -8,6 +8,7 @@ export interface SearchFilters {
   city?: string;
   minPrice?: number;
   maxPrice?: number;
+  budget?: string;
   celebrityLevel?: string;
   isVerified?: boolean;
   isFeatured?: boolean;

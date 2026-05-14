@@ -160,6 +160,7 @@ export class ArtistService {
     cityId?: string;
     minPrice?: number;
     maxPrice?: number;
+    budget?: string;
     celebrityLevel?: string;
     isVerified?: string; // 'true' or 'false'
     isFeatured?: string; // 'true' or 'false'
@@ -175,6 +176,7 @@ export class ArtistService {
       cityId,
       minPrice,
       maxPrice,
+      budget,
       celebrityLevel,
       isVerified,
       isFeatured,

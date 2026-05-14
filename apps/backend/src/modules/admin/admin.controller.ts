@@ -260,11 +260,11 @@ export const updateArtistStep = async (req: Request, res: Response, next: NextFu
         throw new AppError('Profile image required', 400);
     } else if (step === 'commercial') {
       if (data.priceRange?.min === undefined || data.priceRange.min === '')
-        throw new AppError('Price floor required', 400);
+        throw new AppError('Minimum price required', 400);
       if (data.priceRange?.max === undefined || data.priceRange.max === '')
-        throw new AppError('Price ceiling required', 400);
+        throw new AppError('Maximum price required', 400);
       if (Number(data.priceRange.max) < Number(data.priceRange.min))
-        throw new AppError('Price ceiling cannot be less than floor', 400);
+        throw new AppError('Maximum price cannot be less than minimum', 400);
     }
 
     // 2. Map Frontend Field Names to DB Field Names

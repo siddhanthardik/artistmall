@@ -213,10 +213,10 @@ export const CreateArtist: React.FC = () => {
     } else if (step === 3) {
       if (!formData.profilePicture) errs.profilePicture = 'Profile image required';
     } else if (step === 4) {
-      if (!formData.priceRange.min) errs.priceRangeMin = 'Price floor required';
-      if (!formData.priceRange.max) errs.priceRangeMax = 'Price ceiling required';
+      if (!formData.priceRange.min) errs.priceRangeMin = 'Minimum price required';
+      if (!formData.priceRange.max) errs.priceRangeMax = 'Maximum price required';
       if (Number(formData.priceRange.max) < Number(formData.priceRange.min))
-        errs.priceRangeMax = 'Ceiling cannot be less than floor';
+        errs.priceRangeMax = 'Maximum cannot be less than minimum';
     }
     return errs;
   };
@@ -907,7 +907,7 @@ export const CreateArtist: React.FC = () => {
                   <div className="space-y-10">
                     <div className="grid grid-cols-2 gap-6">
                       <InputField
-                        label="Price Floor (₹)"
+                        label="Minimum Price (₹)"
                         placeholder="Min"
                         type="number"
                         value={formData.priceRange.min}
@@ -919,7 +919,7 @@ export const CreateArtist: React.FC = () => {
                         }
                       />
                       <InputField
-                        label="Price Ceiling (₹)"
+                        label="Maximum Price (₹)"
                         placeholder="Max"
                         type="number"
                         value={formData.priceRange.max}

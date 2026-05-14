@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ArtistService } from '../../services/artist.service';
 import { resolveMediaUrl } from '../../utils/media';
+import { Breadcrumbs } from '../../components/shared/Breadcrumbs';
 
 export const CategoriesLanding: React.FC = () => {
   const { data: categoriesResponse, isLoading } = useQuery({
@@ -30,8 +31,9 @@ export const CategoriesLanding: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* 1. HERO SECTION */}
-      <section className="bg-[#f5f3f0] pt-40 pb-32">
+      <section className="bg-[#f5f3f0] pt-24 md:pt-40 pb-32">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <Breadcrumbs className="mb-12" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

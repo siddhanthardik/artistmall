@@ -11,6 +11,8 @@ import { ArtistBiography } from '../components/artist/ArtistBiography';
 import { ArtistSidebar } from '../components/artist/ArtistSidebar';
 import { ArtistMediaGallery } from '../components/artist/ArtistMediaGallery';
 
+import { Breadcrumbs } from '../components/shared/Breadcrumbs';
+
 export const ArtistDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -67,6 +69,13 @@ export const ArtistDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Breadcrumbs Bar */}
+      <div className="bg-white border-b border-surface-container py-6 pt-24 md:pt-32">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <Breadcrumbs overrides={{ [id || '']: artist.stageName }} />
+        </div>
+      </div>
+
       {/* 1. CINEMATIC HERO SECTION */}
       <ArtistHero artist={artist} onBookNow={handleOpenBookingModal} />
 

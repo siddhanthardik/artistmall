@@ -100,7 +100,7 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
                           className="text-lg md:text-xl text-white/60 font-medium max-w-2xl leading-relaxed"
                         >
                           {banner.subtitle ||
-                            "Book world-class verified artists for your next high-impact event with India's premier talent marketplace."}
+                            "Book world-class verified artists for your next high-impact event with India's premier talent booking platform."}
                         </motion.p>
 
                         <motion.div

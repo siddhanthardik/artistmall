@@ -17,6 +17,5 @@ const departmentSchema = new Schema<IDepartment>(
 );
 
 departmentSchema.plugin(auditPlugin);
-departmentSchema.index({ name: 1 });
 
 export const DepartmentModel = mongoose.model<IDepartment>('Department', departmentSchema);

@@ -31,6 +31,5 @@ const adminSessionSchema = new Schema<IAdminSession>(
 // Index for automatic cleanup of expired sessions
 adminSessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 adminSessionSchema.index({ adminId: 1 });
-adminSessionSchema.index({ refreshToken: 1 });
 
 export const AdminSessionModel = mongoose.model<IAdminSession>('AdminSession', adminSessionSchema);

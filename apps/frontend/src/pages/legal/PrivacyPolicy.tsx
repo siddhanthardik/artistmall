@@ -69,7 +69,7 @@ export const PrivacyPolicy: React.FC = () => {
                 'We utilize industry-standard AES-256 encryption for all sensitive data at rest and in transit.',
                 'Access to personal data is strictly limited to authorized operations staff.',
                 'Regular security reviews are performed to maintain platform protection.',
-                'We do not sell your personal or professional data to third-party marketplaces.',
+                'We do not sell your personal or professional data to third-party platforms.',
               ]}
             />
 

@@ -52,7 +52,7 @@ export const Home: React.FC = () => {
     <div className="min-h-screen bg-surface">
       {/* ANNOUNCEMENT BAR */}
       <div className="bg-brand-primary text-white py-3 px-4 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-10 text-sm font-medium">
-        <span>New Artist Marketplace is Live! Limited time booking discounts.</span>
+        <span>New Artist Booking Platform is Live! Limited time booking discounts.</span>
         <Link
           to="/artists"
           className="bg-white text-brand-primary px-6 py-1.5 rounded-full text-xs font-bold hover:bg-white/90 transition-all uppercase tracking-wider"

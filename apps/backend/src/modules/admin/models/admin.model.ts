@@ -79,7 +79,6 @@ adminSchema.methods.comparePassword = async function (candidate: string): Promis
 };
 
 adminSchema.plugin(auditPlugin);
-adminSchema.index({ email: 1 });
 adminSchema.index({ role: 1 });
 
 export const AdminModel = mongoose.model<IAdmin>('Admin', adminSchema);

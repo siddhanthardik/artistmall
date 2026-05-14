@@ -1,10 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, ExternalLink } from 'lucide-react';
+import { Breadcrumbs } from '../../components/shared/Breadcrumbs';
 
 export const Contact: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-32 pb-4">
+        <Breadcrumbs />
+      </div>
       {/* 1. HERO SECTION */}
       <section className="pt-40 pb-24 px-6 lg:px-10 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
