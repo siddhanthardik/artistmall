@@ -42,7 +42,6 @@ export const provisionArtist = async (req: Request, res: Response, next: NextFun
     const body = req.body;
 
     // Parse numbers safely — never let NaN reach Mongoose
-    const startingPrice = Number(body.startingPrice) || 0;
     const priceMin = Number(body.priceRange?.min) || 0;
     const priceMax = Number(body.priceRange?.max) || 0;
     const yearsOfExperience = Number(body.yearsOfExperience) || 0;
@@ -57,7 +56,6 @@ export const provisionArtist = async (req: Request, res: Response, next: NextFun
       categoryName: category.name,
       categorySlug: category.slug,
       createdBy: adminId,
-      startingPrice,
       yearsOfExperience,
       eventsCompleted,
       priceRange: { min: priceMin, max: priceMax },
@@ -193,8 +191,6 @@ export const updateArtist = async (req: Request, res: Response, next: NextFuncti
     const oldState = artist.toObject();
 
     // Sanitize numeric fields in updates too
-    if (req.body.startingPrice !== undefined)
-      req.body.startingPrice = Number(req.body.startingPrice) || 0;
     if (req.body.yearsOfExperience !== undefined)
       req.body.yearsOfExperience = Number(req.body.yearsOfExperience) || 0;
     if (req.body.eventsCompleted !== undefined)
@@ -267,6 +263,8 @@ export const updateArtistStep = async (req: Request, res: Response, next: NextFu
         throw new AppError('Price floor required', 400);
       if (data.priceRange?.max === undefined || data.priceRange.max === '')
         throw new AppError('Price ceiling required', 400);
+      if (Number(data.priceRange.max) < Number(data.priceRange.min))
+        throw new AppError('Price ceiling cannot be less than floor', 400);
     }
 
     // 2. Map Frontend Field Names to DB Field Names
@@ -278,14 +276,11 @@ export const updateArtistStep = async (req: Request, res: Response, next: NextFu
     if (data.brochure) updateData.brochureFile = data.brochure;
 
     // Cast numbers
-    if (data.startingPrice !== undefined)
-      updateData.startingPrice = Number(data.startingPrice) || 0;
     if (data.priceRange) {
       updateData.priceRange = {
         min: Number(data.priceRange.min) || 0,
         max: Number(data.priceRange.max) || 0,
       };
-      updateData.startingPrice = updateData.priceRange.min;
     }
 
     // 3. Perform Update

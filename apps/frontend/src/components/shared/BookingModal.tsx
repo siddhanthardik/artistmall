@@ -20,7 +20,6 @@ interface BookingModalProps {
   onClose: () => void;
   artistName: string;
   artistId: string;
-  startingPrice: number;
 }
 
 export const BookingModal: React.FC<BookingModalProps> = ({
@@ -28,7 +27,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   onClose,
   artistName,
   artistId,
-  startingPrice,
 }) => {
   const [step, setStep] = useState<'FORM' | 'SUCCESS'>('FORM');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +35,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     eventDate: '',
     eventLocation: '',
     estimatedGuests: '',
-    budget: startingPrice?.toString() || '',
+    budget: '',
     additionalNotes: '',
     clientName: '',
     clientEmail: '',
@@ -96,7 +94,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         eventDate: '',
         eventLocation: '',
         estimatedGuests: '',
-        budget: startingPrice?.toString() || '',
+        budget: '',
         additionalNotes: '',
         clientName: '',
         clientEmail: '',

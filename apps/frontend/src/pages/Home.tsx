@@ -105,8 +105,8 @@ export const Home: React.FC = () => {
                   role={artist.categoryName}
                   rating={artist.rating || 'New'}
                   badge="FEATURED"
-                  minPrice={artist.priceRange?.min || artist.startingPrice}
-                  maxPrice={artist.priceRange?.max || artist.startingPrice}
+                  minPrice={artist.priceRange?.min || 0}
+                  maxPrice={artist.priceRange?.max || 0}
                   image={resolveMediaUrl(artist.profileImage)}
                   description={artist.shortBio}
                 />
@@ -212,8 +212,8 @@ export const Home: React.FC = () => {
                   role={artist.categoryName}
                   rating={artist.rating || 'New'}
                   badge="POPULAR"
-                  minPrice={artist.priceRange?.min || artist.startingPrice}
-                  maxPrice={artist.priceRange?.max || artist.startingPrice}
+                  minPrice={artist.priceRange?.min || 0}
+                  maxPrice={artist.priceRange?.max || 0}
                   image={resolveMediaUrl(artist.profileImage)}
                   description={artist.shortBio}
                 />

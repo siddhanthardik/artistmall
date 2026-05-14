@@ -136,7 +136,6 @@ export const ArtistDetail: React.FC = () => {
         onClose={handleCloseBookingModal}
         artistName={artist.stageName}
         artistId={artist._id}
-        startingPrice={artist.startingPrice}
       />
 
       {/* 4. WHATSAPP FLOATING ICON (ANIMATED) */}

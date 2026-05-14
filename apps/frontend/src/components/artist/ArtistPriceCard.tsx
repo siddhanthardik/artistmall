@@ -15,14 +15,12 @@ export const ArtistPriceCard: React.FC<ArtistPriceCardProps> = React.memo(({ art
       <div className="relative z-10">
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-content/40 mb-3">
-            Starting From
+            Price Range
           </p>
           <p className="text-4xl font-bold text-neutral-content tracking-tight">
             {artist.priceRange?.min && artist.priceRange?.max
               ? `${formatCurrency(artist.priceRange.min)} – ${formatCurrency(artist.priceRange.max)}`
-              : artist.startingPrice
-                ? formatCurrency(artist.startingPrice)
-                : 'Price on Request'}
+              : 'Price on Request'}
           </p>
           <p className="text-xs font-medium text-neutral-content/50 mt-3 leading-relaxed">
             Based on event type & venue requirements.

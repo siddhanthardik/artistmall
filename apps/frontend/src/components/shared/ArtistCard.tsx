@@ -136,7 +136,6 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({
         onClose={() => setIsBookingModalOpen(false)}
         artistName={name}
         artistId={id}
-        startingPrice={priceRange.min}
       />
     </>
   );

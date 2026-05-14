@@ -27,7 +27,7 @@ export interface Artist {
   gallery: string[];
   videoLinks: string[];
   brochureFile?: string;
-  startingPrice: number;
+  startingPrice?: number;
   priceRange: {
     min: number;
     max: number;

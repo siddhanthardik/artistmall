@@ -215,6 +215,8 @@ export const CreateArtist: React.FC = () => {
     } else if (step === 4) {
       if (!formData.priceRange.min) errs.priceRangeMin = 'Price floor required';
       if (!formData.priceRange.max) errs.priceRangeMax = 'Price ceiling required';
+      if (Number(formData.priceRange.max) < Number(formData.priceRange.min))
+        errs.priceRangeMax = 'Ceiling cannot be less than floor';
     }
     return errs;
   };
@@ -231,7 +233,7 @@ export const CreateArtist: React.FC = () => {
         setIsLoading(true);
         try {
           const stepKey = ARTIST_STEPS[activeStep - 1].key;
-          // Coerce priceRange values to numbers but DO NOT attach startingPrice here.
+          // Coerce priceRange values to numbers.
           const stepPayload = {
             ...formData,
             priceRange: {
@@ -292,7 +294,6 @@ export const CreateArtist: React.FC = () => {
         brochureFile: formData.brochure,
         trustIndicators: [],
         premiumTier: 'STANDARD',
-        startingPrice: Number(formData.priceRange.min) || 0,
         priceRange: {
           min: Number(formData.priceRange.min) || 0,
           max: Number(formData.priceRange.max) || 0,

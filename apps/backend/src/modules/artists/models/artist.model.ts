@@ -56,7 +56,7 @@ export interface IArtist extends Document {
   };
 
   // Pricing
-  startingPrice: number;
+  startingPrice?: number;
   priceRange: { min: number; max: number };
 
   // Operational
