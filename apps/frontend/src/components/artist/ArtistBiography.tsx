@@ -16,7 +16,7 @@ export const ArtistBiography: React.FC<ArtistBiographyProps> = React.memo(({ art
       <div className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-[2px] w-12 bg-brand-primary"></div>
-          <h2 className="text-2xl font-bold text-neutral-content tracking-tight">Biography</h2>
+          <h2 className="text-2xl font-bold text-neutral-content tracking-tight">About {artist.stageName || 'Artist'}</h2>
         </div>
         
         {/* Rich Text Editorial Layout */}

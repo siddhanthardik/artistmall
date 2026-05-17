@@ -69,15 +69,16 @@ export const ArtistDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Breadcrumbs Bar */}
-      <div className="bg-white border-b border-surface-container py-6 pt-24 md:pt-32">
+
+      {/* 1. CINEMATIC HERO SECTION */}
+      <ArtistHero artist={artist} onBookNow={handleOpenBookingModal} />
+
+      {/* Breadcrumbs Bar (positioned below hero) */}
+      <div className="bg-white border-b border-surface-container py-6">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <Breadcrumbs overrides={{ [id || '']: artist.stageName }} />
         </div>
       </div>
-
-      {/* 1. CINEMATIC HERO SECTION */}
-      <ArtistHero artist={artist} onBookNow={handleOpenBookingModal} />
 
       {/* 2. MAIN CONTENT GRID */}
       <div className="bg-[#F8F9FA]/50 py-20">
