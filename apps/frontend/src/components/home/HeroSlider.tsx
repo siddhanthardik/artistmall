@@ -89,7 +89,7 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.8, delay: 0.2 }}
                             >
-                              <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white tracking-tighter leading-[1.1]">
+                              <h1 className="text-3xl md:text-5xl lg:text-6xl font-semibold text-white tracking-normal leading-tight md:leading-snug lg:leading-snug">
                                 {title.split(' ').map((word, i) => (
                                   <span
                                     key={i}
@@ -107,7 +107,7 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.8, delay: 0.4 }}
-                              className="text-lg md:text-xl text-white/60 font-medium max-w-2xl leading-relaxed"
+                              className="text-base md:text-lg lg:text-xl text-white/70 font-medium max-w-xl leading-relaxed md:leading-relaxed"
                             >
                               {subtitle}
                             </motion.p>
