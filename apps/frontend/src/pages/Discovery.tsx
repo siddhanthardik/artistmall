@@ -57,6 +57,7 @@ export const Discovery: React.FC = () => {
   // removed unused clearFilters
 
   const categoryTitle = filters.categoryName || 'Artists';
+  const headingLabel = categoryTitle.endsWith('s') ? categoryTitle : `${categoryTitle}s`;
   const description = CATEGORY_DESCRIPTIONS[filters.categoryName] || CATEGORY_DESCRIPTIONS.Default;
 
   return (
@@ -69,7 +70,7 @@ export const Discovery: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="max-w-2xl">
               <h1 className="text-5xl md:text-6xl font-bold text-neutral-content tracking-tighter mb-6">
-                {categoryTitle}s
+                {headingLabel}
               </h1>
               <p className="text-neutral-content/50 text-lg font-medium leading-relaxed">
                 {description}
