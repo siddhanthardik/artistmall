@@ -26,47 +26,26 @@ export const ArtistBiography: React.FC<ArtistBiographyProps> = React.memo(({ art
         />
       </div>
 
-      {/* HIGHLIGHTS SECTION */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Expertise */}
-        <div className="bg-brand-secondary rounded-3xl p-8 text-white">
-          <h3 className="text-lg font-bold mb-6 tracking-tight">Vocal Expertise</h3>
-          <div className="flex flex-wrap gap-3">
-            {(
-              artist.performanceTypes || [
-                'Mezzo-Soprano',
-                'Improvisation',
-                'Lyric Diction',
-                'Stage Presence',
-              ]
-            ).map((tag, i) => (
-              <span
-                key={i}
-                className="bg-white/10 border border-white/20 px-4 py-2 rounded-lg text-[10px] font-bold tracking-tight uppercase"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
+      {/* HIGHLIGHTS SECTION (Single premium card) */}
+      {artist.premiumHighlights && artist.premiumHighlights.length > 0 && (
+        <div className="">
+          <div className="bg-white rounded-3xl p-8 shadow-lg border border-surface-container max-w-4xl">
+            <div className="flex items-center gap-6 mb-6">
+              <div className="h-[2px] w-12 bg-brand-primary"></div>
+              <h3 className="text-lg font-bold tracking-tight">Highlights</h3>
+            </div>
 
-        {/* Performance Highlights */}
-        <div className="bg-white border border-surface-container rounded-3xl p-8 shadow-sm">
-          <h3 className="text-lg font-bold text-neutral-content mb-6 tracking-tight italic">
-            Highlights
-          </h3>
-          <div className="space-y-4">
-            {(artist.premiumHighlights || []).map((h, i) => (
-              <div key={i} className="flex gap-4">
-                <CheckCircle2 className="w-5 h-5 text-brand-primary shrink-0" />
-                <p className="text-sm font-semibold text-neutral-content/70 leading-snug">
-                  {h}
-                </p>
-              </div>
-            ))}
+            <ul className="space-y-4">
+              {artist.premiumHighlights.map((h, i) => (
+                <li key={i} className="flex items-start gap-4">
+                  <span className="mt-1 text-brand-primary font-black text-lg leading-none">✓</span>
+                  <p className="text-sm font-semibold text-neutral-content/80 leading-snug">{h}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 });
