@@ -321,7 +321,7 @@ export const CreateHeroBanner: React.FC = () => {
               ) : (
                 <Check className="w-5 h-5 stroke-[3]" />
               )}
-              <span>{isEditMode ? 'Update Blueprint' : 'Launch Banner'}</span>
+              <span>{isEditMode ? 'Update Banner' : 'Create Banner'}</span>
             </button>
             <button
               type="button"
