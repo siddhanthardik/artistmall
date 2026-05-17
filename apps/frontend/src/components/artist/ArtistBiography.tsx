@@ -1,5 +1,4 @@
 import React from 'react';
-import { CheckCircle2 } from 'lucide-react';
 import DOMPurify from 'dompurify';
 import { Artist } from '../../types';
 
