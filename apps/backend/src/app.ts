@@ -176,10 +176,10 @@ app.use('/api/admin/auth/login', authLimiter);
 app.use('/api/admin/auth/refresh', authLimiter);
 
 // ── 6. Body Parser (Payload Hardening) ───────────────────────────────────────
-// 2 MB limit prevents large payload DoS attacks
-// urlencoded extended: false avoids complex object injection via query strings
-app.use(express.json({ limit: '2mb' }));
-app.use(express.urlencoded({ extended: false, limit: '2mb' }));
+// Increase limits to allow larger media uploads (hero banners).
+// Keep the rest of the behaviour unchanged; extended=true allows nested form data.
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 app.use(cookieParser());
 
 // ── 7. NoSQL Injection Prevention ────────────────────────────────────────────

@@ -194,11 +194,11 @@ export const uploadBrochure = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 });
 
-/** Hero Banner — field name: "bannerImage" | accepts: JPG, JPEG, PNG | max: 5 MB */
+/** Hero Banner — field name: "bannerImage" | accepts: JPG, JPEG, PNG | max: 25 MB */
 export const uploadBanner = multer({
   storage: bannerStorage,
   fileFilter: imageFilter,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 25 * 1024 * 1024 },
 });
 
 /** Category Image — field name: "categoryImage" | accepts: JPG, JPEG, PNG | max: 2 MB */
