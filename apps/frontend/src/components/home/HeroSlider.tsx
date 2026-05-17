@@ -74,60 +74,71 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ banners }) => {
                 {/* Content Container */}
                 <div className="relative h-full max-w-7xl mx-auto px-6 lg:px-10 flex flex-col justify-center">
                   <AnimatePresence mode="wait">
-                    {isActive && (
-                      <div className="max-w-3xl space-y-6 md:space-y-8">
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.8, delay: 0.2 }}
-                        >
-                          <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white tracking-tighter leading-[1.1]">
-                            {banner.title?.split(' ').map((word, i) => (
-                              <span
-                                key={i}
-                                className={i % 3 === 0 ? 'text-white' : 'text-white/90'}
-                              >
-                                {word}{' '}
-                              </span>
-                            )) || 'Experience Excellence'}
-                          </h1>
-                        </motion.div>
+                    {isActive && (() => {
+                      const title = banner.title?.trim();
+                      const subtitle = banner.subtitle?.trim();
+                      const hasText = Boolean(title) || Boolean(subtitle);
 
-                        <motion.p
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.8, delay: 0.4 }}
-                          className="text-lg md:text-xl text-white/60 font-medium max-w-2xl leading-relaxed"
-                        >
-                          {banner.subtitle ||
-                            "Book world-class verified artists for your next high-impact event with India's premier talent booking platform."}
-                        </motion.p>
+                      if (!hasText) return null;
 
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.8, delay: 0.6 }}
-                          className="flex flex-wrap gap-4 pt-4"
-                        >
-                          {banner.ctaText && (
-                            <Link
-                              to={banner.ctaLink || '/artists'}
-                              target={banner.openInNewTab ? '_blank' : '_self'}
-                              className="group bg-brand-primary hover:bg-brand-primaryContainer text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-2xl shadow-brand-primary/20 flex items-center gap-3 active:scale-95"
+                      return (
+                        <div className="max-w-3xl space-y-6 md:space-y-8">
+                          {title && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.8, delay: 0.2 }}
                             >
-                              <span>{banner.ctaText}</span>
-                              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </Link>
+                              <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white tracking-tighter leading-[1.1]">
+                                {title.split(' ').map((word, i) => (
+                                  <span
+                                    key={i}
+                                    className={i % 3 === 0 ? 'text-white' : 'text-white/90'}
+                                  >
+                                    {word}{' '}
+                                  </span>
+                                ))}
+                              </h1>
+                            </motion.div>
                           )}
-                          <Link
-                            to="/contact"
-                            className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all hover:bg-white/20 active:scale-95"
+
+                          {subtitle && (
+                            <motion.p
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.8, delay: 0.4 }}
+                              className="text-lg md:text-xl text-white/60 font-medium max-w-2xl leading-relaxed"
+                            >
+                              {subtitle}
+                            </motion.p>
+                          )}
+
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.6 }}
+                            className="flex flex-wrap gap-4 pt-4"
                           >
-                            Get a Quote
-                          </Link>
-                        </motion.div>
-                      </div>
-                    )}
+                            {banner.ctaText && (
+                              <Link
+                                to={banner.ctaLink || '/artists'}
+                                target={banner.openInNewTab ? '_blank' : '_self'}
+                                className="group bg-brand-primary hover:bg-brand-primaryContainer text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-2xl shadow-brand-primary/20 flex items-center gap-3 active:scale-95"
+                              >
+                                <span>{banner.ctaText}</span>
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                              </Link>
+                            )}
+                            <Link
+                              to="/contact"
+                              className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all hover:bg-white/20 active:scale-95"
+                            >
+                              Get a Quote
+                            </Link>
+                          </motion.div>
+                        </div>
+                      );
+                    })()}
                   </AnimatePresence>
                 </div>
               </div>
